@@ -7,19 +7,22 @@
 <ion-content>
   <div class="pos1" style="max-width: 75%; max-height: 75%;">
     <circle-progress
-    [percent]="85"
+    [percent]="percent"
     [radius]="85"
     [outerStrokeWidth]="16"
-    [innerStrokeWidth]="8"
-    [outerStrokeColor]="'#78C000'"
+    [innerStrokeWidth]="2"
+    [outerStrokeColor]="'#C7E596'"
+    [backgroundStroke] ="'#C7E596'"
     [innerStrokeColor]="'#C7E596'"
-    [animation]="true"
+    [animation]="false"
     [animationDuration]="300"
+    [showInnerStroke] = "true"
+    [showZeroOuterStroke] = "false"
     ></circle-progress>
     <ion-fab-button (click) = "startTime()" class="pos2">
       <ion-icon [name]="isPlay ? 'pause' : 'play'"></ion-icon>
     </ion-fab-button>
-    <ion-fab-button class="pos3">
+    <ion-fab-button (click) = "resetTime()" class="pos3">
       <ion-icon name="square"></ion-icon>
     </ion-fab-button>
   </div>

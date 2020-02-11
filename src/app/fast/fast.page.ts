@@ -7,15 +7,33 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FastPage implements OnInit {
   isPlay: boolean;
+  percent: number;
+  interval: any;
   constructor() {
     this.isPlay = false;
+    this.percent = 100;
    }
 
   ngOnInit() {
   }
 
-  startTime() {
-    this.isPlay = !this.isPlay;
+  resetTime() {
+    this.percent = 100;
+    this.isPlay = false;
+    clearInterval(this.interval);
+    this.interval = null;
   }
 
+  startTime() {
+    this.isPlay = !this.isPlay;
+    if(this.interval) {
+      clearInterval(this.interval);
+      this.interval = null;
+    }
+    else {
+      this.interval = setInterval(() => {
+        this.percent -= 1;
+      }, 100);
+    }
+  }
 }
