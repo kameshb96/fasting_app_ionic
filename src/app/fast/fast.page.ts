@@ -6,10 +6,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./fast.page.scss'],
 })
 export class FastPage implements OnInit {
-
-  constructor() { }
+  isPlay: boolean;
+  constructor() {
+    this.isPlay = false;
+   }
 
   ngOnInit() {
+  }
+
+  startTime() {
+    this.isPlay = !this.isPlay;
   }
 
 }

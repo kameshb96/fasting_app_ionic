@@ -1,0 +1,20 @@
+.pos1 {
+    position: relative;
+    // left: 10%;
+    top: 20%;
+    margin: 0px auto;
+}
+
+.pos2 {
+    position: absolute;
+    top: 88%;
+    z-index: 1000;
+    left: 13%;
+}
+
+.pos3 {
+    position: absolute;
+    top: 88%;
+    z-index: 1000;
+    left: 69%;
+}
