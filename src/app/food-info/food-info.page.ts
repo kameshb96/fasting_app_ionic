@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../storage.service';
+import { ModalController } from '@ionic/angular';
 @Component({
   selector: 'app-food-info',
   templateUrl: './food-info.page.html',
@@ -11,7 +12,7 @@ export class FoodInfoPage implements OnInit {
   logFood: string;
   logQty: number;
   logCalories: number;
-  constructor(private storage: StorageService) { }
+  constructor(private storage: StorageService, private modal: ModalController) { }
 
   logInfo() {
     console.log(this.logDate);
@@ -28,6 +29,7 @@ export class FoodInfoPage implements OnInit {
     }
     this.storage.addLogItem(obj);
     console.log(this.storage.logs);
+    this.modal.dismiss();
   }
 
   ngOnInit() {
