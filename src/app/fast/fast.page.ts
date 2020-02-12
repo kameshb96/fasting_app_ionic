@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
+import { ResourcesService, Fast } from '../shared/resources.service';
+import { ConsoleReporter } from 'jasmine';
 @Component({
   selector: 'app-fast',
   templateUrl: './fast.page.html',
@@ -9,12 +10,15 @@ export class FastPage implements OnInit {
   isPlay: boolean;
   percent: number;
   interval: any;
-  constructor() {
+  fasts: Array<Fast>;
+  constructor(private resources: ResourcesService) {
     this.isPlay = false;
     this.percent = 100;
    }
 
   ngOnInit() {
+    this.fasts = this.resources.getFasts();
+    console.log(this.fasts);
   }
 
   resetTime() {
