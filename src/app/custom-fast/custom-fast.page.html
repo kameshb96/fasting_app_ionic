@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-icon (click)="closeModal()" name="arrow-round-back" style="zoom: 3.0;"></ion-icon>
+    <ion-title>Custom Fast</ion-title>
+    <ion-icon (click)="addCustomFast()" name="add" style="zoom: 3.0; float: right;"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label>Fast Duration</ion-label>
+    <ion-datetime [(ngModel)]="fastDuration" display-format="H:mm" picker-format="H:mm" placeholder="Set Duration"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label>Title</ion-label>
+    <ion-input class="ion-text-end" [(ngModel)]="fastTitle" placeholder="Fast Title"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Description</ion-label>
+    <ion-input class="ion-text-end" [ngModel]="fastDescription" placeholder="Description"></ion-input>
+  </ion-item>
+
+</ion-content>

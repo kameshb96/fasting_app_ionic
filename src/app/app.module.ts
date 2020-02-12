@@ -9,10 +9,11 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FoodInfoPage } from './food-info/food-info.page';
+import { CustomFastPage } from './custom-fast/custom-fast.page';
 
 @NgModule({
-  declarations: [AppComponent, FoodInfoPage],
-  entryComponents: [FoodInfoPage],
+  declarations: [AppComponent, FoodInfoPage, CustomFastPage],
+  entryComponents: [FoodInfoPage, CustomFastPage],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule],
   providers: [
     StatusBar,

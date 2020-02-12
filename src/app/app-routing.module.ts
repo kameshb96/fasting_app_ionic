@@ -25,6 +25,10 @@ const routes: Routes = [
   {
     path: 'food',
     loadChildren: () => import('./food-info/food-info.module').then( m => m.FoodInfoPageModule)
+  },
+  {
+    path: 'custom-fast',
+    loadChildren: () => import('./custom-fast/custom-fast.module').then( m => m.CustomFastPageModule)
   }
 ];
 @NgModule({

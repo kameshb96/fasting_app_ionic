@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourcesService, Fast } from '../shared/resources.service';
 import { ConsoleReporter } from 'jasmine';
+import { ModalController } from '@ionic/angular';
+import { CustomFastPage } from '../custom-fast/custom-fast.page';
 @Component({
   selector: 'app-fast',
   templateUrl: './fast.page.html',
@@ -11,7 +13,7 @@ export class FastPage implements OnInit {
   percent: number;
   interval: any;
   fasts: Array<Fast>;
-  constructor(private resources: ResourcesService) {
+  constructor(private resources: ResourcesService, private modal: ModalController) {
     this.isPlay = false;
     this.percent = 100;
    }
@@ -20,6 +22,14 @@ export class FastPage implements OnInit {
     this.fasts = this.resources.getFasts();
     console.log(this.fasts);
   }
+
+  async openCustomFastModal() {
+    const modal = await this.modal.create({
+      component: CustomFastPage
+    })
+    modal.present();
+  }
+  
 
   resetTime() {
     this.percent = 100;
