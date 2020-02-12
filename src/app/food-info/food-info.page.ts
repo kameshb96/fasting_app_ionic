@@ -32,6 +32,10 @@ export class FoodInfoPage implements OnInit {
     this.modal.dismiss();
   }
 
+  closeModal() {
+    this.modal.dismiss();
+  }
+
   ngOnInit() {
   }
 
