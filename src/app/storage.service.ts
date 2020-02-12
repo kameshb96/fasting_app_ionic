@@ -29,6 +29,7 @@ async getObject() {
 
 async addLogItem(obj) {
   this.logs.push(obj);
+  this.setItem("logs", JSON.stringify(this.logs));
 }
 
 async setItem(k, v) {
