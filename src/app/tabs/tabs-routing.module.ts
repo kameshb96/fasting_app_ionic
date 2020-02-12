@@ -48,6 +48,16 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'food',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../food-info/food-info.module').then(m => m.FoodInfoPageModule)
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/tabs/fast',
         pathMatch: 'full'
