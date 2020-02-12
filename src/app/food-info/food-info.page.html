@@ -1,9 +1,31 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>food_info</ion-title>
+    <ion-title>Nutritional Info</ion-title>
+    <ion-icon name="add" style="zoom: 3.0; float: right;"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-item>
+    <ion-label>Date</ion-label>
+    <ion-datetime displayFormat="MM DD YY" placeholder="Select Date"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label>Time</ion-label>
+    <ion-datetime display-format="h:mm A" picker-format="h:mm A" placeholder="Choose Time"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-input placeholder="Enter Food"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input type="number" placeholder="0"></ion-input>
+    <ion-select placeholder="Unit">
+      <ion-select-option value="g">g</ion-select-option>
+      <ion-select-option value="oz">oz</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-input disabled placeholder="0 Calories"></ion-input>
+  </ion-item>
 
 </ion-content>
