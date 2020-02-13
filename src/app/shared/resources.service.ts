@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class ResourcesService {
   private fasts: Array<Fast> = [];
   constructor() {
-    this.fasts.push(new Fast("16:8 Fast", 16, "16 Hour Fast followed by an 8 hour eating window"));
+    this.fasts.push(new Fast("16:8 Fast", 16, "16 Hour Fast followed by an 8 hour eating window asjufbasiufasFOUIGASioufdg"));
     this.fasts.push(new Fast("12:12 Fast", 12, "12 Hour Fast followed by a 12 hour eating window"));
    }
 
@@ -29,6 +29,10 @@ export class Fast {
     this.title = title;
     this.duration = duration;
     this.description = description;
+  }
+
+  getTitle() {
+    return this.title;
   }
 }
 

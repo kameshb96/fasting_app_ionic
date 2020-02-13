@@ -10,10 +10,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FoodInfoPage } from './food-info/food-info.page';
 import { CustomFastPage } from './custom-fast/custom-fast.page';
+import { FastModalPage } from './fast-modal/fast-modal.page';
+
 
 @NgModule({
-  declarations: [AppComponent, FoodInfoPage, CustomFastPage],
-  entryComponents: [FoodInfoPage, CustomFastPage],
+  declarations: [AppComponent, FoodInfoPage, CustomFastPage, FastModalPage],
+  entryComponents: [FoodInfoPage, CustomFastPage, FastModalPage],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule],
   providers: [
     StatusBar,

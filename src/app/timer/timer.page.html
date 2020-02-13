@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Timer</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="pos1" style="max-width: 75%; max-height: 75%;">
+    <circle-progress
+    [percent]="percent"
+    [radius]="85"
+    [outerStrokeWidth]="16"
+    [innerStrokeWidth]="2"
+    [outerStrokeColor]="'#C7E596'"
+    [backgroundStroke] ="'#C7E596'"
+    [innerStrokeColor]="'#C7E596'"
+    [animation]="false"
+    [animationDuration]="300"
+    [showInnerStroke] = "true"
+    [showZeroOuterStroke] = "false"
+    ></circle-progress>
+    <ion-button (click)="toggleTimer()" class="pos4">{{ isPlay ? "Stop Fast" : "Start Fast" }} </ion-button>
+  </div>
+</ion-content>

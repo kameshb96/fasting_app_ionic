@@ -58,6 +58,16 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'timer',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../timer/timer.module').then(m => m.TimerPageModule)
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/tabs/fast',
         pathMatch: 'full'

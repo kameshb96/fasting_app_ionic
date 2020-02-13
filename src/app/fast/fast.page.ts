@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourcesService, Fast } from '../shared/resources.service';
 import { ConsoleReporter } from 'jasmine';
-import { ModalController } from '@ionic/angular';
+import { ModalController, PopoverController } from '@ionic/angular';
 import { CustomFastPage } from '../custom-fast/custom-fast.page';
+import { FoodInfoPage } from '../food-info/food-info.page';
+import { FastPopoverComponent } from '../fast-popover/fast-popover.component';
+import { FastModalPage } from '../fast-modal/fast-modal.page';
 @Component({
   selector: 'app-fast',
   templateUrl: './fast.page.html',
@@ -13,7 +16,9 @@ export class FastPage implements OnInit {
   percent: number;
   interval: any;
   fasts: Array<Fast>;
-  constructor(private resources: ResourcesService, private modal: ModalController) {
+  constructor(private resources: ResourcesService, 
+              private modal: ModalController,
+              private popoverController: PopoverController) {
     this.isPlay = false;
     this.percent = 100;
    }
@@ -26,6 +31,28 @@ export class FastPage implements OnInit {
   async openCustomFastModal() {
     const modal = await this.modal.create({
       component: CustomFastPage
+    })
+    modal.present();
+  }
+
+  async openFastModal(event, title) {
+    console.log(event);
+    let selected = null;
+    let i = 0;
+    for(; i < this.fasts.length; i++) {
+      if(this.fasts[i].getTitle() === title) {  
+        selected = this.fasts[i];
+        break;
+      }
+    }
+    let data = {
+      selectedFast: selected, 
+      index: i,
+      fasts: this.fasts
+    };
+    const modal = await this.modal.create({
+      component: FastModalPage,
+      componentProps: data
     })
     modal.present();
   }
