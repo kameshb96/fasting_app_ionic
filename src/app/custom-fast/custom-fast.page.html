@@ -13,11 +13,12 @@
   </ion-item>
   <ion-item>
     <ion-label>Title</ion-label>
-    <ion-input class="ion-text-end" [(ngModel)]="fastTitle" placeholder="Fast Title"></ion-input>
+    <ion-input class="ion-text-end" [(ngModel)]="fastTitle" placeholder="Fast Title" maxlength="10"></ion-input>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-label>Description</ion-label>
   </ion-item>
   <ion-item>
-    <ion-label>Description</ion-label>
-    <ion-input class="ion-text-end" [ngModel]="fastDescription" placeholder="Description"></ion-input>
+    <ion-textarea  [(ngModel)] = "fastDescription" placeholder="Enter more information here..." maxlength="82"></ion-textarea>
   </ion-item>
-
 </ion-content>
