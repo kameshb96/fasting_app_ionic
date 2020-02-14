@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NavParams, ModalController, NavController } from '@ionic/angular';
 import { ResourcesService } from '../shared/resources.service';
+import { StorageService } from '../storage.service';
 
 @Component({
   selector: 'app-fast-modal',
@@ -17,7 +18,8 @@ export class FastModalPage implements OnInit {
   constructor(private modal: ModalController, 
               public navParams: NavParams,
               private resources: ResourcesService,
-              private navController: NavController) {
+              private navController: NavController,
+              private storage: StorageService) {
    }
 
   ngOnInit() {
@@ -46,6 +48,7 @@ export class FastModalPage implements OnInit {
   deleteFast() {
     this.fasts.splice(this.index, 1);
     console.log(this.fasts);
+    this.storage.updateFasts(this.fasts);
     this.modal.dismiss();
   }
 

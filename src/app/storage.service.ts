@@ -7,8 +7,17 @@ const { Storage } = Plugins;
   providedIn: 'root'
 })
 export class StorageService {
-  logs: any = [];
-  constructor() { }
+  logs: Array<any>;
+  fasts: Array<any>;
+  constructor() { 
+    this.logs = [];
+    this.fasts = [];
+    // this.fasts = this.getItem("fasts") ? JSON.parse(this.getCustomItem("fasts"))
+    // this.getItem("fasts").then((obj:any) => {
+    //   console.log(obj);
+    //   this.fasts = JSON.parse(obj);
+    // });
+  }
 
   // JSON "set" example
 async setObject() {
@@ -32,6 +41,21 @@ async addLogItem(obj) {
   this.setItem("logs", JSON.stringify(this.logs));
 }
 
+async addFast(obj) {
+  this.fasts.push(obj);
+  this.setItem("fasts", JSON.stringify(this.fasts));
+  console.log(this.getItem("fasts"));
+  console.log(this.getItem("_cap_fasts"));
+  // this.getItem("_cap_fasts").then((obj:any) => {
+  //   console.log(obj);
+  //   this.fasts = JSON.parse(obj);
+  // });
+}
+
+async updateFasts(obj) {
+  this.setItem("fasts", JSON.stringify(obj));
+}
+
 async setItem(k, v) {
   await Storage.set({
     key: k,
@@ -43,17 +67,21 @@ async getItem(k) {
   const { value } = await Storage.get({ key: k });
   console.log('Got item: ', value);
 }
-
-async removeItem() {
-  await Storage.remove({ key: 'name' });
+ 
+getCustomItem(k) {
+  return Storage.get({ key: k });
 }
 
-async keys() {
-  const { keys } = await Storage.keys();
-  console.log('Got keys: ', keys);
-}
+// async removeItem() {
+//   await Storage.remove({ key: 'name' });
+// }
 
-async clear() {
-  await Storage.clear();
-}
+// async keys() {
+//   const { keys } = await Storage.keys();
+//   console.log('Got keys: ', keys);
+// }
+
+// async clear() {
+//   await Storage.clear();
+// }
 }
