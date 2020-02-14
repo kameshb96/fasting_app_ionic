@@ -14,16 +14,20 @@ export class TimerPage implements OnInit {
   percent: number;
   interval: any;
   titleText: string;
-  hours: number;
-  minutes: number;
-  seconds: number;
+  fastTime: any = {
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  };
+  eatTime: any = {
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  };
   initialSeconds: number;
   constructor(private resources: ResourcesService) {
     this.isPlay = false;
     this.percent = 100;
-    this.hours = 0;
-    this.minutes = 0;
-    this.seconds = 0;
     this.setTitle();
    }
 
@@ -33,32 +37,32 @@ export class TimerPage implements OnInit {
       let duration = new Date(chosen.getDuration());
       console.log(duration);
       console.log(new Date(duration));
-      this.hours = duration.getHours();
-      this.minutes = duration.getMinutes();
-      this.seconds = 0;
+      this.fastTime.hours = duration.getHours();
+      this.fastTime.minutes = duration.getMinutes();
+      this.fastTime.seconds = 0;
       this.setTitle();
-      this.initialSeconds = this.getTotalSeconds();
+      this.initialSeconds = this.getTotalSeconds(this.fastTime);
       this.percent = this.getCurrentpercent();
     }
    }
 
   ngOnInit() {}
 
-  getTotalSeconds() {
-    return (3600 * this.hours) + (60 * this.minutes) + this.seconds;
+  getTotalSeconds(obj) {
+    return (3600 * obj.hours) + (60 * obj.minutes) + obj.seconds;
   }
 
   setTitle() {
-    this.titleText = "" + ((this.hours < 10) ? ("0" + this.hours) : this.hours)
+    this.titleText = "" + ((this.fastTime.hours < 10) ? ("0" + this.fastTime.hours) : this.fastTime.hours)
                          + ":" 
-                         + ((this.minutes < 10) ? ("0" + this.minutes) : this.minutes)
+                         + ((this.fastTime.minutes < 10) ? ("0" + this.fastTime.minutes) : this.fastTime.minutes)
                          + ":"
-                         + ((this.seconds < 10) ? ("0" + this.seconds) : this.seconds);
+                         + ((this.fastTime.seconds < 10) ? ("0" + this.fastTime.seconds) : this.fastTime.seconds);
   }
   
   resetTimer() {
     this.percent = 100;
-    this.hours = this.minutes = this.seconds = 0;
+    this.fastTime.hours = this.fastTime.minutes = this.fastTime.seconds = 0;
     this.setTitle();
     this.isPlay = false;
     clearInterval(this.interval);
@@ -73,8 +77,8 @@ export class TimerPage implements OnInit {
     this.interval = null;
   }
 
-  toggleTimer() {
-    if(this.hours == 0 && this.minutes == 0 && this.seconds == 0)
+  startFast(obj) {
+    if(this.fastTime.hours == 0 && this.fastTime.minutes == 0 && this.fastTime.seconds == 0)
       return;
     if(this.interval) {
       this.isPlay = !this.isPlay;
@@ -82,32 +86,47 @@ export class TimerPage implements OnInit {
     }
     else {
       this.interval = setInterval(() => {
-        if(this.seconds == 0) {
-          this.seconds = 59;
-          if(this.minutes == 0) {
-            this.minutes = 59;
-            this.hours -= 1;
+        if(this.fastTime.seconds == 0) {
+          this.fastTime.seconds = 59;
+          if(this.fastTime.minutes == 0) {
+            this.fastTime.minutes = 59;
+            this.fastTime.hours -= 1;
           }
           else {
-            this.minutes -= 1;
+            this.fastTime.minutes -= 1;
           }
         }
         else {
-          this.seconds -= 1;
+          this.fastTime.seconds -= 1;
         }
         this.percent = this.getCurrentpercent();
         this.setTitle();
-        if(this.hours == 0 && this.minutes == 0 && this.seconds == 0)
+        if(this.fastTime.hours == 0 && this.fastTime.minutes == 0 && this.fastTime.seconds == 0)
           this.stopTimer();
       }, 10);
       this.isPlay = !this.isPlay;
     }
   }
 
+  startEat() {
+    let chosen = this.resources.getChosenFast();
+    let duration = new Date(chosen.getDuration());
+    this.eatTime(duration.getHours(), duration.getMinutes());
+    this.initialSeconds = this.getTotalSeconds(this.eatTime);
+  }
+
   getCurrentpercent() {
-    let current = this.getTotalSeconds();
+    let current = this.getTotalSeconds(this.fastTime);
     let currentPercent = (current / this.initialSeconds) * 100;
     return currentPercent;
   }
+
+  getEatTime(hours, minutes) {
+    this.eatTime.hours = (minutes > 0) ? 24 - hours - 1 : 24 - hours;
+    this.eatTime.minutes = (minutes > 0) ? 60 - minutes : minutes;
+    this.eatTime.seconds = 0; 
+  }
+
+  
 
 }
