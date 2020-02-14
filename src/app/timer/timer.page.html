@@ -9,6 +9,9 @@
     <circle-progress
     [percent]="percent"
     [radius]="85"
+    [showTitle] = "true"
+    [showSubtitle] = "false"
+    [showUnits] = "false"
     [outerStrokeWidth]="16"
     [innerStrokeWidth]="2"
     [outerStrokeColor]="'#C7E596'"
@@ -18,6 +21,7 @@
     [animationDuration]="300"
     [showInnerStroke] = "true"
     [showZeroOuterStroke] = "false"
+    [title] = "titleText"
     ></circle-progress>
     <ion-button (click)="toggleTimer()" class="pos4">{{ isPlay ? "Stop Fast" : "Start Fast" }} </ion-button>
   </div>
