@@ -31,6 +31,10 @@ export class ResourcesService {
      return this.storage.getFasts();
    }
 
+   getCompletedFasts() {
+     return this.completedFasts;
+   }
+
   addFast(fastTime, fastTitle, description) {
     console.log(this.fasts);
     let fast = new Fast(fastTitle, fastTime, description);
