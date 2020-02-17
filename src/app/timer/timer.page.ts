@@ -73,6 +73,7 @@ export class TimerPage implements OnInit {
     this.status = this.fastTime;
     this.setTitle();
     this.isPlay = false;
+    this.statusName = "fast";
     clearInterval(this.interval);
     this.interval = null;
   }
@@ -114,8 +115,14 @@ export class TimerPage implements OnInit {
         if(this.status.hours == 0 && this.status.minutes == 0 && this.status.seconds == 0) {
           if(this.statusName === "fast")
             this.startEat();
-          else
+          else {
             this.stopTimer();
+            this.resources.addCompletedFast({
+              title: "Fast",
+              time: "5:00"
+            });
+            this.resetTimer();
+          }
         }
       }, 0.1);
       this.isPlay = !this.isPlay;
@@ -144,7 +151,7 @@ export class TimerPage implements OnInit {
   }
 
   getEatTime(hours, minutes) {
-    this.eatTime.hours = (minutes > 0) ? 24 - hours - 1 : 24 - hours;
+    this.eatTime.hours = (minutes > 0) ? 2 - hours - 1 : 2 - hours;
     this.eatTime.minutes = (minutes > 0) ? 60 - minutes : minutes;
     this.eatTime.seconds = 0; 
   }

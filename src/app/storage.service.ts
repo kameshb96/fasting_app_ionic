@@ -9,9 +9,11 @@ const { Storage } = Plugins;
 export class StorageService {
   private logs: Array<any>;
   private fasts: Array<any>;
+  private fastHistory: Array<any>;
   constructor() { 
     this.logs = [];
     this.fasts = [];
+    this.fastHistory = [];
     // this.fasts = this.getItem("fasts") ? JSON.parse(this.getCustomItem("fasts"))
     // this.getItem("fasts").then((obj:any) => {
     //   console.log(obj);
@@ -60,6 +62,21 @@ async updateFasts(obj) {
   this.setItem("fasts", JSON.stringify(obj));
   this.fasts = obj;
   console.log(this.fasts);
+}
+
+async addCompletedFast(obj) {
+  this.fastHistory.push(obj);
+  this.setItem("completedFasts",  JSON.stringify(this.fastHistory));
+}
+
+getCompletedFast() {
+  return this.fastHistory;
+}
+
+async getFastHistory() {
+  const { value } = await Storage.get({ key: "completedFasts"});
+  console.log('Got item: ', value);
+  return value;
 }
 
 async setItem(k, v) {

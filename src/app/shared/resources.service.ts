@@ -6,11 +6,17 @@ import { StorageService } from '../storage.service';
 })
 export class ResourcesService {
   private fasts: Array<Fast> = [];
+  private completedFasts: Array<Fast> = [];
   private chosenFast: Fast;
   constructor(private storage: StorageService) {
     this.fasts.push(new Fast("16:8 Fast", new Date("2020-02-13T16:00:58.404-05:00"), "16 Hour Fast followed by an 8 hour eating window"));
     this.fasts.push(new Fast("12:12 Fast", new Date("2020-02-13T12:00:03.098-05:00"), "12 Hour Fast followed by a 12 hour eating window"));
     this.storage.updateFasts(this.fasts);
+    //this.completedFasts = this.storage.getCompletedFast();
+    this.storage.getFastHistory().then ((res: any) => {
+      console.log(res);
+      this.completedFasts = JSON.parse(res);
+    });
    }
 
    setChosenFast(fast: Fast) {
@@ -29,6 +35,11 @@ export class ResourcesService {
     console.log(this.fasts);
     let fast = new Fast(fastTitle, fastTime, description);
     this.storage.addFast(fast);
+  }
+
+  addCompletedFast(obj) {
+    this.storage.addCompletedFast(obj);
+    this.completedFasts = this.storage.getCompletedFast();
   }
 }
 
