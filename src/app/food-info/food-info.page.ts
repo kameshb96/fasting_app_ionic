@@ -28,7 +28,6 @@ export class FoodInfoPage implements OnInit {
       cal: this.logCalories ? this.logCalories : 0
     }
     this.storage.addLogItem(obj);
-    console.log(this.storage.logs);
     this.modal.dismiss();
   }
 

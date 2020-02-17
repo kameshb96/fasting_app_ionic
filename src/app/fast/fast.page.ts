@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourcesService, Fast } from '../shared/resources.service';
-import { ConsoleReporter } from 'jasmine';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { CustomFastPage } from '../custom-fast/custom-fast.page';
 import { FoodInfoPage } from '../food-info/food-info.page';
-import { FastPopoverComponent } from '../fast-popover/fast-popover.component';
 import { FastModalPage } from '../fast-modal/fast-modal.page';
 @Component({
   selector: 'app-fast',

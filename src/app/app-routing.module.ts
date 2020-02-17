@@ -35,10 +35,6 @@ const routes: Routes = [
     loadChildren: () => import('./timer/timer.module').then( m => m.TimerPageModule)
   },
   {
-    path: 'fast-popover',
-    loadChildren: () => import('./fast-popover/fast-popover.module').then( m => m.FastPopoverPageModule)
-  },
-  {
     path: 'fast-modal',
     loadChildren: () => import('./fast-modal/fast-modal.module').then( m => m.FastModalPageModule)
   }
