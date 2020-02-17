@@ -7,8 +7,8 @@ const { Storage } = Plugins;
   providedIn: 'root'
 })
 export class StorageService {
-  logs: Array<any>;
-  fasts: Array<any>;
+  private logs: Array<any>;
+  private fasts: Array<any>;
   constructor() { 
     this.logs = [];
     this.fasts = [];
@@ -41,11 +41,15 @@ async addLogItem(obj) {
   this.setItem("logs", JSON.stringify(this.logs));
 }
 
+getFasts() {
+  return this.fasts;
+}
+
 async addFast(obj) {
+  console.log(this.fasts);
   this.fasts.push(obj);
+  console.log(this.fasts);
   this.setItem("fasts", JSON.stringify(this.fasts));
-  console.log(this.getItem("fasts"));
-  console.log(this.getItem("_cap_fasts"));
   // this.getItem("_cap_fasts").then((obj:any) => {
   //   console.log(obj);
   //   this.fasts = JSON.parse(obj);
@@ -54,6 +58,8 @@ async addFast(obj) {
 
 async updateFasts(obj) {
   this.setItem("fasts", JSON.stringify(obj));
+  this.fasts = obj;
+  console.log(this.fasts);
 }
 
 async setItem(k, v) {

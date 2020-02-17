@@ -22,12 +22,12 @@ export class ResourcesService {
    }
 
    getFasts() {
-     return this.fasts;
+     return this.storage.getFasts();
    }
 
   addFast(fastTime, fastTitle, description) {
+    console.log(this.fasts);
     let fast = new Fast(fastTitle, fastTime, description);
-    this.fasts.push(fast);
     this.storage.addFast(fast);
   }
 }
