@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ResourcesService, Fast } from '../shared/resources.service';
+import { ResourcesService, Fast, CompletedFast } from '../shared/resources.service';
 import { PopoverController } from '@ionic/angular';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
@@ -27,6 +27,9 @@ export class TimerPage implements OnInit {
   initialSeconds: number;
   status: any;
   statusName: string;
+  fastStartTime: Date;
+  eatStartTime: Date;
+  eatEndTime: Date;
   constructor(private resources: ResourcesService) {
    }
 
@@ -96,6 +99,12 @@ export class TimerPage implements OnInit {
       this.resetTimer();
     }
     else {
+      if(this.statusName == "fast") {
+        this.fastStartTime = new Date();
+      }
+      else {
+        this.eatStartTime = new Date();
+      }
       this.interval = setInterval(() => {
         if(this.status.seconds == 0) {
           this.status.seconds = 59;
@@ -116,11 +125,13 @@ export class TimerPage implements OnInit {
           if(this.statusName === "fast")
             this.startEat();
           else {
+            this.eatEndTime = new Date();
             this.stopTimer();
-            this.resources.addCompletedFast({
-              title: "Fast",
-              time: "5:00"
-            });
+            let cf = new CompletedFast(this.resources.getChosenFast(), 
+                                       this.fastStartTime,
+                                       this.eatStartTime,
+                                       this.eatEndTime);
+            this.resources.addCompletedFast(cf);
             this.resetTimer();
           }
         }

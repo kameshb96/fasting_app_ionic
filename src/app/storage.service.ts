@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { listLazyRoutes } from '@angular/compiler/src/aot/lazy_routes';
+import { CompletedFast, Fast } from './shared/resources.service';
 const { Storage } = Plugins;
 
 @Injectable({
@@ -9,11 +10,24 @@ const { Storage } = Plugins;
 export class StorageService {
   private logs: Array<any>;
   private fasts: Array<any>;
-  private fastHistory: Array<any>;
+  private completedFasts: Array<CompletedFast>;
   constructor() { 
     this.logs = [];
     this.fasts = [];
-    this.fastHistory = [];
+    this.getFastHistory().then ((res: any) => {
+      this.completedFasts = JSON.parse(res);
+    });
+    // this.getFastHistory().then ((res: any) => {
+    //   console.log(res);
+    //   let history = JSON.parse(res);
+    //   for(let i = 0; i < history.length; i++) {
+    //     let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description);
+    //     let cf = new  CompletedFast(fast, history[i].fastStartTime,  history[i].eatStartTime,  history[i].eatEndTime);
+    //     this.completedFasts.push(cf);
+    //   }
+    //   console.log(this.completedFasts[0]);
+    //   console.log(this.completedFasts[0].getDetails());
+    // });
     // this.fasts = this.getItem("fasts") ? JSON.parse(this.getCustomItem("fasts"))
     // this.getItem("fasts").then((obj:any) => {
     //   console.log(obj);
@@ -64,13 +78,15 @@ async updateFasts(obj) {
   console.log(this.fasts);
 }
 
-async addCompletedFast(obj) {
-  this.fastHistory.push(obj);
-  this.setItem("completedFasts",  JSON.stringify(this.fastHistory));
+async addCompletedFast(obj: CompletedFast) {
+  console.log(obj);
+  this.completedFasts.push(obj);
+  console.log(this.completedFasts);
+  this.setItem("completedFasts",  JSON.stringify(this.completedFasts));
 }
 
 getCompletedFast() {
-  return this.fastHistory;
+  return this.completedFasts;
 }
 
 async getFastHistory() {
