@@ -8,6 +8,17 @@
 </ion-header>
 
 <ion-content>
+  <ion-list *ngFor="let l of foodLogs">
+    <ion-item>
+      <ion-label>
+        <h2>{{ l.food }}</h2>
+        <h3>{{ l.cal + " calories"}}</h3>
+        <h3>{{ l.qty + "" + l.unit}}</h3>
+        <h3>{{"Time: " + l.time }}</h3>
+        <p>{{"Date: " }} {{ l.date.getUTCMonth() + 1}}/{{ l.date.getUTCDate() +  "/" + l.date.getUTCFullYear() }}</p>
+      </ion-label>  
+    </ion-item>
+  </ion-list>
   <div style="position: fixed; bottom: 0; width: 100%;">
     <ion-fab-button (click)="openModal()" style="margin: 0 auto;">
       <ion-icon name="add"></ion-icon>

@@ -20,7 +20,7 @@
   </ion-item>
   <ion-item>
     <ion-input [(ngModel)]="logQty" type="number" placeholder="0"></ion-input>
-    <ion-select placeholder="Unit">
+    <ion-select [(ngModel)]="unit" placeholder="Unit">
       <ion-select-option value="g">g</ion-select-option>
       <ion-select-option value="oz">oz</ion-select-option>
     </ion-select>

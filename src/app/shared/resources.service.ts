@@ -8,7 +8,9 @@ export class ResourcesService {
   private fasts: Array<Fast> = [];
   private completedFasts: Array<CompletedFast> = [];
   private chosenFast: Fast;
+  private foodLogs: Array<any>;
   constructor(private storage: StorageService) {
+    this.foodLogs = [];
     this.fasts.push(new Fast("16:8 Fast", new Date("2020-02-13T16:00:58.404-05:00"), "16 Hour Fast followed by an 8 hour eating window"));
     this.fasts.push(new Fast("12:12 Fast", new Date("2020-02-13T12:00:03.098-05:00"), "12 Hour Fast followed by a 12 hour eating window"));
     this.storage.updateFasts(this.fasts);
@@ -22,6 +24,29 @@ export class ResourcesService {
           let cf = new  CompletedFast(fast, history[i].fastStartTime,  history[i].eatStartTime, history[i].eatEndTime);
           this.completedFasts.push(cf);
         }
+      }
+    });
+    this.storage.getLogHistory().then ((res: any) => {
+      let logHistory = [];
+      if(res)
+        logHistory = JSON.parse(res);
+      if(logHistory) {
+        logHistory.forEach(log => {
+          let d = new Date(log.date);
+          let t = log.time;
+          let f =  log.food;
+          let q =  log.qty;
+          let c = log.cal;
+          let u = log.unit;
+          this.foodLogs.push({
+            date: d,
+            time: t,
+            food: f,
+            qty:  q,
+            cal: c,
+            unit: u
+          });
+        });
       }
     });
    }
@@ -42,6 +67,10 @@ export class ResourcesService {
      return this.completedFasts;
    }
 
+   getFoodLogs() {
+     return this.foodLogs;
+   }
+
   addFast(fastTime, fastTitle, description) {
     console.log(this.fasts);
     let fast = new Fast(fastTitle, fastTime, description);
@@ -52,6 +81,12 @@ export class ResourcesService {
     this.storage.addCompletedFast(obj);
     //this.completedFasts = this.storage.getCompletedFast();
     this.completedFasts.push(obj);
+  }
+
+  addFoodLog(obj) {
+    this.storage.addLogItem(obj); 
+    this.foodLogs.push(obj);
+    console.log(this.foodLogs);
   }
 }
 
