@@ -16,13 +16,13 @@ export class ResourcesService {
     this.storage.getFastHistory().then ((res: any) => {
       console.log(res);
       let history = JSON.parse(res);
-      for(let i = 0; i < history.length; i++) {
-        let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description);
-        let cf = new  CompletedFast(fast, history[i].fastStartTime,  history[i].eatStartTime,  history[i].eatEndTime);
-        this.completedFasts.push(cf);
+      if (history) {
+        for(let i = 0; i < history.length; i++) {
+          let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description);
+          let cf = new  CompletedFast(fast, history[i].fastStartTime,  history[i].eatStartTime, history[i].eatEndTime);
+          this.completedFasts.push(cf);
+        }
       }
-      console.log(this.completedFasts[0]);
-      console.log(this.completedFasts[0].getDetails());
     });
    }
 
