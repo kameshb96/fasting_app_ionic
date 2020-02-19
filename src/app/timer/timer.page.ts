@@ -47,6 +47,7 @@ export class TimerPage implements OnInit {
       this.initialSeconds = this.getTotalSeconds(this.fastTime);
       //this.percent = this.getCurrentpercent();
     }
+    console.log(window.screen);
    }
 
   ngOnInit() {

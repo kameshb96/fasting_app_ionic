@@ -5,24 +5,27 @@
 </ion-header>
 
 <ion-content>
-  <div class="pos1" style="max-width: 75%; max-height: 75%;">
-    <circle-progress
-    [percent]="percent"
-    [radius]="85"
-    [showTitle] = "true"
-    [showSubtitle] = "false"
-    [showUnits] = "false"
-    [outerStrokeWidth]="16"
-    [innerStrokeWidth]="2"
-    [outerStrokeColor]="'#C7E596'"
-    [backgroundStroke] ="'#C7E596'"
-    [innerStrokeColor]="'#C7E596'"
-    [animation]="false"
-    [animationDuration]="300"
-    [showInnerStroke] = "true"
-    [showZeroOuterStroke] = "false"
-    [title] = "titleText"
-    ></circle-progress>
-    <ion-button (click)="startStage()" class="pos4">{{ isPlay ? "Stop Fast" : "Start Fast" }} </ion-button>
+  <div class="center-wrapper">
+    <div class="center-circle-element">
+      <circle-progress
+      [percent]="percent"
+      [radius]="85"
+      [showTitle] = "true"
+      [showSubtitle] = "false"
+      [showUnits] = "false"
+      [outerStrokeWidth]="16"
+      [innerStrokeWidth]="2"
+      [outerStrokeColor]="'#C7E596'"
+      [backgroundStroke] ="'#C7E596'"
+      [innerStrokeColor]="'#C7E596'"
+      [animation]="false"
+      [animationDuration]="300"
+      [showInnerStroke] = "true"
+      [showZeroOuterStroke] = "false"
+      [title] = "titleText"
+      ></circle-progress>
+    </div>
+    <ion-button (click)="startStage()" class="center-btn-element">{{ isPlay ? "Stop Fast" : "Start Fast" }} </ion-button>
   </div>
+
 </ion-content>
