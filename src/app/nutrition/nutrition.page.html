@@ -1,14 +1,16 @@
 <ion-header>
 
   <ion-toolbar>
+    <ion-icon (click)="previousDate()" name="arrow-round-back" style="zoom: 3.0;"></ion-icon>
     <ion-title>
-      Today
+      {{ title }}
     </ion-title>
+    <ion-icon (click)="nextDate()" name="arrow-round-forward" style="zoom: 3.0; float: right;"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list *ngFor="let l of foodLogs">
+  <ion-list *ngFor="let l of filteredFoodLogs">
     <ion-item>
       <ion-label>
         <h2>{{ l.food }}</h2>
