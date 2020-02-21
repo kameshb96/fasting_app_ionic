@@ -32,7 +32,7 @@ export class FoodInfoPage implements OnInit {
     let t = new Date(this.logTime)
     let obj = {
       date: new Date(this.logDate),
-      time: this.timeUtil(t.getHours(), t.getMinutes()),
+      time: t,
       food: this.logFood,
       qty: this.logQty,
       cal: this.logCalories ? this.logCalories : 0,

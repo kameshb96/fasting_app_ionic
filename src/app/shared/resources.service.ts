@@ -33,7 +33,7 @@ export class ResourcesService {
       if(logHistory) {
         logHistory.forEach(log => {
           let d = new Date(log.date);
-          let t = log.time;
+          let t = new Date(log.time);
           let f =  log.food;
           let q =  log.qty;
           let c = log.cal;

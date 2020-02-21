@@ -34,7 +34,12 @@ export class NutritionPage implements OnInit {
             && this.currentPageDate.getFullYear() == year);
   }
 
+  timeUtil(hours, minutes) {
+    return hours + ":" + ((minutes < 10) ? ("" + "0" + minutes) : ("" + minutes));
+  }
+
   ionViewWillEnter() {
+    console.log("Ion View");
     this.foodLogs = this.resources.getFoodLogs();
     this.filterLogsByDate();
   }
@@ -75,8 +80,20 @@ export class NutritionPage implements OnInit {
   }
 
   filterLogsByDate() {
+    this.foodLogs = this.resources.getFoodLogs();
+    this.filteredFoodLogs = this.foodLogs.filter((log) => this.checkDate(log));
 
-    this.filteredFoodLogs = this.foodLogs.filter((log) => this.checkDate(log)); 
+    this.filteredFoodLogs.sort((a,b) => a.time > b.time ? 1: -1);
+    console.log(this.filteredFoodLogs);
+
+    let fl = this.filteredFoodLogs;
+    fl.forEach(e => {
+      console.log(e);
+      if (e.time instanceof Date) {
+        e.time = this.timeUtil(e.time.getHours(), e.time.getMinutes());
+      }
+    })
+    this.filteredFoodLogs = fl;
   }
 
   async openModal() {
