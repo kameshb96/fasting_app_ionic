@@ -92,7 +92,7 @@ export class NutritionPage implements OnInit {
       if (e.time instanceof Date) {
         e.time = this.timeUtil(e.time.getHours(), e.time.getMinutes());
       }
-    })
+    });
     this.filteredFoodLogs = fl;
   }
 
