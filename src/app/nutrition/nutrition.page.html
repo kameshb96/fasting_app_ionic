@@ -17,7 +17,7 @@
         <h3>{{ l.cal + " calories"}}</h3>
         <h3>{{ l.qty + "" + l.unit}}</h3>
         <h3>{{"Time: " + l.time }}</h3>
-        <p>{{"Date: " }} {{ l.date.getUTCMonth() + 1}}/{{ l.date.getUTCDate() +  "/" + l.date.getUTCFullYear() }}</p>
+        <p>{{"Date: " }} {{ l.date.getMonth() + 1}}/{{ l.date.getDate() +  "/" + l.date.getFullYear() }}</p>
       </ion-label>  
     </ion-item>
   </ion-list>

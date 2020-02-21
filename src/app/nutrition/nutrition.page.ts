@@ -39,6 +39,10 @@ export class NutritionPage implements OnInit {
     this.filterLogsByDate();
   }
 
+  timeUtil(hours, minutes) {
+    return hours + ":" + ((minutes < 10) ? ("" + "0" + minutes) : ("" + minutes));
+  }
+
   //current, page  current - page / (1000 * 60 * 60 * 24) = no. of day between 
   
   setTitle() {
@@ -76,7 +80,15 @@ export class NutritionPage implements OnInit {
 
   filterLogsByDate() {
 
-    this.filteredFoodLogs = this.foodLogs.filter((log) => this.checkDate(log)); 
+    let fl = this.resources.getFoodLogs();
+    fl.forEach(e => {
+      console.log(e);
+      if (e.time instanceof Date) {
+        e.time = this.timeUtil(e.time.getHours(), e.time.getMinutes());
+      }
+    })
+    this.foodLogs = fl;
+    this.filteredFoodLogs = this.foodLogs.filter((log) => this.checkDate(log));
   }
 
   async openModal() {
