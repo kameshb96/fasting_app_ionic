@@ -80,6 +80,7 @@ export class TimerPage implements OnInit {
     this.statusName = "fast";
     clearInterval(this.interval);
     this.interval = null;
+    this.resources.setChosenFast(null);
   }
 
 
@@ -91,6 +92,8 @@ export class TimerPage implements OnInit {
   }
 
   startStage() {
+    if(!this.resources.getChosenFast()) 
+      return;
     this.percent = this.getCurrentpercent();
     if(this.status.hours == 0 && this.status.minutes == 0 && this.status.seconds == 0)
       return
