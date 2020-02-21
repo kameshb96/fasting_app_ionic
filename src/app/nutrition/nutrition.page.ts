@@ -16,7 +16,9 @@ export class NutritionPage implements OnInit {
   title: string;
   constructor(private modalController: ModalController, 
               private resources: ResourcesService, 
-              private storage: StorageService) {}
+              private storage: StorageService) {
+                
+              }
 
   ngOnInit() {
     this.currentPageDate =  new Date();
@@ -82,7 +84,6 @@ export class NutritionPage implements OnInit {
   filterLogsByDate() {
     this.foodLogs = this.resources.getFoodLogs();
     this.filteredFoodLogs = this.foodLogs.filter((log) => this.checkDate(log));
-
     this.filteredFoodLogs.sort((a,b) => a.time > b.time ? 1: -1);
     console.log(this.filteredFoodLogs);
 

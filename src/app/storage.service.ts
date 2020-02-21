@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ɵConsole } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { listLazyRoutes } from '@angular/compiler/src/aot/lazy_routes';
 import { CompletedFast, Fast } from './shared/resources.service';
@@ -15,8 +15,10 @@ export class StorageService {
     this.fasts = [];
     this.logs = [];
     this.getLogHistory().then ((res: any) => {
-      if(res)
+      if(res) {
+        console.log(res);
         this.logs = JSON.parse(res);
+      }
     });
     this.getFastHistory().then ((res: any) => {
       this.completedFasts = JSON.parse(res);
@@ -57,6 +59,7 @@ async getObject() {
 }
 
 async addLogItem(obj) {
+  console.log(JSON.stringify(obj), this.logs);
   this.logs.push(obj);
   this.setItem("logs", JSON.stringify(this.logs));
 }
@@ -94,6 +97,7 @@ getCompletedFast() {
 }
 
 getFoodLogs() {
+  console.log(this.logs);
   return this.logs;
 }
 
