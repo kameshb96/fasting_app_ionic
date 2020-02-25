@@ -127,19 +127,16 @@ export class NutritionPage implements OnInit {
   }
 
   nextDate() {
-    this.currentPageDate.setDate(this.currentPageDate.getDate()+1);
-    this.filterLogsByDate();
-    this.setTitle();
-    console.log(this.filteredFoodLogs);
-    console.log(this.title);
+    // this.currentPageDate.setDate(this.currentPageDate.getDate()+1);
+    // this.filterLogsByDate();
+    // this.setTitle();
+    // console.log(this.filteredFoodLogs);
+    // console.log(this.title);
+    this.slides.slideTo(2);
   }
 
   previousDate() {
-    this.currentPageDate.setDate(this.currentPageDate.getDate()-1);
-    this.filterLogsByDate();
-    this.setTitle();
-    console.log(this.filteredFoodLogs);
-    console.log(this.title);
+    this.slides.slideTo(0);
   }
 
   getFilteredLogs(date: Date) {
