@@ -1,17 +1,15 @@
-<ion-header>
-
-  <ion-toolbar>
-    <ion-icon (click)="previousDate()" name="arrow-round-back" style="zoom: 3.0;"></ion-icon>
-    <ion-title>
-      {{ title }}
-    </ion-title>
-    <ion-icon (click)="nextDate()" name="arrow-round-forward" style="zoom: 3.0; float: right;"></ion-icon>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
   <ion-slides (ionSlideDidChange)="didChange()" pager="false" #slides>
     <ion-slide>
+      <ion-header>
+        <ion-toolbar>
+          <ion-icon (click)="previousDate()" name="arrow-round-back" style="zoom: 3.0; float: left;"></ion-icon>
+          <ion-title>
+            {{ previousTitle }}
+          </ion-title>
+          <ion-icon (click)="nextDate()" name="arrow-round-forward" style="zoom: 3.0; float: right;"></ion-icon>
+        </ion-toolbar>
+      </ion-header>
       <ion-list *ngFor="let l of previousFilteredFoodLogs">
         <ion-item>
           <ion-label>
@@ -31,6 +29,15 @@
     </ion-slide>
 
     <ion-slide>
+      <ion-header>
+        <ion-toolbar>
+          <ion-icon (click)="previousDate()" name="arrow-round-back" style="zoom: 3.0; float: left;"></ion-icon>
+          <ion-title>
+            {{ title }}
+          </ion-title>
+          <ion-icon (click)="nextDate()" name="arrow-round-forward" style="zoom: 3.0; float: right;"></ion-icon>
+        </ion-toolbar>
+      </ion-header>
       <ion-list *ngFor="let l of filteredFoodLogs">
         <ion-item>
           <ion-label>
@@ -50,6 +57,15 @@
     </ion-slide>
 
     <ion-slide>
+      <ion-header>
+        <ion-toolbar>
+          <ion-icon (click)="previousDate()" name="arrow-round-back" style="zoom: 3.0; float: left;"></ion-icon>
+          <ion-title>
+            {{ nextTitle }}
+          </ion-title>
+          <ion-icon (click)="nextDate()" name="arrow-round-forward" style="zoom: 3.0; float: right;"></ion-icon>
+        </ion-toolbar>
+      </ion-header>
       <ion-list *ngFor="let l of nextFilteredFoodLogs">
         <ion-item>
           <ion-label>
