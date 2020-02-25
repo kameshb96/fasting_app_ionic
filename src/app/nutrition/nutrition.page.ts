@@ -148,6 +148,18 @@ export class NutritionPage implements OnInit {
         tmp.push(this.foodLogs[i]);
       }
     }
+    n = tmp.length;
+    for(let i = 0; i < n; i++) {
+      tmp[i].formattedTime = this.timeUtil(tmp[i].time.getHours(), tmp[i].time.getMinutes());
+    }
+
+    // tmp.forEach(e => {
+    //   console.log(e);
+    //   if (e.time instanceof Date) {
+    //     e.time = this.timeUtil(e.time.getHours(), e.time.getMinutes());
+    //   }
+    // });
+    
     return tmp;
   }
 
