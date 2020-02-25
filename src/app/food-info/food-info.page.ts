@@ -29,10 +29,9 @@ export class FoodInfoPage implements OnInit {
     console.log(this.logQty);
     console.log(this.logCalories);
     console.log(this.unit);
-    let t = new Date(this.logTime)
     let obj = {
       date: new Date(this.logDate),
-      time: t,
+      time: new Date(this.logTime),
       food: this.logFood,
       qty: this.logQty,
       cal: this.logCalories ? this.logCalories : 0,
@@ -40,11 +39,15 @@ export class FoodInfoPage implements OnInit {
     }
     console.log(obj);
     this.resources.addFoodLog(obj);
-    this.modal.dismiss();
+    this.closeModal({
+      isFoodInfoAdded: true
+    });
   }
 
-  closeModal() {
-    this.modal.dismiss();
+  closeModal(obj) {
+    console.log("closing modal");
+    if (obj) this.modal.dismiss(obj);
+    else this.modal.dismiss();
   }
 
   ngOnInit() {

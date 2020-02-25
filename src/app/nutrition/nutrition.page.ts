@@ -38,13 +38,11 @@ export class NutritionPage implements OnInit {
             && date1.getFullYear() == date2.getFullYear());
   }
   
-
   timeUtil(hours, minutes) {
     return hours + ":" + ((minutes < 10) ? ("" + "0" + minutes) : ("" + minutes));
   }
 
   ionViewWillEnter() {
-    console.log("Ion View"); 
     this.currentPageDate =  new Date();
     this.title = "Today";
     this.previousPageDate = new Date();
@@ -90,7 +88,7 @@ export class NutritionPage implements OnInit {
   }
 
   //current, page  current - page / (1000 * 60 * 60 * 24) = no. of day between 
-  
+
   setTitle2(date: Date) {
     let currentDate = new Date();
     currentDate.setHours(0,0,0,0);
@@ -127,11 +125,6 @@ export class NutritionPage implements OnInit {
   }
 
   nextDate() {
-    // this.currentPageDate.setDate(this.currentPageDate.getDate()+1);
-    // this.filterLogsByDate();
-    // this.setTitle();
-    // console.log(this.filteredFoodLogs);
-    // console.log(this.title);
     this.slides.slideTo(2);
   }
 
@@ -144,28 +137,24 @@ export class NutritionPage implements OnInit {
     let n = this.foodLogs.length;
     let tmp = [];
     for(let i = 0; i < n; i++) {
+      this.foodLogs[i].date = this.foodLogs[i].date instanceof Date ? this.foodLogs[i].date: new Date(this.foodLogs[i].date);
       if(this.checkDate(this.foodLogs[i].date, date)) {
         tmp.push(this.foodLogs[i]);
       }
     }
     n = tmp.length;
     for(let i = 0; i < n; i++) {
-      tmp[i].formattedTime = this.timeUtil(tmp[i].time.getHours(), tmp[i].time.getMinutes());
+      console.log(tmp[i]);
+      let d1 = tmp[i].time instanceof Date ? tmp[i].date: new Date(tmp[i].date);
+      tmp[i].formattedTime = this.timeUtil(d1.getHours(), d1.getMinutes());
     }
-
-    // tmp.forEach(e => {
-    //   console.log(e);
-    //   if (e.time instanceof Date) {
-    //     e.time = this.timeUtil(e.time.getHours(), e.time.getMinutes());
-    //   }
-    // });
     
     return tmp;
   }
 
   filterLogsByDate() {
     this.foodLogs = this.resources.getFoodLogs();
-    this.filteredFoodLogs = this.foodLogs.filter( (log)=> this.checkDate(log));
+    // this.filteredFoodLogs = this.foodLogs.filter( (log)=> this.checkDate(log));
     this.filteredFoodLogs.sort((a,b) => a.time > b.time ? 1: -1);
     console.log(this.filteredFoodLogs);
 
@@ -179,11 +168,24 @@ export class NutritionPage implements OnInit {
     this.filteredFoodLogs = fl;
   }
 
+  refreshPage () {
+    this.setPageData(new Date());
+    this.slides.slideTo(1,0);
+  }
+
   async openModal() {
     console.log("Inside openModal");
     const modal = await this.modalController.create({
       component: FoodInfoPage
-    })
+    });
+
+    modal.onDidDismiss().then(res => {
+      console.log(res);
+      if (res) this.refreshPage();
+    }, err => {
+      console.log(err);
+    });
+
     modal.present();
   }
 

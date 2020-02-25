@@ -68,7 +68,8 @@ export class ResourcesService {
    }
 
    getFoodLogs() {
-     return this.foodLogs;
+    //  return this.foodLogs;
+    return this.storage.getFoodLogs ();
    }
 
   addFast(fastTime, fastTitle, description) {
@@ -84,9 +85,9 @@ export class ResourcesService {
   }
 
   addFoodLog(obj) {
+    console.log(obj);
     this.storage.addLogItem(obj); 
-    this.foodLogs.push(obj);
-    console.log(this.foodLogs);
+    //this.foodLogs.push(obj);
   }
 }
 
