@@ -11,7 +11,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-list *ngFor="let l of previousFilteredFoodLogs">
-        <ion-item>
+        <ion-item (click)="openActionSheet($event, l.date)">
           <ion-label>
             <h2>{{ l.food }}</h2>
             <h3>{{ l.cal + " calories"}}</h3>
@@ -39,7 +39,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-list *ngFor="let l of filteredFoodLogs">
-        <ion-item>
+        <ion-item (click)="openActionSheet($event, l.date)">
           <ion-label>
             <h2>{{ l.food }}</h2>
             <h3>{{ l.cal + " calories"}}</h3>
@@ -67,7 +67,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-list *ngFor="let l of nextFilteredFoodLogs">
-        <ion-item>
+        <ion-item (click)="openActionSheet($event, l.date)">
           <ion-label>
             <h2>{{ l.food }}</h2>
             <h3>{{ l.cal + " calories"}}</h3>

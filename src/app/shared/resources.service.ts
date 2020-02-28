@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from '../storage.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Injectable({
   providedIn: 'root'
@@ -15,62 +16,54 @@ export class ResourcesService {
     this.fasts.push(new Fast("12:12 Fast", new Date("2020-02-13T12:00:03.098-05:00"), "12 Hour Fast followed by a 12 hour eating window"));
     this.storage.updateFasts(this.fasts);
     //this.completedFasts = this.storage.getCompletedFast();
-    this.storage.getFastHistory().then ((res: any) => {
+    this.storage.getFastHistory().then((res: any) => {
       console.log(res);
       let history = JSON.parse(res);
       if (history) {
-        for(let i = 0; i < history.length; i++) {
+        for (let i = 0; i < history.length; i++) {
           let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description);
-          let cf = new  CompletedFast(fast, history[i].fastStartTime,  history[i].eatStartTime, history[i].eatEndTime);
+          let cf = new CompletedFast(fast, history[i].fastStartTime, history[i].eatStartTime, history[i].eatEndTime);
           this.completedFasts.push(cf);
         }
       }
     });
-    this.storage.getLogHistory().then ((res: any) => {
-      let logHistory = [];
-      if(res)
-        logHistory = JSON.parse(res);
-      if(logHistory) {
-        logHistory.forEach(log => {
-          let d = new Date(log.date);
-          let t = new Date(log.time);
-          let f =  log.food;
-          let q =  log.qty;
-          let c = log.cal;
-          let u = log.unit;
-          this.foodLogs.push({
-            date: d,
-            time: t,
-            food: f,
-            qty:  q,
-            cal: c,
-            unit: u
-          });
-        });
-      }
-    });
-   }
+    this.foodLogs = this.storage.getFoodLogs();
+  }
 
-   setChosenFast(fast: Fast) {
+  setChosenFast(fast: Fast) {
     this.chosenFast = fast;
-   }
+  }
 
-   getChosenFast() {
-     return this.chosenFast;
-   }
+  getChosenFast() {
+    return this.chosenFast;
+  }
 
-   getFasts() {
-     return this.storage.getFasts();
-   }
+  getFasts() {
+    return this.storage.getFasts();
+  }
 
-   getCompletedFasts() {
-     return this.completedFasts;
-   }
+  getCompletedFasts() {
+    return this.completedFasts;
+  }
 
-   getFoodLogs() {
+  getFoodLogs() {
     //  return this.foodLogs;
-    return this.storage.getFoodLogs ();
-   }
+    return this.storage.getFoodLogs();
+  }
+
+  deleteLog(date) {
+    this.foodLogs = this.storage.getFoodLogs();
+    let d = new Date(date);
+    for(let i = 0; i < this.foodLogs.length; i++) {
+      let d2 = new Date(this.foodLogs[i].date);
+      console.log(d, d2);
+      if (d.getTime() == d2.getTime()) {
+        this.foodLogs.splice(i, 1);
+        this.storage.updateLogs(this.foodLogs);
+        return;
+      }
+    }
+  }
 
   addFast(fastTime, fastTitle, description) {
     console.log(this.fasts);
@@ -86,7 +79,7 @@ export class ResourcesService {
 
   addFoodLog(obj) {
     console.log(obj);
-    this.storage.addLogItem(obj); 
+    this.storage.addLogItem(obj);
     //this.foodLogs.push(obj);
   }
 }

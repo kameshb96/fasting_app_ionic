@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ModalController, IonSlides } from '@ionic/angular';
+import { ModalController, IonSlides, ActionSheetController } from '@ionic/angular';
 import { FoodInfoPage } from '../food-info/food-info.page';
 import { ResourcesService } from '../shared/resources.service';
 import { StorageService } from '../storage.service';
@@ -22,28 +22,29 @@ export class NutritionPage implements OnInit {
   nextPageDate: Date;
   nextFilteredFoodLogs: Array<any>;
   nextTitle: string;
-  constructor(private modalController: ModalController, 
-              private resources: ResourcesService, 
-              private storage: StorageService) {
-                
-              }
+  constructor(private modalController: ModalController,
+    private resources: ResourcesService,
+    private storage: StorageService,
+    private actionSheetController: ActionSheetController) {
+
+  }
 
   ngOnInit() {
     this.slides.slideTo(1, 500);
   }
 
   checkDate(date1: Date, date2: Date) {
-    return (date1.getMonth() == date2.getMonth() 
-            && date1.getDate() == date2.getDate() 
-            && date1.getFullYear() == date2.getFullYear());
+    return (date1.getMonth() == date2.getMonth()
+      && date1.getDate() == date2.getDate()
+      && date1.getFullYear() == date2.getFullYear());
   }
-  
+
   timeUtil(hours, minutes) {
     return hours + ":" + ((minutes < 10) ? ("" + "0" + minutes) : ("" + minutes));
   }
 
   ionViewWillEnter() {
-    this.currentPageDate =  new Date();
+    this.currentPageDate = new Date();
     this.title = "Today";
     this.previousPageDate = new Date();
     this.previousPageDate.setDate(this.previousPageDate.getDate() - 1);
@@ -56,14 +57,14 @@ export class NutritionPage implements OnInit {
 
   didChange() {
     this.slides.getActiveIndex().then(index => {
-      if(index == 1) return;
+      if (index == 1) return;
       console.log(index);
-      if(index == 0)
+      if (index == 0)
         this.setPageData(this.previousPageDate);
-      else if(index == 2)
+      else if (index == 2)
         this.setPageData(this.nextPageDate);
-      this.slides.slideTo(1,0);
-   });
+      this.slides.slideTo(1, 0);
+    });
   }
 
   setPageData(d: Date) {
@@ -91,37 +92,37 @@ export class NutritionPage implements OnInit {
 
   setTitle2(date: Date) {
     let currentDate = new Date();
-    currentDate.setHours(0,0,0,0);
+    currentDate.setHours(0, 0, 0, 0);
     let cpd = new Date(date);
-    cpd.setHours(0,0,0,0);
+    cpd.setHours(0, 0, 0, 0);
     let diff = (currentDate.getTime() - cpd.getTime()) / (1000 * 3600 * 24);
     let t = '';
-    if(diff == 0) t = "Today";
-    else if(diff == 1) t = "Yesterday";
-    else if(diff == -1) t = "Tomorrow";
-    else t = cpd.toLocaleString('default', { weekday: 'long' }) 
-                      + ', ' 
-                      + cpd.toLocaleString('default', { month: 'long' }).substr(0, 3)
-                      + ' '
-                      + cpd.getDate();
+    if (diff == 0) t = "Today";
+    else if (diff == 1) t = "Yesterday";
+    else if (diff == -1) t = "Tomorrow";
+    else t = cpd.toLocaleString('default', { weekday: 'long' })
+      + ', '
+      + cpd.toLocaleString('default', { month: 'long' }).substr(0, 3)
+      + ' '
+      + cpd.getDate();
     return t;
   }
 
   setTitle() {
     let currentDate = new Date();
-    currentDate.setHours(0,0,0,0);
+    currentDate.setHours(0, 0, 0, 0);
     let cpd = new Date(this.currentPageDate);
-    cpd.setHours(0,0,0,0);
+    cpd.setHours(0, 0, 0, 0);
     let diff = (currentDate.getTime() - cpd.getTime()) / (1000 * 3600 * 24);
-    if(diff == 0) this.title = "Today";
-    else if(diff == 1) this.title = "Yesterday";
-    else if(diff == -1) this.title = "Tomorrow";
+    if (diff == 0) this.title = "Today";
+    else if (diff == 1) this.title = "Yesterday";
+    else if (diff == -1) this.title = "Tomorrow";
     // Returns value of sample format: Thursday, Feb 20
-    else this.title = cpd.toLocaleString('default', { weekday: 'long' }) 
-                      + ', ' 
-                      + cpd.toLocaleString('default', { month: 'long' }).substr(0, 3)
-                      + ' '
-                      + cpd.getDate();
+    else this.title = cpd.toLocaleString('default', { weekday: 'long' })
+      + ', '
+      + cpd.toLocaleString('default', { month: 'long' }).substr(0, 3)
+      + ' '
+      + cpd.getDate();
   }
 
   nextDate() {
@@ -136,26 +137,26 @@ export class NutritionPage implements OnInit {
     this.foodLogs = this.resources.getFoodLogs();
     let n = this.foodLogs.length;
     let tmp = [];
-    for(let i = 0; i < n; i++) {
-      this.foodLogs[i].date = this.foodLogs[i].date instanceof Date ? this.foodLogs[i].date: new Date(this.foodLogs[i].date);
-      if(this.checkDate(this.foodLogs[i].date, date)) {
+    for (let i = 0; i < n; i++) {
+      this.foodLogs[i].date = this.foodLogs[i].date instanceof Date ? this.foodLogs[i].date : new Date(this.foodLogs[i].date);
+      if (this.checkDate(this.foodLogs[i].date, date)) {
         tmp.push(this.foodLogs[i]);
       }
     }
     n = tmp.length;
-    for(let i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++) {
       console.log(tmp[i]);
-      let d1 = tmp[i].time instanceof Date ? tmp[i].date: new Date(tmp[i].date);
+      let d1 = tmp[i].time instanceof Date ? tmp[i].date : new Date(tmp[i].date);
       tmp[i].formattedTime = this.timeUtil(d1.getHours(), d1.getMinutes());
     }
-    
+
     return tmp;
   }
 
   filterLogsByDate() {
     this.foodLogs = this.resources.getFoodLogs();
     // this.filteredFoodLogs = this.foodLogs.filter( (log)=> this.checkDate(log));
-    this.filteredFoodLogs.sort((a,b) => a.time > b.time ? 1: -1);
+    this.filteredFoodLogs.sort((a, b) => a.time > b.time ? 1 : -1);
     console.log(this.filteredFoodLogs);
 
     let fl = this.filteredFoodLogs;
@@ -168,9 +169,10 @@ export class NutritionPage implements OnInit {
     this.filteredFoodLogs = fl;
   }
 
-  refreshPage () {
+  refreshPage(shouldSlide=true) {
+    this.foodLogs = this.resources.getFoodLogs();
     this.setPageData(new Date());
-    this.slides.slideTo(1,0);
+    if(shouldSlide) this.slides.slideTo(1, 0);
   }
 
   async openModal() {
@@ -187,6 +189,32 @@ export class NutritionPage implements OnInit {
     });
 
     modal.present();
+  }
+
+  deleteLog(date) {
+    this.resources.deleteLog(date);
+    this.refreshPage(false);
+  }
+
+  async openActionSheet(event, date) {
+    const actionSheet = await this.actionSheetController.create({
+      buttons: [{
+        text: 'Delete',
+        role: 'destructive',
+        icon: 'trash',
+        handler: () => {
+          this.deleteLog(date);
+        }
+      }, {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    await actionSheet.present();
   }
 
 }

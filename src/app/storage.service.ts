@@ -64,6 +64,12 @@ async addLogItem(obj) {
   this.setItem("logs", JSON.stringify(this.logs));
 }
 
+async updateLogs(obj) {
+  this.setItem("logs", JSON.stringify(obj));
+  this.logs = obj;
+  console.log(this.logs);
+}
+
 getFasts() {
   return this.fasts;
 }
@@ -97,7 +103,7 @@ getCompletedFast() {
 }
 
 getFoodLogs() {
-  console.log(this.logs);
+  //console.log(this.logs);
   return this.logs;
 }
 
