@@ -183,7 +183,7 @@ export class NutritionPage implements OnInit {
 
     modal.onDidDismiss().then(res => {
       console.log(res);
-      if (res) this.refreshPage();
+      if (res && res.data) this.refreshPage();
     }, err => {
       console.log(err);
     });
