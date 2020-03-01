@@ -15,6 +15,12 @@ export class StorageService {
     this.fasts = [];
     this.logs = [];
     this.completedFasts = [];
+    this.getFastList().then( (res:any) => {
+      if(res) {
+        console.log(res)
+        this.fasts = JSON.parse(res)
+      }
+    });
     this.getLogHistory().then ((res: any) => {
       if(res) {
         console.log(res);
@@ -77,6 +83,7 @@ getFasts() {
 }
 
 async addFast(obj) {
+  console.log(obj)
   console.log(this.fasts);
   this.fasts.push(obj);
   console.log(this.fasts);
@@ -107,6 +114,12 @@ getCompletedFast() {
 getFoodLogs() {
   //console.log(this.logs);
   return this.logs;
+}
+
+async getFastList(){
+  const { value } = await Storage.get({ key: "fasts"});
+  console.log('Got item: ', value);
+  return value;
 }
 
 async getFastHistory() {

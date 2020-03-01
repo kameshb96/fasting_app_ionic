@@ -14,8 +14,16 @@ export class ResourcesService {
     this.foodLogs = [];
     this.fasts.push(new Fast("16:8 Fast", new Date("2020-02-13T16:00:58.404-05:00"), "16 Hour Fast followed by an 8 hour eating window"));
     this.fasts.push(new Fast("12:12 Fast", new Date("2020-02-13T12:00:03.098-05:00"), "12 Hour Fast followed by a 12 hour eating window"));
-    this.fasts.push(new Fast("A",new Date("2020-03-01T01:14:29.909-05:00"),"1"));
-    this.storage.updateFasts(this.fasts);
+    this.storage.getFastList().then((res:any) => {
+      if(res) {
+        let arr = JSON.parse(res);
+        for(let i = 0; i < arr.length; i++)
+          this.fasts.push(new Fast(arr[i].title, new Date(arr[i].duration), arr[i].description))
+      }
+    });
+    console.log(this.fasts)
+    // this.fasts.push(new Fast("A",new Date("2020-03-01T01:14:29.909-05:00"),"1"));
+    // this.storage.updateFasts(this.fasts);
     //this.completedFasts = this.storage.getCompletedFast();
     this.storage.getFastHistory().then((res: any) => {
       console.log(res);
@@ -40,7 +48,7 @@ export class ResourcesService {
   }
 
   getFasts() {
-    return this.storage.getFasts();
+    return this.fasts;
   }
 
   getCompletedFasts() {
@@ -70,6 +78,7 @@ export class ResourcesService {
     console.log(this.fasts);
     let fast = new Fast(fastTitle, fastTime, description);
     this.storage.addFast(fast);
+    this.fasts.push(fast)
   }
 
   addCompletedFast(obj: CompletedFast) {
