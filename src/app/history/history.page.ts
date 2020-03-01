@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourcesService, CompletedFast } from '../shared/resources.service';
+import { start } from 'repl';
 
 @Component({
   selector: 'app-history',
@@ -15,6 +16,9 @@ export class HistoryPage implements OnInit {
 
   ionViewWillEnter()  {
     this.completedFasts = this.resources.getCompletedFasts();
+    for(let i = 0; i < this.completedFasts.length; i++) {
+      this.completedFasts[i].formattedStartTime = this.timeUtil(this.completedFasts[i].fastStartTime)
+    }
     // setTimeout(() => {
     //   let history = this.resources.getCompletedFasts();
     //   history.forEach(e => {
@@ -24,6 +28,16 @@ export class HistoryPage implements OnInit {
     //   })
     //   this.completedFasts = this.resources.getCompletedFasts();
     // }, 500);
+  }
+  // Name of fast
+  // Date dd/mm/yyyy hh:mm
+  
+  timeUtil(startTime: Date) {
+    if(!(startTime instanceof Date)) startTime = new Date(startTime)
+    let date = startTime.toLocaleDateString()
+    let time = startTime.toLocaleTimeString()
+    time = time.substring(0,time.length-6) + " " + time.substr(time.length-2, 2)
+    return date + " " + time
   }
 
 }

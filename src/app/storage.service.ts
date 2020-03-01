@@ -14,6 +14,7 @@ export class StorageService {
   constructor() { 
     this.fasts = [];
     this.logs = [];
+    this.completedFasts = [];
     this.getLogHistory().then ((res: any) => {
       if(res) {
         console.log(res);
@@ -21,7 +22,8 @@ export class StorageService {
       }
     });
     this.getFastHistory().then ((res: any) => {
-      this.completedFasts = JSON.parse(res);
+      if(res)
+        this.completedFasts = JSON.parse(res);
     });
     // this.getFastHistory().then ((res: any) => {
     //   console.log(res);
