@@ -13,7 +13,7 @@
     </ion-card-header> -->
       <ion-label>
         <h2>{{ c.getDetails().fast.getTitle() }}</h2>
-        <h3>{{ c.formattedStartTime }}</h3>
+        <h3>{{ c.fastStartTime | dateFormat }}</h3>
       </ion-label>
     </ion-item>
   </ion-list>

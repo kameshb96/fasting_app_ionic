@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ResourcesService, CompletedFast } from '../shared/resources.service';
-import { start } from 'repl';
+import { ResourcesService } from '../shared/resources.service';
 
 @Component({
   selector: 'app-history',
   templateUrl: './history.page.html',
   styleUrls: ['./history.page.scss'],
+  
 })
 export class HistoryPage implements OnInit {
   private completedFasts: Array<any>;
