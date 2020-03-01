@@ -11,15 +11,24 @@ Useful git commands:
 >> git log --branches --not --remotes=origin
 
 [Git pull without "fast foward merge"]
->> git pull --no-ff
+	>> git pull --no-ff
 
-[Prevent "fast forward merge" globally]
->> git config --global --add merge.ff false (did not work)
->> git config --global merge.ff only
->> git config --global merge.commit no
+	[Prevent "fast forward merge" globally]
+	>> git config --global --add merge.ff false (did not work)
+	>> git config --global merge.ff only
+	>> git config --global merge.commit no
+
+	>> git checkout <non-master-branch>
+	>> git pull [--rebase]
+	>> git checkout master
+	>> git merge <non-master-branch> [--no-ff] [--no-commit]
+	>> git commit -m "Merged naveen branch"
 
 [Shows which commit you are working on]
 >> git show --oneline -s
 >> git log -1 --oneline
+
+[Log commit history graphically]
+>> git log --pretty --graph --oneline --all
 
 
