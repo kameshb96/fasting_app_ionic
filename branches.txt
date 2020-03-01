@@ -1,2 +1,21 @@
 master
 naveen
+
+
+
+
+---------------------------------
+Useful git commands:
+
+[List outgoing commits to remote repo. Similar to >> hg out]
+>> git log --branches --not --remotes=origin
+
+[Git pull without "fast foward merge"]
+>> git pull --no-
+
+[Shows which commit you are working on]
+>> git show --oneline -s
+>> git log -1 --oneline
+
+[Prevent "fast forward merge" globally]
+>> git config --global --add merge.ff false
