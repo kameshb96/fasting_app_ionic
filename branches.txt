@@ -14,7 +14,8 @@ Useful git commands:
 >> git pull --no-ff
 
 [Prevent "fast forward merge" globally]
->> git config --global --add merge.ff false
+>> git config --global --add merge.ff false (did not work)
+>> git config --global merge.ff only
 >> git config --global merge.commit no
 
 [Shows which commit you are working on]
