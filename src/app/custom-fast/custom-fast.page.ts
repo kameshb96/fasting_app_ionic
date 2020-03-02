@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourcesService } from '../shared/resources.service';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-custom-fast',
@@ -11,15 +11,37 @@ export class CustomFastPage implements OnInit {
   fastDuration: any;
   fastTitle: string;
   fastDescription: string;
-  constructor(private resources: ResourcesService, private modal: ModalController) { }
+  constructor(private resources: ResourcesService, 
+              private modal: ModalController,
+              private toastController: ToastController) { }
 
   ngOnInit() {
   }
 
+  async presentToast(toastMessage) {
+    const toast = await this.toastController.create({
+      color: 'dark',
+      duration: 2000,
+      message: toastMessage,
+      showCloseButton: true
+    });
+
+    await toast.present();
+  }
+
   addCustomFast() {
-    this.resources.addFast(this.fastDuration, this.fastTitle, this.fastDescription);
+    if(!this.fastDuration) {
+      this.presentToast('Please Enter Fast Duration');
+      return;
+    }
+    if(!this.fastTitle) {
+      this.presentToast('Please Enter Fast Title');
+      return;
+    }
+    this.resources.addFast(this.fastDuration, this.fastTitle, this.fastDescription, false);
     console.log(this.resources.getFasts());
     this.modal.dismiss();
+    this.presentToast('Custom Fast Added');
   }
 
   closeModal() {

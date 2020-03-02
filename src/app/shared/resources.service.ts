@@ -12,13 +12,13 @@ export class ResourcesService {
   private foodLogs: Array<any>;
   constructor(private storage: StorageService) {
     this.foodLogs = [];
-    this.fasts.push(new Fast("16:8 Fast", new Date("2020-02-13T16:00:58.404-05:00"), "16 Hour Fast followed by an 8 hour eating window"));
-    this.fasts.push(new Fast("12:12 Fast", new Date("2020-02-13T12:00:03.098-05:00"), "12 Hour Fast followed by a 12 hour eating window"));
+    this.fasts.push(new Fast("16:8 Fast", new Date("2020-02-13T16:00:58.404-05:00"), "16 Hour Fast followed by an 8 hour eating window", true));
+    this.fasts.push(new Fast("12:12 Fast", new Date("2020-02-13T12:00:03.098-05:00"), "12 Hour Fast followed by a 12 hour eating window", true));
     this.storage.getFastList().then((res:any) => {
       if(res) {
         let arr = JSON.parse(res);
         for(let i = 0; i < arr.length; i++)
-          this.fasts.push(new Fast(arr[i].title, new Date(arr[i].duration), arr[i].description))
+          this.fasts.push(new Fast(arr[i].title, new Date(arr[i].duration), arr[i].description, arr[i].isPredefined))
       }
     });
     console.log(this.fasts)
@@ -30,7 +30,7 @@ export class ResourcesService {
       let history = JSON.parse(res);
       if (history) {
         for (let i = 0; i < history.length; i++) {
-          let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description);
+          let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description, history[i].fast.isPredefined);
           let cf = new CompletedFast(fast, history[i].fastStartTime, history[i].eatStartTime, history[i].eatEndTime);
           this.completedFasts.push(cf);
         }
@@ -74,11 +74,19 @@ export class ResourcesService {
     }
   }
 
-  addFast(fastTime, fastTitle, description) {
+  addFast(fastTime, fastTitle, description, isPre) {
     console.log(this.fasts);
-    let fast = new Fast(fastTitle, fastTime, description);
+    let fast = new Fast(fastTitle, fastTime, description, isPre);
     this.storage.addFast(fast);
     this.fasts.push(fast)
+  }
+
+  deleteFast(index) {
+    console.log(this.fasts);
+    console.log(index);
+    this.fasts.splice(index,1);
+    console.log(this.fasts);
+    this.storage.deleteFast(index);
   }
 
   addCompletedFast(obj: CompletedFast) {
@@ -98,11 +106,13 @@ export class Fast {
   private title: string;
   private duration: Date;
   private description: string;
+  private isPredefined: Boolean;
 
-  constructor(title, duration, description) {
+  constructor(title, duration, description, isPre) {
     this.title = title;
     this.duration = duration;
     this.description = description;
+    this.isPredefined = isPre;
   }
 
   getDescription() {
@@ -115,6 +125,10 @@ export class Fast {
 
   getTitle() {
     return this.title;
+  }
+
+  getIsPreDefined() {
+    return this.isPredefined;
   }
 }
 
