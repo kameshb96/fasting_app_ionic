@@ -15,6 +15,7 @@ export class FastModalPage implements OnInit {
   selected: any;
   index: number;
   fasts: any;
+  shouldShow: Boolean;
   constructor(private modal: ModalController, 
               public navParams: NavParams,
               private resources: ResourcesService,
@@ -25,10 +26,11 @@ export class FastModalPage implements OnInit {
   ngOnInit() {
     this.selected = this.navParams.get('selectedFast');
     this.index = this.navParams.get('index');
-    this.fasts = this.navParams.get('fasts');
+    this.fasts = JSON.parse(JSON.stringify(this.navParams.get('fasts')));
     this.fastDuration = this.setDurationText();
     this.fastTitle = this.selected.title;
     this.fastDescription = this.selected.description;
+    this.shouldShow = !this.selected.isPredefined;
   }
 
   setDurationText() {
@@ -48,7 +50,8 @@ export class FastModalPage implements OnInit {
   deleteFast() {
     this.fasts.splice(this.index, 1);
     console.log(this.fasts);
-    this.storage.updateFasts(this.fasts);
+    this.resources.deleteFast(this.index);
+    //this.storage.updateFasts(this.fasts);
     this.modal.dismiss();
   }
 

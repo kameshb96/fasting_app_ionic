@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-icon (click)="closeModal()" name="arrow-round-back" style="zoom: 3.0;"></ion-icon>
     <ion-title>Fast</ion-title>
-    <ion-icon (click)="deleteFast()" name="trash" style="zoom: 2.0; float: right; padding-top:3px;"></ion-icon>
+    <ion-icon (click)="deleteFast()" name="trash" style="zoom: 2.0; float: right; padding-top:3px;" *ngIf="shouldShow"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
