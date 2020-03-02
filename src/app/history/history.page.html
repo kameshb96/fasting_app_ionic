@@ -6,7 +6,7 @@
 
 <ion-content>
   <ion-list>
-    <ion-item style="background-color: lightgray; height:13.5%;" *ngFor="let c of completedFasts">
+    <ion-item (click)="openActionSheet($event, c.fastStartTime)" style="background-color: lightgray; height:13.5%;" *ngFor="let c of completedFasts">
       <!-- <ion-card-header>
       <ion-card-title style="font-size: 1rem;">{{ c.getDetails().fast.getTitle() }}</ion-card-title>
       <ion-card-subtitle>{{ c.fastStartTime }}</ion-card-subtitle>

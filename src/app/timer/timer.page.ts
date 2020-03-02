@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourcesService, Fast, CompletedFast } from '../shared/resources.service';
-import { PopoverController } from '@ionic/angular';
+import { PopoverController, ToastController } from '@ionic/angular';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
@@ -30,7 +30,7 @@ export class TimerPage implements OnInit {
   fastStartTime: Date;
   eatStartTime: Date;
   eatEndTime: Date;
-  constructor(private resources: ResourcesService) {
+  constructor(private resources: ResourcesService, private toastController: ToastController) {
    }
 
    ionViewWillEnter() {
@@ -91,9 +91,22 @@ export class TimerPage implements OnInit {
     this.interval = null;
   }
 
+  async presentToast(toastMessage) {
+    const toast = await this.toastController.create({
+      color: 'dark',
+      duration: 2000,
+      message: toastMessage,
+      showCloseButton: true
+    });
+
+    await toast.present();
+  }
+
   startStage() {
-    if(!this.resources.getChosenFast()) 
+    if(!this.resources.getChosenFast()) {
+      this.presentToast("Please Choose a Fast before starting");
       return;
+    } 
     this.percent = this.getCurrentpercent();
     if(this.status.hours == 0 && this.status.minutes == 0 && this.status.seconds == 0)
       return

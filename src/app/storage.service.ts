@@ -101,8 +101,7 @@ async updateFasts(obj) {
 }
 
 deleteFast(index) {
-  console.log(index - 2);
-  this.fasts.splice(index-2,1);
+  this.fasts.splice(index-3,1);
   console.log(this.fasts);
   this.setItem("fasts", JSON.stringify(this.fasts));
 }
@@ -111,6 +110,11 @@ async addCompletedFast(obj: CompletedFast) {
   console.log(obj);
   this.completedFasts.push(obj);
   console.log(this.completedFasts);
+  this.setItem("completedFasts",  JSON.stringify(this.completedFasts));
+}
+
+deleteCompletedFast(index) {
+  this.completedFasts.splice(index,1);
   this.setItem("completedFasts",  JSON.stringify(this.completedFasts));
 }
 

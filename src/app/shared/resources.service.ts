@@ -63,6 +63,21 @@ export class ResourcesService {
     return this.storage.getFoodLogs();
   }
 
+  deleteCompletedFast(fastStartTime) {
+    for(let i = 0; i < this.completedFasts.length; i++) {
+      if(!(fastStartTime instanceof Date)) 
+        fastStartTime = new Date(fastStartTime)
+      let d = this.completedFasts[i].getDetails().fastStartTime
+      if(!(d instanceof Date))
+        d = new Date(d)
+      if(fastStartTime.getTime() == d.getTime()) {
+        this.completedFasts.splice(i,1);
+        this.storage.deleteCompletedFast(i);
+        return;
+      }
+    }
+  }
+
   deleteLog(date) {
     this.foodLogs = this.storage.getFoodLogs();
     let d = new Date(date);
