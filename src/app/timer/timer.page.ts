@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ResourcesService, Fast, CompletedFast } from '../shared/resources.service';
 import { PopoverController, ToastController } from '@ionic/angular';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { StorageService } from '../storage.service';
 
 
 @Component({
@@ -30,11 +31,31 @@ export class TimerPage implements OnInit {
   fastStartTime: Date;
   eatStartTime: Date;
   eatEndTime: Date;
-  constructor(private resources: ResourcesService, private toastController: ToastController) {
-   }
+  constructor(private resources: ResourcesService,
+    private toastController: ToastController,
+    private storage: StorageService) {
+      this.storage.getFastStartTime().then((res) => {
+        if(res) {
+          let d1 = new Date(res);
+          let d2 = new Date();
+          let diff = new Date(d2.getTime() - d1.getTime());
+          this.storage.getChosenFast().then((chosenFast) => {
+            if(chosenFast) {
+              let cf = JSON.parse(chosenFast);
+              //cf = new Fast(cf.getTitle(), cf.getDuration(), cf.getDescription(), cf.getIsPreDefined());
+              let dur = new Date(cf.getDuration());
+              
 
-   ionViewWillEnter() {
-    if(!this.isPlay && this.resources.getChosenFast()) {
+
+            }
+          });
+        }
+      })
+
+  }
+
+  ionViewWillEnter() {
+    if (!this.isPlay && this.resources.getChosenFast()) {
       console.log(this.status);
       let chosen = this.resources.getChosenFast();
       let duration = new Date(chosen.getDuration());
@@ -48,7 +69,7 @@ export class TimerPage implements OnInit {
       //this.percent = this.getCurrentpercent();
     }
     console.log(window.screen);
-   }
+  }
 
   ngOnInit() {
     this.isPlay = false;
@@ -64,12 +85,12 @@ export class TimerPage implements OnInit {
 
   setTitle() {
     this.titleText = "" + ((this.status.hours < 10) ? ("0" + this.status.hours) : this.status.hours)
-                         + ":" 
-                         + ((this.status.minutes < 10) ? ("0" + this.status.minutes) : this.status.minutes)
-                         + ":"
-                         + ((this.status.seconds < 10) ? ("0" + this.status.seconds) : this.status.seconds);
+      + ":"
+      + ((this.status.minutes < 10) ? ("0" + this.status.minutes) : this.status.minutes)
+      + ":"
+      + ((this.status.seconds < 10) ? ("0" + this.status.seconds) : this.status.seconds);
   }
-  
+
   resetTimer() {
     this.percent = 100;
     this.fastTime.hours = this.fastTime.minutes = this.fastTime.seconds = 0;
@@ -103,29 +124,33 @@ export class TimerPage implements OnInit {
   }
 
   startStage() {
-    if(!this.resources.getChosenFast()) {
+    if (!this.resources.getChosenFast()) {
       this.presentToast("Please Choose a Fast before starting");
       return;
-    } 
+    }
     this.percent = this.getCurrentpercent();
-    if(this.status.hours == 0 && this.status.minutes == 0 && this.status.seconds == 0)
+    if (this.status.hours == 0 && this.status.minutes == 0 && this.status.seconds == 0)
       return
     console.log(this.interval);
-    if(this.interval) {
+    if (this.interval) {
       this.isPlay = !this.isPlay;
       this.resetTimer();
+      this.storage.deleteChosenFast();
+      this.storage.deleteFastStartTime();
     }
     else {
-      if(this.statusName == "fast") {
+      if (this.statusName == "fast") {
         this.fastStartTime = new Date();
+        this.storage.saveFastStartTime(this.fastStartTime);
+        this.storage.saveChosenFast(this.resources.getChosenFast());
       }
       else {
         this.eatStartTime = new Date();
       }
       this.interval = setInterval(() => {
-        if(this.status.seconds == 0) {
+        if (this.status.seconds == 0) {
           this.status.seconds = 59;
-          if(this.status.minutes == 0) {
+          if (this.status.minutes == 0) {
             this.status.minutes = 59;
             this.status.hours -= 1;
           }
@@ -138,17 +163,19 @@ export class TimerPage implements OnInit {
         }
         this.percent = this.getCurrentpercent();
         this.setTitle();
-        if(this.status.hours == 0 && this.status.minutes == 0 && this.status.seconds == 0) {
-          if(this.statusName === "fast")
+        if (this.status.hours == 0 && this.status.minutes == 0 && this.status.seconds == 0) {
+          if (this.statusName === "fast")
             this.startEat();
           else {
             this.eatEndTime = new Date();
             this.stopTimer();
-            let cf = new CompletedFast(this.resources.getChosenFast(), 
-                                       this.fastStartTime,
-                                       this.eatStartTime,
-                                       this.eatEndTime);
+            let cf = new CompletedFast(this.resources.getChosenFast(),
+              this.fastStartTime,
+              this.eatStartTime,
+              this.eatEndTime);
             this.resources.addCompletedFast(cf);
+            this.storage.deleteFastStartTime();
+            this.storage.deleteChosenFast();
             this.resetTimer();
           }
         }
@@ -181,9 +208,9 @@ export class TimerPage implements OnInit {
   getEatTime(hours, minutes) {
     this.eatTime.hours = (minutes > 0) ? 2 - hours - 1 : 2 - hours;
     this.eatTime.minutes = (minutes > 0) ? 60 - minutes : minutes;
-    this.eatTime.seconds = 0; 
+    this.eatTime.seconds = 0;
   }
 
-  
+
 
 }

@@ -106,6 +106,34 @@ deleteFast(index) {
   this.setItem("fasts", JSON.stringify(this.fasts));
 }
 
+saveFastStartTime(fastStartTime) {
+  this.setItem("fastStartTime", JSON.stringify(fastStartTime));
+}
+
+async getFastStartTime() {
+  const { value } = await Storage.get({ key: "fastStartTime"});
+  console.log('Got item: ', value);
+  return value;
+}
+
+deleteFastStartTime() {
+  this.setItem("fastStartTime", "");
+}
+
+saveChosenFast(chosenFast) {
+  this.setItem("chosenFast", JSON.stringify(chosenFast));
+}
+
+async getChosenFast() {
+  const { value } = await Storage.get({ key: "chosenFast"});
+  console.log('Got item: ', value);
+  return value;
+}
+
+deleteChosenFast() {
+  this.setItem("chosenFast", "");    
+}
+
 async addCompletedFast(obj: CompletedFast) {
   console.log(obj);
   this.completedFasts.push(obj);
