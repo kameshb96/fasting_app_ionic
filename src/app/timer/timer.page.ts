@@ -11,6 +11,7 @@ import { StorageService } from '../storage.service';
   styleUrls: ['./timer.page.scss'],
 })
 export class TimerPage implements OnInit {
+  didReOpen: boolean;
   isPlay: boolean;
   percent: number;
   interval: any;
@@ -34,28 +35,90 @@ export class TimerPage implements OnInit {
   constructor(private resources: ResourcesService,
     private toastController: ToastController,
     private storage: StorageService) {
-      this.storage.getFastStartTime().then((res) => {
-        if(res) {
-          let d1 = new Date(res);
-          let d2 = new Date();
-          let diff = new Date(d2.getTime() - d1.getTime());
-          this.storage.getChosenFast().then((chosenFast) => {
-            if(chosenFast) {
-              let cf = JSON.parse(chosenFast);
-              //cf = new Fast(cf.getTitle(), cf.getDuration(), cf.getDescription(), cf.getIsPreDefined());
-              let dur = new Date(cf.getDuration());
-              
-
-
+      console.log("constructor");
+    this.didReOpen = false;
+    this.storage.getFastStartTime().then((res) => {
+      if (res) {
+        this.fastStartTime = new Date(JSON.parse(res));
+        this.didReOpen = true;
+        let d1 = new Date(JSON.parse(res));
+        let d2 = new Date();
+        this.storage.getChosenFast().then((chosenFast) => {
+          if (chosenFast) {
+            console.log(chosenFast);
+            let cf = JSON.parse(chosenFast);
+            this.resources.setChosenFast(new Fast(cf.title, cf.duration, cf.description, cf.IsPredefined));
+            //cf = new Fast(cf.getTitle(), cf.getDuration(), cf.getDescription(), cf.getIsPreDefined());
+            let dur = new Date(cf.duration);
+            let fastEndTime = new Date(d1);
+            
+            console.log(fastEndTime);
+            fastEndTime.setHours(fastEndTime.getHours() + dur.getHours());
+            fastEndTime.setMinutes(fastEndTime.getMinutes() + dur.getMinutes());
+            let eatEndTime = new Date(d1);
+            eatEndTime.setHours(eatEndTime.getHours() + 24);
+            console.log(fastEndTime);
+            console.log(eatEndTime);
+            
+            if (d2 < fastEndTime) {
+              // Still in fasting time
+              let diff = new Date(d2.getTime() - d1.getTime());
+              let totalSecs = this.getTotalSeconds({
+                hours: dur.getHours(),
+                minutes: dur.getMinutes(),
+                seconds: 0
+              });
+              let elapsedSecs = Math.floor(diff.getTime() / 1000)
+              //this.percent = ((totalSecs - elapsedSecs) / totalSecs) * 100;
+              let remainingTime = this.getTimeData(totalSecs - elapsedSecs);
+              this.status = this.fastTime;
+              this.status.hours = remainingTime.hours;
+              this.status.minutes = remainingTime.minutes;
+              this.status.seconds = remainingTime.seconds;
+              this.isPlay = false;
+              this.initialSeconds = totalSecs;
+              console.log("Here");
+              this.setTitle();
+              this.startStage();
+              this.didReOpen = false;
             }
-          });
-        }
-      })
+            else if(d2 > fastEndTime && d2 < eatEndTime) {
+              let totalSecs = Math.floor((eatEndTime.getTime() - fastEndTime.getTime()) / 1000);
+              let diff = d2.getTime() - fastEndTime.getTime();
+              let elapsedSecs = 86330;//Math.floor(diff / 1000)
+              let remainingTime = this.getTimeData(totalSecs - elapsedSecs);
+              this.status = this.eatTime;
+              this.status.hours = remainingTime.hours;
+              this.status.minutes = remainingTime.minutes;
+              this.status.seconds = remainingTime.seconds;
+              this.isPlay = false;
+              this.initialSeconds = totalSecs;
+              console.log("Here");
+              this.statusName = "eat";
+              this.setTitle();
+              this.startStage();
+            }
+            else {
+              console.log("Here in else")
+              this.resources.addCompletedFast(
+                new CompletedFast(this.resources.getChosenFast(), 
+                this.fastStartTime,
+                null,
+                null));
+              this.resetTimer();
+              this.storage.deleteFastStartTime();
+            }
+          }
+        });
+      }
+    })
 
   }
 
   ionViewWillEnter() {
-    if (!this.isPlay && this.resources.getChosenFast()) {
+    console.log(this.resources.getChosenFast());
+    console.log(this.didReOpen, this.isPlay);
+    if (!this.didReOpen && !this.isPlay && this.resources.getChosenFast()) {
       console.log(this.status);
       let chosen = this.resources.getChosenFast();
       let duration = new Date(chosen.getDuration());
@@ -72,6 +135,7 @@ export class TimerPage implements OnInit {
   }
 
   ngOnInit() {
+    if (this.didReOpen) return;
     this.isPlay = false;
     this.percent = 100;
     this.status = this.fastTime;
@@ -83,6 +147,14 @@ export class TimerPage implements OnInit {
     return (3600 * obj.hours) + (60 * obj.minutes) + obj.seconds;
   }
 
+  getTimeData(secs) {
+    return {
+      hours: Math.floor(secs / 3600),
+      minutes: Math.floor((secs % 3600) / 60),
+      seconds: secs % 60
+    }
+  }
+
   setTitle() {
     this.titleText = "" + ((this.status.hours < 10) ? ("0" + this.status.hours) : this.status.hours)
       + ":"
@@ -92,6 +164,7 @@ export class TimerPage implements OnInit {
   }
 
   resetTimer() {
+    this.didReOpen = false;
     this.percent = 100;
     this.fastTime.hours = this.fastTime.minutes = this.fastTime.seconds = 0;
     this.eatTime.hours = this.eatTime.minutes = this.eatTime.seconds = 0;
@@ -124,11 +197,12 @@ export class TimerPage implements OnInit {
   }
 
   startStage() {
-    if (!this.resources.getChosenFast()) {
+    if (!this.didReOpen && !this.resources.getChosenFast()) {
       this.presentToast("Please Choose a Fast before starting");
       return;
     }
     this.percent = this.getCurrentpercent();
+    console.log(this.percent);
     if (this.status.hours == 0 && this.status.minutes == 0 && this.status.seconds == 0)
       return
     console.log(this.interval);
@@ -139,13 +213,15 @@ export class TimerPage implements OnInit {
       this.storage.deleteFastStartTime();
     }
     else {
-      if (this.statusName == "fast") {
-        this.fastStartTime = new Date();
-        this.storage.saveFastStartTime(this.fastStartTime);
-        this.storage.saveChosenFast(this.resources.getChosenFast());
-      }
-      else {
-        this.eatStartTime = new Date();
+      if (!this.didReOpen) {
+        if (this.statusName == "fast") {
+          this.fastStartTime = new Date();
+          this.storage.saveFastStartTime(this.fastStartTime);
+          this.storage.saveChosenFast(this.resources.getChosenFast());
+        }
+        else {
+          this.eatStartTime = new Date();
+        }
       }
       this.interval = setInterval(() => {
         if (this.status.seconds == 0) {
@@ -164,8 +240,9 @@ export class TimerPage implements OnInit {
         this.percent = this.getCurrentpercent();
         this.setTitle();
         if (this.status.hours == 0 && this.status.minutes == 0 && this.status.seconds == 0) {
-          if (this.statusName === "fast")
+          if (this.statusName === "fast") {
             this.startEat();
+          }
           else {
             this.eatEndTime = new Date();
             this.stopTimer();
@@ -179,7 +256,7 @@ export class TimerPage implements OnInit {
             this.resetTimer();
           }
         }
-      }, 0.1);
+      }, 1000);
       this.isPlay = !this.isPlay;
     }
   }
@@ -191,6 +268,7 @@ export class TimerPage implements OnInit {
     this.status = this.eatTime;
     this.statusName = "eat";
     let chosen = this.resources.getChosenFast();
+    console.log(chosen);
     let duration = new Date(chosen.getDuration());
     this.getEatTime(duration.getHours(), duration.getMinutes());
     this.initialSeconds = this.getTotalSeconds(this.eatTime);
@@ -206,7 +284,7 @@ export class TimerPage implements OnInit {
   }
 
   getEatTime(hours, minutes) {
-    this.eatTime.hours = (minutes > 0) ? 2 - hours - 1 : 2 - hours;
+    this.eatTime.hours = (minutes > 0) ? 24 - hours - 1 : 24 - hours;
     this.eatTime.minutes = (minutes > 0) ? 60 - minutes : minutes;
     this.eatTime.seconds = 0;
   }

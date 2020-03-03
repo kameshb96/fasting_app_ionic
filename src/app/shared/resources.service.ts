@@ -95,6 +95,7 @@ export class ResourcesService {
   addFast(fastTime, fastTitle, description, isPre) {
     console.log(this.fasts);
     let fast = new Fast(fastTitle, fastTime, description, isPre);
+    console.log(fast);
     this.storage.addFast(fast);
     this.fasts.push(fast)
   }

@@ -56,7 +56,9 @@ export class FastModalPage implements OnInit {
   }
 
   setFast() {
+    console.log(this.selected);
     this.resources.setChosenFast(this.selected);
+    console.log(this.resources.getChosenFast());
     this.modal.dismiss();
     this.navController.navigateRoot(`/tabs/timer`);
   }
