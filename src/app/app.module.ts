@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-
+import { HttpClientModule } from '@angular/common/http';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -16,7 +16,7 @@ import { FastModalPage } from './fast-modal/fast-modal.page';
 @NgModule({
   declarations: [AppComponent, FoodInfoPage, CustomFastPage, FastModalPage],
   entryComponents: [FoodInfoPage, CustomFastPage, FastModalPage],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, HttpClientModule],
   providers: [
     StatusBar,
     SplashScreen,

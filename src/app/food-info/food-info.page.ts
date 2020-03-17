@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../storage.service';
 import { ModalController } from '@ionic/angular';
 import { ResourcesService } from '../shared/resources.service';
+import { RestService } from '../rest.service';
 @Component({
   selector: 'app-food-info',
   templateUrl: './food-info.page.html',
@@ -14,7 +15,10 @@ export class FoodInfoPage implements OnInit {
   logQty: number;
   logCalories: number;
   unit: string;
-  constructor(private storage: StorageService, private resources: ResourcesService, private modal: ModalController) { 
+  constructor(private storage: StorageService, 
+              private resources: ResourcesService, 
+              private modal: ModalController,
+              private restService: RestService) { 
     this.unit = "g";
   }
 
@@ -48,6 +52,12 @@ export class FoodInfoPage implements OnInit {
     console.log("closing modal");
     if (obj) this.modal.dismiss(obj);
     else this.modal.dismiss();
+  }
+
+  getFoodInfo() {
+    this.restService.getNutritionixData(this.logFood).subscribe((data) => {
+      console.log(data)
+    })
   }
 
   ngOnInit() {

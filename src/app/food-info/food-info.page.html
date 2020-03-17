@@ -16,7 +16,7 @@
     <ion-datetime [(ngModel)]="logTime" display-format="h:mm A" picker-format="h:mm A" placeholder="Choose Time"></ion-datetime>
   </ion-item>
   <ion-item>
-    <ion-input [(ngModel)]="logFood" placeholder="Enter Food"></ion-input>
+    <ion-input [(ngModel)]="logFood" (ionBlur)="getFoodInfo()" placeholder="Enter Food"></ion-input>
   </ion-item>
   <ion-item>
     <ion-input [(ngModel)]="logQty" type="number" placeholder="0"></ion-input>

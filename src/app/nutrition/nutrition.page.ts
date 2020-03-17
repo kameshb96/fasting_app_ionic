@@ -3,6 +3,8 @@ import { ModalController, IonSlides, ActionSheetController } from '@ionic/angula
 import { FoodInfoPage } from '../food-info/food-info.page';
 import { ResourcesService } from '../shared/resources.service';
 import { StorageService } from '../storage.service';
+import { RestService } from '../rest.service';
+
 
 @Component({
   selector: 'app-nutrition',
@@ -25,7 +27,8 @@ export class NutritionPage implements OnInit {
   constructor(private modalController: ModalController,
     private resources: ResourcesService,
     private storage: StorageService,
-    private actionSheetController: ActionSheetController) {
+    private actionSheetController: ActionSheetController,
+    private restService: RestService) {
 
   }
 

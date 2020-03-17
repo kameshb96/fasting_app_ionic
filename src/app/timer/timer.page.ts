@@ -85,7 +85,7 @@ export class TimerPage implements OnInit {
             else if(d2 > fastEndTime && d2 < eatEndTime) {
               let totalSecs = Math.floor((eatEndTime.getTime() - fastEndTime.getTime()) / 1000);
               let diff = d2.getTime() - fastEndTime.getTime();
-              let elapsedSecs = 86330;//Math.floor(diff / 1000)
+              let elapsedSecs = Math.floor(diff / 1000); //86330
               let remainingTime = this.getTimeData(totalSecs - elapsedSecs);
               this.status = this.eatTime;
               this.status.hours = remainingTime.hours;
