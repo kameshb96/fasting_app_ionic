@@ -3,6 +3,7 @@ import { StorageService } from '../storage.service';
 import { ModalController } from '@ionic/angular';
 import { ResourcesService } from '../shared/resources.service';
 import { RestService } from '../rest.service';
+import { CompleteTestService } from '../complete-test.service';
 @Component({
   selector: 'app-food-info',
   templateUrl: './food-info.page.html',
@@ -18,7 +19,8 @@ export class FoodInfoPage implements OnInit {
   constructor(private storage: StorageService, 
               private resources: ResourcesService, 
               private modal: ModalController,
-              private restService: RestService) { 
+              private restService: RestService,
+              private completeTestService: CompleteTestService) { 
     this.unit = "g";
   }
 

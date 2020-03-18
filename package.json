@@ -28,6 +28,7 @@
     "cordova-plugin-appcenter-analytics": "^0.5.1",
     "cordova-plugin-appcenter-shared": "^0.5.1",
     "core-js": "^2.5.4",
+    "ionic4-auto-complete": "^2.6.0",
     "ng-circle-progress": "^1.5.1",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",

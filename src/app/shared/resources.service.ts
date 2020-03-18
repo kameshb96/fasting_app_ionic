@@ -10,6 +10,7 @@ export class ResourcesService {
   private completedFasts: Array<CompletedFast> = [];
   private chosenFast: Fast;
   private foodLogs: Array<any>;
+  private foodResult: Array<Object>;
   constructor(private storage: StorageService) {
     this.foodLogs = [];
     this.fasts.push(new Fast("16:8 Fast", new Date("2020-02-13T16:00:58.404-05:00"), "16 Hour Fast followed by an 8 hour eating window", true));
@@ -61,6 +62,10 @@ export class ResourcesService {
   getFoodLogs() {
     //  return this.foodLogs;
     return this.storage.getFoodLogs();
+  }
+
+  setFoodResult(result) {
+    this.foodResult = result
   }
 
   deleteCompletedFast(fastStartTime) {

@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { FoodInfoPageRoutingModule } from './food-info-routing.module';
 
 import { FoodInfoPage } from './food-info.page';
+import { CompleteTestService } from '../complete-test.service';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { FoodInfoPage } from './food-info.page';
     IonicModule,
     FoodInfoPageRoutingModule
   ],
-  declarations: [FoodInfoPage]
+  declarations: [FoodInfoPage],
+  providers: [CompleteTestService]
 })
 export class FoodInfoPageModule {}
