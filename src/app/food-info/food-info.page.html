@@ -15,9 +15,10 @@
     <ion-label>Time</ion-label>
     <ion-datetime [(ngModel)]="logTime" display-format="h:mm A" picker-format="h:mm A" placeholder="Choose Time"></ion-datetime>
   </ion-item>
-  <ion-item>
+  <!-- <ion-item>
     <ion-input [(ngModel)]="logFood" (ionBlur)="getFoodInfo()" placeholder="Enter Food"></ion-input>
-  </ion-item>
+  </ion-item> -->
+  <ion-auto-complete [dataProvider]="completeTestService" style="width: 100%" [options]="{ placeholder : 'Search for food' }"></ion-auto-complete>
   <ion-item>
     <ion-input [(ngModel)]="logQty" type="number" placeholder="0"></ion-input>
     <ion-select [(ngModel)]="unit" placeholder="Unit">
@@ -28,5 +29,4 @@
   <ion-item>
     <ion-input [ngModel]="logCalories" disabled placeholder="0 Calories"></ion-input>
   </ion-item>
-  <ion-auto-complete [dataProvider]="completeTestService"></ion-auto-complete>
 </ion-content>
