@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from '../storage.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { THIS_EXPR, ClassGetter } from '@angular/compiler/src/output/output_ast';
 
 @Injectable({
   providedIn: 'root'
@@ -66,6 +66,10 @@ export class ResourcesService {
 
   setFoodResult(result) {
     this.foodResult = result
+  }
+
+  getFoodResult() {
+    return this.foodResult
   }
 
   deleteCompletedFast(fastStartTime) {

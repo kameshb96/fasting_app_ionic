@@ -7,6 +7,7 @@
 </ion-header>
 
 <ion-content>
+  <ion-auto-complete (itemSelected)="processInfo($event)" [dataProvider]="completeTestService" style="width: 100%" [options]="{ placeholder : 'Search for food' }"></ion-auto-complete>
   <ion-item>
     <ion-label>Date</ion-label>
     <ion-datetime [(ngModel)]="logDate" displayFormat="MM DD YY" placeholder="Select Date"></ion-datetime>
@@ -18,15 +19,15 @@
   <!-- <ion-item>
     <ion-input [(ngModel)]="logFood" (ionBlur)="getFoodInfo()" placeholder="Enter Food"></ion-input>
   </ion-item> -->
-  <ion-auto-complete [dataProvider]="completeTestService" style="width: 100%" [options]="{ placeholder : 'Search for food' }"></ion-auto-complete>
   <ion-item>
-    <ion-input [(ngModel)]="logQty" type="number" placeholder="0"></ion-input>
-    <ion-select [(ngModel)]="unit" placeholder="Unit">
+    <ion-input (ionChange)="computeCalories()" [(ngModel)]="logQty" type="number" placeholder="0"></ion-input>
+    <ion-label style="color: gray;">{{ logUnit }}</ion-label>
+    <!-- <ion-select [(ngModel)]="unit" placeholder="Unit">
       <ion-select-option value="g">g</ion-select-option>
       <ion-select-option value="oz">oz</ion-select-option>
-    </ion-select>
+    </ion-select> -->
   </ion-item>
   <ion-item>
-    <ion-input [ngModel]="logCalories" disabled placeholder="0 Calories"></ion-input>
+    <ion-label style="color: gray;">{{ logCalories + " Calories" }}</ion-label>
   </ion-item>
 </ion-content>

@@ -15,6 +15,8 @@ export class FoodInfoPage implements OnInit {
   logFood: string;
   logQty: number;
   logCalories: number;
+  logUnit: string;
+  selectedFood: any =  {}
   unit: string;
   constructor(private storage: StorageService, 
               private resources: ResourcesService, 
@@ -22,6 +24,8 @@ export class FoodInfoPage implements OnInit {
               private restService: RestService,
               private completeTestService: CompleteTestService) { 
     this.unit = "g";
+    this.logUnit = "Units"
+    this.logCalories = 0
   }
 
   timeUtil(hours, minutes) {
@@ -60,6 +64,28 @@ export class FoodInfoPage implements OnInit {
     this.restService.getNutritionixData(this.logFood).subscribe((data) => {
       console.log(data)
     })
+  }
+
+  computeCalories() {
+    console.log(typeof this.logQty)
+    if(this.logQty == undefined || this.logQty < 0) {
+      this.logQty=  0
+    }
+    this.logQty = 1 * parseFloat(""  + this.logQty)
+    console.log(this.logQty)
+    let unit_qty_calories = this.selectedFood.nf_calories/ this.selectedFood.serving_qty
+    this.logCalories = this.logQty * unit_qty_calories
+  }
+
+  processInfo(event) {
+    let results = this.resources.getFoodResult()
+    this.selectedFood = results.filter((elem: any) => {
+      return elem.brand_name_item_name == event
+    })[0]
+    console.log(this.selectedFood)
+    this.logUnit = this.selectedFood.serving_unit
+    this.logQty = this.selectedFood.serving_qty
+    this.logCalories = this.selectedFood.nf_calories
   }
 
   ngOnInit() {
