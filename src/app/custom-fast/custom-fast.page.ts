@@ -8,12 +8,18 @@ import { ModalController, ToastController } from '@ionic/angular';
   styleUrls: ['./custom-fast.page.scss'],
 })
 export class CustomFastPage implements OnInit {
-  fastDuration: any;
+  fastDuration: string;
   fastTitle: string;
   fastDescription: string;
   constructor(private resources: ResourcesService, 
               private modal: ModalController,
-              private toastController: ToastController) { }
+              private toastController: ToastController) { 
+                let currentDateTime = new Date();
+                currentDateTime.setHours(12);
+                currentDateTime.setMinutes(0);
+                this.fastTitle = "Custom fast (12 hours)";
+                this.fastDuration = currentDateTime.toISOString();
+              }
 
   ngOnInit() {
   }

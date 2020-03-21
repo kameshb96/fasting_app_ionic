@@ -10,8 +10,8 @@ import { CompleteTestService } from '../complete-test.service';
   styleUrls: ['./food-info.page.scss'],
 })
 export class FoodInfoPage implements OnInit {
-  logDate: Date;
-  logTime: Date;
+  logDate: string;
+  logTime: string;
   logFood: string;
   logQty: number;
   logCalories: number;
@@ -22,8 +22,11 @@ export class FoodInfoPage implements OnInit {
               private modal: ModalController,
               private restService: RestService,
               private completeTestService: CompleteTestService) { 
-    this.logUnit = "Units"
-    this.logCalories = 0
+    this.logUnit = "Units";
+    this.logCalories = 0;
+    let currentDateTime = new Date().toISOString();
+    this.logDate = currentDateTime
+    this.logTime = currentDateTime
   }
 
   timeUtil(hours, minutes) {
