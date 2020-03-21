@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../storage.service';
-import { ModalController } from '@ionic/angular';
+import { ModalController, NavParams } from '@ionic/angular';
 import { ResourcesService } from '../shared/resources.service';
 import { RestService } from '../rest.service';
 import { CompleteTestService } from '../complete-test.service';
@@ -17,14 +17,18 @@ export class FoodInfoPage implements OnInit {
   logCalories: number;
   logUnit: string;
   selectedFood: any =  {}
-  constructor(private storage: StorageService, 
-              private resources: ResourcesService, 
-              private modal: ModalController,
-              private restService: RestService,
-              private completeTestService: CompleteTestService) { 
+  constructor(
+    private storage: StorageService,
+    private resources: ResourcesService, 
+    private modal: ModalController,
+    private restService: RestService,
+    private completeTestService: CompleteTestService,
+    private navParams: NavParams
+  ) { 
     this.logUnit = "Units";
     this.logCalories = 0;
-    let currentDateTime = new Date().toISOString();
+    let currentDateTime = this.navParams.get("currentPageDate")
+    if (!currentDateTime || currentDateTime == undefined || currentDateTime == "") currentDateTime = new Date().toISOString();
     this.logDate = currentDateTime
     this.logTime = currentDateTime
   }

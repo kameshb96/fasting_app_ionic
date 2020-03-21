@@ -33,10 +33,11 @@ export class NutritionPage implements OnInit {
   }
 
   ngOnInit() {
-    this.slides.slideTo(1, 500);
+    // this.slides.slideTo(1, 500);
   }
 
   checkDate(date1: Date, date2: Date) {
+    if (!date1 || !date2) return false;
     return (date1.getMonth() == date2.getMonth()
       && date1.getDate() == date2.getDate()
       && date1.getFullYear() == date2.getFullYear());
@@ -47,22 +48,20 @@ export class NutritionPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.currentPageDate = new Date();
-    this.title = "Today";
-    this.previousPageDate = new Date();
-    this.previousPageDate.setDate(this.previousPageDate.getDate() - 1);
-    this.previousTitle = "Yesterday";
-    this.nextPageDate = new Date();
-    this.nextPageDate.setDate(this.nextPageDate.getDate() + 1);
-    this.nextTitle = "Tomorrow";
-    this.setPageData(new Date());
+    if (this.resources.IS_DEBUG_MODE) console.log(this.resources.currentNutritionPageDate)
+    if(this.resources.currentNutritionPageDate) {
+      this.currentPageDate = new Date(this.resources.currentNutritionPageDate);  
+    } else {
+      this.currentPageDate = new Date(); 
+    }
+    this.slides.slideTo(1, 0);
   }
 
   didChange() {
     this.slides.getActiveIndex().then(index => {
-      if (index == 1) return;
-      if (this.resources.IS_DEBUG_MODE) console.log(index);
-      if (index == 0)
+      if (this.resources.IS_DEBUG_MODE) console.log("Did change" + index);
+      if (index == 1) this.setPageData(this.currentPageDate);
+      else if (index == 0)
         this.setPageData(this.previousPageDate);
       else if (index == 2)
         this.setPageData(this.nextPageDate);
@@ -72,6 +71,7 @@ export class NutritionPage implements OnInit {
 
   setPageData(d: Date) {
     let date = new Date(d);
+    this.resources.currentNutritionPageDate = new Date (date);
     this.previousPageDate = new Date(date);
     this.previousPageDate.setDate(this.previousPageDate.getDate() - 1);
     this.nextPageDate = new Date(date);
@@ -92,7 +92,6 @@ export class NutritionPage implements OnInit {
   }
 
   //current, page  current - page / (1000 * 60 * 60 * 24) = no. of day between 
-
   setTitle2(date: Date) {
     let currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
@@ -111,6 +110,7 @@ export class NutritionPage implements OnInit {
     return t;
   }
 
+  // Obsolete
   setTitle() {
     let currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
@@ -161,7 +161,6 @@ export class NutritionPage implements OnInit {
     // this.filteredFoodLogs = this.foodLogs.filter( (log)=> this.checkDate(log));
     this.filteredFoodLogs.sort((a, b) => a.time > b.time ? 1 : -1);
     if (this.resources.IS_DEBUG_MODE) console.log(this.filteredFoodLogs);
-
     let fl = this.filteredFoodLogs;
     fl.forEach(e => {
       if (this.resources.IS_DEBUG_MODE) console.log(e);
@@ -172,31 +171,32 @@ export class NutritionPage implements OnInit {
     this.filteredFoodLogs = fl;
   }
 
-  refreshPage(shouldSlide=true) {
-    this.foodLogs = this.resources.getFoodLogs();
-    this.setPageData(new Date());
+  refreshPage(refreshDate = new Date(), shouldSlide=true) {
+    // this.foodLogs = this.resources.getFoodLogs();
+    this.setPageData(refreshDate);
     if(shouldSlide) this.slides.slideTo(1, 0);
   }
 
   async openModal() {
     if (this.resources.IS_DEBUG_MODE) console.log("Inside openModal");
     const modal = await this.modalController.create({
-      component: FoodInfoPage
+      component: FoodInfoPage,
+      componentProps: {
+        currentPageDate: this.currentPageDate.toISOString()
+      }
     });
-
     modal.onDidDismiss().then(res => {
       if (this.resources.IS_DEBUG_MODE) console.log(res);
-      if (res && res.data) this.refreshPage();
+      if (res && res.data) this.refreshPage(this.currentPageDate, false);
     }, err => {
       if (this.resources.IS_DEBUG_MODE) console.log(err);
     });
-
     modal.present();
   }
 
   deleteLog(date) {
     this.resources.deleteLog(date);
-    this.refreshPage(false);
+    this.refreshPage(this.currentPageDate, false);
   }
 
   async openActionSheet(event, date) {
@@ -219,5 +219,4 @@ export class NutritionPage implements OnInit {
     });
     await actionSheet.present();
   }
-
 }

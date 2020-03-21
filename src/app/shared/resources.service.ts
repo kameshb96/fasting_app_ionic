@@ -11,6 +11,7 @@ export class ResourcesService {
   private foodLogs: Array<any>;
   private foodResult: Array<Object>;
   public IS_DEBUG_MODE: boolean = false;
+  public currentNutritionPageDate: Date = new Date();
   constructor(private storage: StorageService) {
     this.foodLogs = [];
     this.fasts.push(new Fast("16:8 Fast", new Date("2020-02-13T16:00:58.404-05:00"), "16 Hour Fast followed by an 8 hour eating window", true));
