@@ -10,18 +10,18 @@ const routes: Routes = [
     path: 'tabs',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
-  {
-    path: 'food',
-    loadChildren: () => import('./food-info/food-info.module').then( m => m.FoodInfoPageModule)
-  },
-  {
-    path: 'custom-fast',
-    loadChildren: () => import('./custom-fast/custom-fast.module').then( m => m.CustomFastPageModule)
-  },
-  {
-    path: 'fast-modal',
-    loadChildren: () => import('./fast-modal/fast-modal.module').then( m => m.FastModalPageModule)
-  },
+  // {
+  //   path: 'food',
+  //   loadChildren: () => import('./food-info/food-info.module').then( m => m.FoodInfoPageModule)
+  // },
+  // {
+  //   path: 'custom-fast',
+  //   loadChildren: () => import('./custom-fast/custom-fast.module').then( m => m.CustomFastPageModule)
+  // },
+  // {
+  //   path: 'fast-modal',
+  //   loadChildren: () => import('./fast-modal/fast-modal.module').then( m => m.FastModalPageModule)
+  // },
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule)
