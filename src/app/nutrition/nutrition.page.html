@@ -12,10 +12,10 @@
       </ion-header>
       <ion-list *ngFor="let l of previousFilteredFoodLogs">
         <ion-item (click)="openActionSheet($event, l.date)">
-          <ion-label>
+          <ion-label class="ion-text-wrap">
             <h2>{{ l.food }}</h2>
             <h3>{{ l.cal + " calories"}}</h3>
-            <h3>{{ l.qty + "" + l.unit}}</h3>
+            <h3>{{ l.qty + " " + l.unit}}</h3>
             <h3>{{"Time: " + l.formattedTime }}</h3>
             <p>{{"Date: " }} {{ l.date.getMonth() + 1}}/{{ l.date.getDate() +  "/" + l.date.getFullYear() }}</p>
           </ion-label>  
@@ -40,10 +40,10 @@
       </ion-header>
       <ion-list *ngFor="let l of filteredFoodLogs">
         <ion-item (click)="openActionSheet($event, l.date)">
-          <ion-label>
+          <ion-label class="ion-text-wrap">
             <h2>{{ l.food }}</h2>
             <h3>{{ l.cal + " calories"}}</h3>
-            <h3>{{ l.qty + "" + l.unit}}</h3>
+            <h3>{{ l.qty + " " + l.unit}}</h3>
             <h3>{{"Time: " + l.formattedTime }}</h3>
             <p>{{"Date: " }} {{ l.date.getMonth() + 1}}/{{ l.date.getDate() +  "/" + l.date.getFullYear() }}</p>
           </ion-label>  
@@ -68,10 +68,10 @@
       </ion-header>
       <ion-list *ngFor="let l of nextFilteredFoodLogs">
         <ion-item (click)="openActionSheet($event, l.date)">
-          <ion-label>
+          <ion-label class="ion-text-wrap">
             <h2>{{ l.food }}</h2>
             <h3>{{ l.cal + " calories"}}</h3>
-            <h3>{{ l.qty + "" + l.unit}}</h3>
+            <h3>{{ l.qty + " " + l.unit}}</h3>
             <h3>{{"Time: " + l.formattedTime }}</h3>
             <p>{{"Date: " }} {{ l.date.getMonth() + 1}}/{{ l.date.getDate() +  "/" + l.date.getFullYear() }}</p>
           </ion-label>  

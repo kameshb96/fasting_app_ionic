@@ -17,13 +17,11 @@ export class FoodInfoPage implements OnInit {
   logCalories: number;
   logUnit: string;
   selectedFood: any =  {}
-  unit: string;
   constructor(private storage: StorageService, 
               private resources: ResourcesService, 
               private modal: ModalController,
               private restService: RestService,
               private completeTestService: CompleteTestService) { 
-    this.unit = "g";
     this.logUnit = "Units"
     this.logCalories = 0
   }
@@ -38,14 +36,13 @@ export class FoodInfoPage implements OnInit {
     console.log(this.logFood);
     console.log(this.logQty);
     console.log(this.logCalories);
-    console.log(this.unit);
     let obj = {
       date: new Date(this.logDate),
       time: new Date(this.logTime),
       food: this.logFood,
       qty: this.logQty,
       cal: this.logCalories ? this.logCalories : 0,
-      unit: this.unit
+      unit: this.logUnit
     }
     console.log(obj);
     this.resources.addFoodLog(obj);
@@ -73,19 +70,20 @@ export class FoodInfoPage implements OnInit {
     }
     this.logQty = 1 * parseFloat(""  + this.logQty)
     console.log(this.logQty)
-    let unit_qty_calories = this.selectedFood.nf_calories/ this.selectedFood.serving_qty
+    let unit_qty_calories = Math.round(this.selectedFood.nf_calories)/ this.selectedFood.serving_qty
     this.logCalories = this.logQty * unit_qty_calories
   }
 
-  processInfo(event) {
+  processInfo(foodName) {
     let results = this.resources.getFoodResult()
     this.selectedFood = results.filter((elem: any) => {
-      return elem.brand_name_item_name == event
+      return elem.brand_name_item_name == foodName
     })[0]
     console.log(this.selectedFood)
+    this.logFood = foodName
     this.logUnit = this.selectedFood.serving_unit
     this.logQty = this.selectedFood.serving_qty
-    this.logCalories = this.selectedFood.nf_calories
+    this.logCalories = Math.round(this.selectedFood.nf_calories)
   }
 
   ngOnInit() {
