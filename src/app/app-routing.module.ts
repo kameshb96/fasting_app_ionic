@@ -1,28 +1,14 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { TabsPage } from './tabs/tabs.page';
 
 const routes: Routes = [
   {
     path: '',
-    // loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
     loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule)
   },
   {
-    path: 'fast',
-    loadChildren: () => import('./fast/fast.module').then( m => m.FastPageModule)
-  },
-  {
-    path: 'nutrition',
-    loadChildren: () => import('./nutrition/nutrition.module').then( m => m.NutritionPageModule)
-  },
-  {
-    path: 'history',
-    loadChildren: () => import('./history/history.module').then( m => m.HistoryPageModule)
-  },
-  {
-    path: 'settings',
-    loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
+    path: 'tabs',
+    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
     path: 'food',
@@ -31,10 +17,6 @@ const routes: Routes = [
   {
     path: 'custom-fast',
     loadChildren: () => import('./custom-fast/custom-fast.module').then( m => m.CustomFastPageModule)
-  },
-  {
-    path: 'timer',
-    loadChildren: () => import('./timer/timer.module').then( m => m.TimerPageModule)
   },
   {
     path: 'fast-modal',
