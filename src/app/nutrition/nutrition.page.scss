@@ -3,6 +3,7 @@
     --ion-safe-area-bottom: 22px;  
   }  
   .swiper-slide {  
+    overflow-y: scroll;
     display: block;  
   }  
   ion-slides {
