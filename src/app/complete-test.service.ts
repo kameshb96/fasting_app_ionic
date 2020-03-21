@@ -20,28 +20,28 @@ export class CompleteTestService implements AutoCompleteService {
   }
 
   getResults(query:string) {
-    console.log(query)
+    if (this.resources.IS_DEBUG_MODE) console.log(query)
     if (!query || (typeof query) == "undefined" || query.length <= 3) { return false; }
     return this.restService.getNutritionixData(query).pipe(map(
       (result: any) => {
-        console.log(result);
+        if (this.resources.IS_DEBUG_MODE) console.log(result);
         let res = [];
         this.resources.setFoodResult(result.branded)
         for(let i = 0; i < result.branded.length; i++) {
           // search for keywords using AND operator
           let arr = query.split(" ");
-          console.log(arr);
+          if (this.resources.IS_DEBUG_MODE) console.log(arr);
           let isAllKeywordExist = true;
           for(let z = 0; z < arr.length; z++) {
             if (result.branded[i].brand_name_item_name.toLowerCase().indexOf(arr[z].toLowerCase()) == -1) {
-              console.log("Keyword not found");
+              if (this.resources.IS_DEBUG_MODE) console.log("Keyword not found");
               isAllKeywordExist = false;
               break;
             }
           }
           if (isAllKeywordExist) res.push(result.branded[i].brand_name_item_name);
         }
-        console.log(res)
+        if (this.resources.IS_DEBUG_MODE) console.log(res)
         return res
       }
     ));

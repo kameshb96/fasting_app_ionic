@@ -61,7 +61,7 @@ export class NutritionPage implements OnInit {
   didChange() {
     this.slides.getActiveIndex().then(index => {
       if (index == 1) return;
-      console.log(index);
+      if (this.resources.IS_DEBUG_MODE) console.log(index);
       if (index == 0)
         this.setPageData(this.previousPageDate);
       else if (index == 2)
@@ -77,7 +77,7 @@ export class NutritionPage implements OnInit {
     this.nextPageDate = new Date(date);
     this.nextPageDate.setDate(this.nextPageDate.getDate() + 1);
     this.currentPageDate = new Date(date);
-    console.log(date);
+    if (this.resources.IS_DEBUG_MODE) console.log(date);
     this.filteredFoodLogs = this.getFilteredLogs(date);
     this.title = this.setTitle2(date);
     date.setDate(date.getDate() - 1);
@@ -86,9 +86,9 @@ export class NutritionPage implements OnInit {
     date.setDate(date.getDate() + 2);
     this.nextFilteredFoodLogs = this.getFilteredLogs(date);
     this.nextTitle = this.setTitle2(date);
-    console.log("Current: ", this.title, this.filteredFoodLogs);
-    console.log("Prev: ", this.previousTitle, this.previousFilteredFoodLogs);
-    console.log("Next: ", this.nextTitle, this.nextFilteredFoodLogs);
+    if (this.resources.IS_DEBUG_MODE) console.log("Current: ", this.title, this.filteredFoodLogs);
+    if (this.resources.IS_DEBUG_MODE) console.log("Prev: ", this.previousTitle, this.previousFilteredFoodLogs);
+    if (this.resources.IS_DEBUG_MODE) console.log("Next: ", this.nextTitle, this.nextFilteredFoodLogs);
   }
 
   //current, page  current - page / (1000 * 60 * 60 * 24) = no. of day between 
@@ -148,7 +148,7 @@ export class NutritionPage implements OnInit {
     }
     n = tmp.length;
     for (let i = 0; i < n; i++) {
-      console.log(tmp[i]);
+      if (this.resources.IS_DEBUG_MODE) console.log(tmp[i]);
       let d1 = tmp[i].time instanceof Date ? tmp[i].date : new Date(tmp[i].date);
       tmp[i].formattedTime = this.timeUtil(d1.getHours(), d1.getMinutes());
     }
@@ -160,11 +160,11 @@ export class NutritionPage implements OnInit {
     this.foodLogs = this.resources.getFoodLogs();
     // this.filteredFoodLogs = this.foodLogs.filter( (log)=> this.checkDate(log));
     this.filteredFoodLogs.sort((a, b) => a.time > b.time ? 1 : -1);
-    console.log(this.filteredFoodLogs);
+    if (this.resources.IS_DEBUG_MODE) console.log(this.filteredFoodLogs);
 
     let fl = this.filteredFoodLogs;
     fl.forEach(e => {
-      console.log(e);
+      if (this.resources.IS_DEBUG_MODE) console.log(e);
       if (e.time instanceof Date) {
         e.time = this.timeUtil(e.time.getHours(), e.time.getMinutes());
       }
@@ -179,16 +179,16 @@ export class NutritionPage implements OnInit {
   }
 
   async openModal() {
-    console.log("Inside openModal");
+    if (this.resources.IS_DEBUG_MODE) console.log("Inside openModal");
     const modal = await this.modalController.create({
       component: FoodInfoPage
     });
 
     modal.onDidDismiss().then(res => {
-      console.log(res);
+      if (this.resources.IS_DEBUG_MODE) console.log(res);
       if (res && res.data) this.refreshPage();
     }, err => {
-      console.log(err);
+      if (this.resources.IS_DEBUG_MODE) console.log(err);
     });
 
     modal.present();
@@ -213,7 +213,7 @@ export class NutritionPage implements OnInit {
         icon: 'close',
         role: 'cancel',
         handler: () => {
-          console.log('Cancel clicked');
+          if (this.resources.IS_DEBUG_MODE) console.log('Cancel clicked');
         }
       }]
     });

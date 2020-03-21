@@ -35,7 +35,7 @@ export class TimerPage implements OnInit {
   constructor(private resources: ResourcesService,
     private toastController: ToastController,
     private storage: StorageService) {
-      console.log("constructor");
+      if (this.resources.IS_DEBUG_MODE) console.log("constructor");
     this.didReOpen = false;
     this.storage.getFastStartTime().then((res) => {
       if (res) {
@@ -45,20 +45,20 @@ export class TimerPage implements OnInit {
         let d2 = new Date();
         this.storage.getChosenFast().then((chosenFast) => {
           if (chosenFast) {
-            console.log(chosenFast);
+            if (this.resources.IS_DEBUG_MODE) console.log(chosenFast);
             let cf = JSON.parse(chosenFast);
             this.resources.setChosenFast(new Fast(cf.title, cf.duration, cf.description, cf.IsPredefined));
             //cf = new Fast(cf.getTitle(), cf.getDuration(), cf.getDescription(), cf.getIsPreDefined());
             let dur = new Date(cf.duration);
             let fastEndTime = new Date(d1);
             
-            console.log(fastEndTime);
+            if (this.resources.IS_DEBUG_MODE) console.log(fastEndTime);
             fastEndTime.setHours(fastEndTime.getHours() + dur.getHours());
             fastEndTime.setMinutes(fastEndTime.getMinutes() + dur.getMinutes());
             let eatEndTime = new Date(d1);
             eatEndTime.setHours(eatEndTime.getHours() + 24);
-            console.log(fastEndTime);
-            console.log(eatEndTime);
+            if (this.resources.IS_DEBUG_MODE) console.log(fastEndTime);
+            if (this.resources.IS_DEBUG_MODE) console.log(eatEndTime);
             
             if (d2 < fastEndTime) {
               // Still in fasting time
@@ -77,7 +77,7 @@ export class TimerPage implements OnInit {
               this.status.seconds = remainingTime.seconds;
               this.isPlay = false;
               this.initialSeconds = totalSecs;
-              console.log("Here");
+              if (this.resources.IS_DEBUG_MODE) console.log("Here");
               this.setTitle();
               this.startStage();
               this.didReOpen = false;
@@ -93,13 +93,13 @@ export class TimerPage implements OnInit {
               this.status.seconds = remainingTime.seconds;
               this.isPlay = false;
               this.initialSeconds = totalSecs;
-              console.log("Here");
+              if (this.resources.IS_DEBUG_MODE) console.log("Here");
               this.statusName = "eat";
               this.setTitle();
               this.startStage();
             }
             else {
-              console.log("Here in else")
+              if (this.resources.IS_DEBUG_MODE) console.log("Here in else")
               this.resources.addCompletedFast(
                 new CompletedFast(this.resources.getChosenFast(), 
                 this.fastStartTime,
@@ -116,14 +116,14 @@ export class TimerPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    console.log(this.resources.getChosenFast());
-    console.log(this.didReOpen, this.isPlay);
+    if (this.resources.IS_DEBUG_MODE) console.log(this.resources.getChosenFast());
+    if (this.resources.IS_DEBUG_MODE) console.log(this.didReOpen, this.isPlay);
     if (!this.didReOpen && !this.isPlay && this.resources.getChosenFast()) {
-      console.log(this.status);
+      if (this.resources.IS_DEBUG_MODE) console.log(this.status);
       let chosen = this.resources.getChosenFast();
       let duration = new Date(chosen.getDuration());
-      console.log(duration);
-      console.log(new Date(duration));
+      if (this.resources.IS_DEBUG_MODE) console.log(duration);
+      if (this.resources.IS_DEBUG_MODE) console.log(new Date(duration));
       this.fastTime.hours = duration.getHours();
       this.fastTime.minutes = duration.getMinutes();
       this.fastTime.seconds = 0;
@@ -131,7 +131,7 @@ export class TimerPage implements OnInit {
       this.initialSeconds = this.getTotalSeconds(this.fastTime);
       //this.percent = this.getCurrentpercent();
     }
-    console.log(window.screen);
+    if (this.resources.IS_DEBUG_MODE) console.log(window.screen);
   }
 
   ngOnInit() {
@@ -202,10 +202,10 @@ export class TimerPage implements OnInit {
       return;
     }
     this.percent = this.getCurrentpercent();
-    console.log(this.percent);
+    if (this.resources.IS_DEBUG_MODE) console.log(this.percent);
     if (this.status.hours == 0 && this.status.minutes == 0 && this.status.seconds == 0)
       return
-    console.log(this.interval);
+    if (this.resources.IS_DEBUG_MODE) console.log(this.interval);
     if (this.interval) {
       this.isPlay = !this.isPlay;
       this.resetTimer();
@@ -268,7 +268,7 @@ export class TimerPage implements OnInit {
     this.status = this.eatTime;
     this.statusName = "eat";
     let chosen = this.resources.getChosenFast();
-    console.log(chosen);
+    if (this.resources.IS_DEBUG_MODE) console.log(chosen);
     let duration = new Date(chosen.getDuration());
     this.getEatTime(duration.getHours(), duration.getMinutes());
     this.initialSeconds = this.getTotalSeconds(this.eatTime);

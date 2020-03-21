@@ -34,11 +34,11 @@ export class FoodInfoPage implements OnInit {
   }
 
   logInfo() {
-    console.log(this.logDate);
-    console.log(this.logTime);
-    console.log(this.logFood);
-    console.log(this.logQty);
-    console.log(this.logCalories);
+    if (this.resources.IS_DEBUG_MODE) console.log(this.logDate);
+    if (this.resources.IS_DEBUG_MODE) console.log(this.logTime);
+    if (this.resources.IS_DEBUG_MODE) console.log(this.logFood);
+    if (this.resources.IS_DEBUG_MODE) console.log(this.logQty);
+    if (this.resources.IS_DEBUG_MODE) console.log(this.logCalories);
     let obj = {
       date: new Date(this.logDate),
       time: new Date(this.logTime),
@@ -47,7 +47,7 @@ export class FoodInfoPage implements OnInit {
       cal: this.logCalories ? this.logCalories : 0,
       unit: this.logUnit
     }
-    console.log(obj);
+    if (this.resources.IS_DEBUG_MODE) console.log(obj);
     this.resources.addFoodLog(obj);
     this.closeModal({
       isFoodInfoAdded: true
@@ -55,24 +55,24 @@ export class FoodInfoPage implements OnInit {
   }
 
   closeModal(obj) {
-    console.log("closing modal");
+    if (this.resources.IS_DEBUG_MODE) console.log("closing modal");
     if (obj) this.modal.dismiss(obj);
     else this.modal.dismiss();
   }
 
   getFoodInfo() {
     this.restService.getNutritionixData(this.logFood).subscribe((data) => {
-      console.log(data)
+      if (this.resources.IS_DEBUG_MODE) console.log(data)
     })
   }
 
   computeCalories() {
-    console.log(typeof this.logQty)
+    if (this.resources.IS_DEBUG_MODE) console.log(typeof this.logQty)
     if(this.logQty == undefined || this.logQty < 0) {
       this.logQty=  0
     }
     this.logQty = 1 * parseFloat(""  + this.logQty)
-    console.log(this.logQty)
+    if (this.resources.IS_DEBUG_MODE) console.log(this.logQty)
     let unit_qty_calories = Math.round(this.selectedFood.nf_calories)/ this.selectedFood.serving_qty
     this.logCalories = this.logQty * unit_qty_calories
   }
@@ -82,7 +82,7 @@ export class FoodInfoPage implements OnInit {
     this.selectedFood = results.filter((elem: any) => {
       return elem.brand_name_item_name == foodName
     })[0]
-    console.log(this.selectedFood)
+    if (this.resources.IS_DEBUG_MODE) console.log(this.selectedFood)
     this.logFood = foodName
     this.logUnit = this.selectedFood.serving_unit
     this.logQty = this.selectedFood.serving_qty

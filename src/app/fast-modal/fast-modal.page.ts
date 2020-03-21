@@ -49,16 +49,16 @@ export class FastModalPage implements OnInit {
 
   deleteFast() {
     this.fasts.splice(this.index, 1);
-    console.log(this.fasts);
+    if (this.resources.IS_DEBUG_MODE) console.log(this.fasts);
     this.resources.deleteFast(this.index);
     //this.storage.updateFasts(this.fasts);
     this.modal.dismiss();
   }
 
   setFast() {
-    console.log(this.selected);
+    if (this.resources.IS_DEBUG_MODE) console.log(this.selected);
     this.resources.setChosenFast(this.selected);
-    console.log(this.resources.getChosenFast());
+    if (this.resources.IS_DEBUG_MODE) console.log(this.resources.getChosenFast());
     this.modal.dismiss();
     this.navController.navigateRoot(`/tabs/timer`);
   }

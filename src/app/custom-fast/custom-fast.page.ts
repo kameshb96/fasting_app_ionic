@@ -45,7 +45,7 @@ export class CustomFastPage implements OnInit {
       return;
     }
     this.resources.addFast(this.fastDuration, this.fastTitle, this.fastDescription, false);
-    console.log(this.resources.getFasts());
+    if (this.resources.IS_DEBUG_MODE) console.log(this.resources.getFasts());
     this.modal.dismiss();
     this.presentToast('Custom Fast Added');
   }

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from '../storage.service';
-import { THIS_EXPR, ClassGetter } from '@angular/compiler/src/output/output_ast';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +10,7 @@ export class ResourcesService {
   private chosenFast: Fast;
   private foodLogs: Array<any>;
   private foodResult: Array<Object>;
+  public IS_DEBUG_MODE: boolean = false;
   constructor(private storage: StorageService) {
     this.foodLogs = [];
     this.fasts.push(new Fast("16:8 Fast", new Date("2020-02-13T16:00:58.404-05:00"), "16 Hour Fast followed by an 8 hour eating window", true));
@@ -25,12 +25,12 @@ export class ResourcesService {
           this.fasts.push(new Fast(arr[i].title, new Date(arr[i].duration), arr[i].description, arr[i].isPredefined))
       }
     });
-    console.log(this.fasts)
+    if (this.IS_DEBUG_MODE) console.log(this.fasts)
     // this.fasts.push(new Fast("A",new Date("2020-03-01T01:14:29.909-05:00"),"1"));
     // this.storage.updateFasts(this.fasts);
     //this.completedFasts = this.storage.getCompletedFast();
     this.storage.getFastHistory().then((res: any) => {
-      console.log(res);
+      if (this.IS_DEBUG_MODE) console.log(res);
       let history = JSON.parse(res);
       if (history) {
         for (let i = 0; i < history.length; i++) {
@@ -92,7 +92,7 @@ export class ResourcesService {
     let d = new Date(date);
     for(let i = 0; i < this.foodLogs.length; i++) {
       let d2 = new Date(this.foodLogs[i].date);
-      console.log(d, d2);
+      if (this.IS_DEBUG_MODE) console.log(d, d2);
       if (d.getTime() == d2.getTime()) {
         this.foodLogs.splice(i, 1);
         this.storage.updateLogs(this.foodLogs);
@@ -102,18 +102,18 @@ export class ResourcesService {
   }
 
   addFast(fastTime, fastTitle, description, isPre) {
-    console.log(this.fasts);
+    if (this.IS_DEBUG_MODE) console.log(this.fasts);
     let fast = new Fast(fastTitle, fastTime, description, isPre);
-    console.log(fast);
+    if (this.IS_DEBUG_MODE) console.log(fast);
     this.storage.addFast(fast);
     this.fasts.push(fast)
   }
 
   deleteFast(index) {
-    console.log(this.fasts);
-    console.log(index);
+    if (this.IS_DEBUG_MODE) console.log(this.fasts);
+    if (this.IS_DEBUG_MODE) console.log(index);
     this.fasts.splice(index,1);
-    console.log(this.fasts);
+    if (this.IS_DEBUG_MODE) console.log(this.fasts);
     this.storage.deleteFast(index);
   }
 
@@ -124,7 +124,7 @@ export class ResourcesService {
   }
 
   addFoodLog(obj) {
-    console.log(obj);
+    if (this.IS_DEBUG_MODE) console.log(obj);
     this.storage.addLogItem(obj);
     //this.foodLogs.push(obj);
   }

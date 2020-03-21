@@ -51,7 +51,7 @@ export class HistoryPage implements OnInit {
         icon: 'close',
         role: 'cancel',
         handler: () => {
-          console.log('Cancel clicked');
+          if (this.resources.IS_DEBUG_MODE) console.log('Cancel clicked');
         }
       }]
     });

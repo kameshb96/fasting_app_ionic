@@ -17,13 +17,13 @@ export class StorageService {
     this.completedFasts = [];
     this.getFastList().then( (res:any) => {
       if(res) {
-        console.log(res)
+        // console.log(res)
         this.fasts = JSON.parse(res)
       }
     });
     this.getLogHistory().then ((res: any) => {
       if(res) {
-        console.log(res);
+        // console.log(res);
         this.logs = JSON.parse(res);
       }
     });
@@ -32,19 +32,19 @@ export class StorageService {
         this.completedFasts = JSON.parse(res);
     });
     // this.getFastHistory().then ((res: any) => {
-    //   console.log(res);
+    //   // console.log(res);
     //   let history = JSON.parse(res);
     //   for(let i = 0; i < history.length; i++) {
     //     let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description);
     //     let cf = new  CompletedFast(fast, history[i].fastStartTime,  history[i].eatStartTime,  history[i].eatEndTime);
     //     this.completedFasts.push(cf);
     //   }
-    //   console.log(this.completedFasts[0]);
-    //   console.log(this.completedFasts[0].getDetails());
+    //   // console.log(this.completedFasts[0]);
+    //   // console.log(this.completedFasts[0].getDetails());
     // });
     // this.fasts = this.getItem("fasts") ? JSON.parse(this.getCustomItem("fasts"))
     // this.getItem("fasts").then((obj:any) => {
-    //   console.log(obj);
+    //   // console.log(obj);
     //   this.fasts = JSON.parse(obj);
     // });
   }
@@ -67,7 +67,7 @@ async getObject() {
 }
 
 async addLogItem(obj) {
-  console.log(JSON.stringify(obj), this.logs);
+  // console.log(JSON.stringify(obj), this.logs);
   this.logs.push(obj);
   this.setItem("logs", JSON.stringify(this.logs));
 }
@@ -75,7 +75,7 @@ async addLogItem(obj) {
 async updateLogs(obj) {
   this.setItem("logs", JSON.stringify(obj));
   this.logs = obj;
-  console.log(this.logs);
+  // console.log(this.logs);
 }
 
 getFasts() {
@@ -83,13 +83,13 @@ getFasts() {
 }
 
 async addFast(obj) {
-  console.log(obj)
-  console.log(this.fasts);
+  // console.log(obj)
+  // console.log(this.fasts);
   this.fasts.push(obj);
-  console.log(this.fasts);
+  // console.log(this.fasts);
   this.setItem("fasts", JSON.stringify(this.fasts));
   // this.getItem("_cap_fasts").then((obj:any) => {
-  //   console.log(obj);
+  //   // console.log(obj);
   //   this.fasts = JSON.parse(obj);
   // });
 }
@@ -97,12 +97,12 @@ async addFast(obj) {
 async updateFasts(obj) {
   this.setItem("fasts", JSON.stringify(obj));
   this.fasts = obj;
-  console.log(this.fasts);
+  // console.log(this.fasts);
 }
 
 deleteFast(index) {
   this.fasts.splice(index-3,1);
-  console.log(this.fasts);
+  // console.log(this.fasts);
   this.setItem("fasts", JSON.stringify(this.fasts));
 }
 
@@ -112,7 +112,7 @@ saveFastStartTime(fastStartTime) {
 
 async getFastStartTime() {
   const { value } = await Storage.get({ key: "fastStartTime"});
-  console.log('Got item: ', value);
+  // console.log('Got item: ', value);
   return value;
 }
 
@@ -126,7 +126,7 @@ saveChosenFast(chosenFast) {
 
 async getChosenFast() {
   const { value } = await Storage.get({ key: "chosenFast"});
-  console.log('Got item: ', value);
+  // console.log('Got item: ', value);
   return value;
 }
 
@@ -135,9 +135,9 @@ deleteChosenFast() {
 }
 
 async addCompletedFast(obj: CompletedFast) {
-  console.log(obj);
+  // console.log(obj);
   this.completedFasts.push(obj);
-  console.log(this.completedFasts);
+  // console.log(this.completedFasts);
   this.setItem("completedFasts",  JSON.stringify(this.completedFasts));
 }
 
@@ -151,25 +151,25 @@ getCompletedFast() {
 }
 
 getFoodLogs() {
-  //console.log(this.logs);
+  //// console.log(this.logs);
   return this.logs;
 }
 
 async getFastList(){
   const { value } = await Storage.get({ key: "fasts"});
-  console.log('Got item: ', value);
+  // console.log('Got item: ', value);
   return value;
 }
 
 async getFastHistory() {
   const { value } = await Storage.get({ key: "completedFasts"});
-  console.log('Got item: ', value);
+  // console.log('Got item: ', value);
   return value;
 }
 
 async getLogHistory(){
   const { value } = await Storage.get({ key: "logs"});
-  console.log('Got item: ', value);
+  // console.log('Got item: ', value);
   return value;
 }
 
@@ -182,7 +182,7 @@ async setItem(k, v) {
 
 async getItem(k) {
   const { value } = await Storage.get({ key: k });
-  console.log('Got item: ', value);
+  // console.log('Got item: ', value);
 }
  
 getCustomItem(k) {
@@ -195,7 +195,7 @@ getCustomItem(k) {
 
 // async keys() {
 //   const { keys } = await Storage.keys();
-//   console.log('Got keys: ', keys);
+//   // console.log('Got keys: ', keys);
 // }
 
 // async clear() {

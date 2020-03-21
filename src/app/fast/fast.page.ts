@@ -23,7 +23,7 @@ export class FastPage implements OnInit {
 
   ngOnInit() {
     this.fasts = this.resources.getFasts();
-    console.log(this.fasts);
+    if (this.resources.IS_DEBUG_MODE) console.log(this.fasts);
   }
 
   async openCustomFastModal() {
@@ -34,7 +34,7 @@ export class FastPage implements OnInit {
   }
 
   async openFastModal(event, title) {
-    console.log(event);
+    if (this.resources.IS_DEBUG_MODE) console.log(event);
     let selected = null;
     let i = 0;
     for(; i < this.fasts.length; i++) {
