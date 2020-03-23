@@ -8,9 +8,9 @@ export class RestService {
 
   constructor(private httpClient: HttpClient) {
 
-   }
+  }
 
-   public getNutritionixData(query){
+  public getNutritionixData(query) {
     return this.httpClient.get(`http://localhost:3500/search?q=${encodeURIComponent(query)}&qty=100`);
   }
 
@@ -22,11 +22,26 @@ export class RestService {
     }
     return fetch(tmp, {
       method: 'POST',
-      headers: { 
-          'Content-Type': 'application/json',
+      headers: {
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(b)
-  })
+    })
+  }
+
+  public register(loginUsername, loginPassword) {
+    let tmp = 'http://localhost:3500/register'
+    let b = {
+      username: loginUsername,
+      password: loginPassword
+    }
+    return fetch(tmp, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(b)
+    })
   }
 
 }

@@ -4,22 +4,24 @@ import { NavController, ToastController } from '@ionic/angular';
 import { Router, Route } from '@angular/router';
 import { ResourcesService } from '../shared/resources.service';
 
+
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+  selector: 'app-register',
+  templateUrl: './register.page.html',
+  styleUrls: ['./register.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class RegisterPage implements OnInit {
+
   private loginUsername: string
   private loginPassword: string
   constructor(private rest: RestService,
-              private navController: NavController,
-              private router: Router,
-              private toastController:  ToastController,
-              private resources: ResourcesService) {
+    private navController: NavController,
+    private router: Router,
+    private toastController: ToastController,
+    private resources: ResourcesService) {
     this.loginUsername = "asd@aol.com"
     this.loginPassword = "test1235"
-   }
+  }
 
   ngOnInit() {
   }
@@ -35,30 +37,31 @@ export class LoginPage implements OnInit {
     }
   }
 
-  register() {
-    this.router.navigate(['/register'])
-  }
-
-  login() {
-    if(!this.loginUsername) {
+  signUp() {
+    if (!this.loginUsername) {
       this.presentToast("Please provide a valid username")
       return
     }
-    if(!this.loginPassword) { 
+    if (!this.loginPassword) {
       this.presentToast("Please provide a password")
       return
     }
-    if(!this.validateEmail(this.loginUsername)) {
+    if (!this.validateEmail(this.loginUsername)) {
       this.presentToast("Please provide a valid email id as a username")
       return
     }
-    // this.printpath('', this.router.config);
-    this.rest.login(this.loginUsername,  this.loginPassword).then((response) => {
+    this.rest.register(this.loginUsername, this.loginPassword).then((response) => {
       response.json().then((r) => {
         if (this.resources.IS_DEBUG_MODE) console.log(r)
-        if(r && r.meta && r.meta.status) {
+        console.log(r)
+        console.log(response.status)
+        if (response.status == 409) {
+          this.presentToast(r.meta.message)
+          return
+        }
+        if (r && r.meta && r.meta.status) {
           // this.navController.navigateRoot('tabs/fast'); // navigates without slide animation
-          this.router.navigate(['/tabs/fast']) // navigates with slide animation, by default
+          this.router.navigate(['/login']) // navigates with slide animation, by default
         }
         else {
           this.presentToast("Invalid Login Credentials")
@@ -85,6 +88,8 @@ export class LoginPage implements OnInit {
   validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
+  }
 }
 
-}
+
+
