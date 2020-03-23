@@ -3,6 +3,7 @@ import { RestService } from '../rest.service';
 import { NavController, ToastController } from '@ionic/angular';
 import { Router, Route } from '@angular/router';
 import { ResourcesService } from '../shared/resources.service';
+import { StorageService } from '../storage.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,8 @@ export class LoginPage implements OnInit {
               private navController: NavController,
               private router: Router,
               private toastController:  ToastController,
-              private resources: ResourcesService) {
+              private resources: ResourcesService,
+              private storage: StorageService) {
     this.loginUsername = "asd@aol.com"
     this.loginPassword = "test1235"
    }
@@ -57,6 +59,7 @@ export class LoginPage implements OnInit {
       response.json().then((r) => {
         if (this.resources.IS_DEBUG_MODE) console.log(r)
         if(r && r.meta && r.meta.status) {
+          this.storage.setToken(r.data.sessionToken)
           // this.navController.navigateRoot('tabs/fast'); // navigates without slide animation
           this.router.navigate(['/tabs/fast']) // navigates with slide animation, by default
         }

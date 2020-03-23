@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourcesService, Fast } from '../shared/resources.service';
-import { ModalController, PopoverController } from '@ionic/angular';
+import { ModalController, PopoverController, ToastController } from '@ionic/angular';
 import { CustomFastPage } from '../custom-fast/custom-fast.page';
 import { FoodInfoPage } from '../food-info/food-info.page';
 import { FastModalPage } from '../fast-modal/fast-modal.page';
+import { RestService } from '../rest.service';
+import { Router, Route } from '@angular/router';
 @Component({
   selector: 'app-fast',
   templateUrl: './fast.page.html',
@@ -16,7 +18,10 @@ export class FastPage implements OnInit {
   fasts: Array<Fast>;
   constructor(private resources: ResourcesService, 
               private modal: ModalController,
-              private popoverController: PopoverController) {
+              private popoverController: PopoverController,
+              private rest: RestService,
+              private router: Router,
+              private toastController: ToastController) {
     this.isPlay = false;
     this.percent = 100;
    }
@@ -24,6 +29,28 @@ export class FastPage implements OnInit {
   ngOnInit() {
     this.fasts = this.resources.getFasts();
     if (this.resources.IS_DEBUG_MODE) console.log(this.fasts);
+    this.rest.validateToken().then((res) => {
+      if(res.status == 403) {
+        this.router.navigate(['/login'])
+        return
+      }
+      else if(res.status != 200) {
+        this.presentToast("Something went wrong")
+        this.router.navigate(['/login'])
+        return
+      }
+    })
+  }
+
+  async presentToast(toastMessage) {
+    const toast = await this.toastController.create({
+      color: 'dark',
+      duration: 2000,
+      message: toastMessage,
+      showCloseButton: true
+    });
+
+    await toast.present();
   }
 
   async openCustomFastModal() {

@@ -130,6 +130,10 @@ async getChosenFast() {
   return value;
 }
 
+async setToken(v) {
+  this.setItem("sessionToken", v)
+}
+
 deleteChosenFast() {
   this.setItem("chosenFast", "");    
 }
