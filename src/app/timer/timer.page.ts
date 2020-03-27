@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourcesService, Fast, CompletedFast } from '../shared/resources.service';
-import { PopoverController, ToastController } from '@ionic/angular';
+import { PopoverController, ToastController, NavController } from '@ionic/angular';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { StorageService } from '../storage.service';
+import { RestService } from '../rest.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -34,7 +36,12 @@ export class TimerPage implements OnInit {
   eatEndTime: Date;
   constructor(private resources: ResourcesService,
     private toastController: ToastController,
-    private storage: StorageService) {
+    private storage: StorageService,
+    private rest: RestService,
+    private router: Router,
+    private navController: NavController
+  ) {
+    console.log("Timer - Constructor");
       if (this.resources.IS_DEBUG_MODE) console.log("constructor");
     this.didReOpen = false;
     this.storage.getFastStartTime().then((res) => {
@@ -116,6 +123,15 @@ export class TimerPage implements OnInit {
   }
 
   ionViewWillEnter() {
+    console.log("Timer - ionViewWillEnter");
+    this.rest.validateToken().then(res => {
+      console.log(res);
+      if(res.status != 200) {
+        this.navController.navigateBack("/login");
+      }
+    }, e => {
+      console.error(e);
+    })
     if (this.resources.IS_DEBUG_MODE) console.log(this.resources.getChosenFast());
     if (this.resources.IS_DEBUG_MODE) console.log(this.didReOpen, this.isPlay);
     if (!this.didReOpen && !this.isPlay && this.resources.getChosenFast()) {
@@ -135,6 +151,7 @@ export class TimerPage implements OnInit {
   }
 
   ngOnInit() {
+    console.log("Timer - ngOnInit");
     if (this.didReOpen) return;
     this.isPlay = false;
     this.percent = 100;

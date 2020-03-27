@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ResourcesService, Fast } from '../shared/resources.service';
-import { ModalController, PopoverController, ToastController } from '@ionic/angular';
+import { ModalController, PopoverController, ToastController, NavController } from '@ionic/angular';
 import { CustomFastPage } from '../custom-fast/custom-fast.page';
 import { FoodInfoPage } from '../food-info/food-info.page';
 import { FastModalPage } from '../fast-modal/fast-modal.page';
@@ -16,34 +16,37 @@ export class FastPage implements OnInit {
   percent: number;
   interval: any;
   fasts: Array<Fast>;
-  constructor(private resources: ResourcesService, 
-              private modal: ModalController,
-              private popoverController: PopoverController,
-              private rest: RestService,
-              private router: Router,
-              private toastController: ToastController) {
+  constructor(
+    private resources: ResourcesService, 
+    private modal: ModalController,
+    private popoverController: PopoverController,
+    private rest: RestService,
+    private router: Router,
+    private toastController: ToastController,
+    private navController: NavController
+  ) {
     this.isPlay = false;
     this.percent = 100;
+    console.log("Fast - Constructor");
    }
 
   ionViewWillEnter() {
-    console.log('here')
+    console.log('Fast - ionViewWillEnter')
     this.rest.validateToken().then((res) => {
       if(res.status == 403) {
-        this.router.navigate(['/login'])
-        return
+        this.navController.navigateBack('/login')
       }
       else if(res.status != 200) {
         this.resources.presentToast("Something went wrong")
-        this.router.navigate(['/login'])
-        return
+        this.navController.navigateBack('/login')
+      } else {
+        this.fasts =  this.resources.getFasts()
       }
-      this.fasts =  this.resources.getFasts() 
     })
   }
 
   ngOnInit() {
-    console.log('Refreshing')
+    console.log('Fast - ngOnInit')
     // this.fasts = this.resources.getFasts();
     if (this.resources.IS_DEBUG_MODE) console.log(this.fasts);
   }
@@ -53,6 +56,10 @@ export class FastPage implements OnInit {
       component: CustomFastPage
     })
     modal.present();
+  }
+
+  ionViewDidEnter() {
+    console.log("Fast - ionViewDidEnter");
   }
 
   async openFastModal(event, title) {

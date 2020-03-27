@@ -13,13 +13,15 @@ import { StorageService } from '../storage.service';
 export class LoginPage implements OnInit {
   private loginUsername: string
   private loginPassword: string
-  constructor(private rest: RestService,
-              private navController: NavController,
-              private router: Router,
-              private toastController:  ToastController,
-              private resources: ResourcesService,
-              private storage: StorageService,
-              private route: ActivatedRoute ) {
+  constructor(
+    private rest: RestService,
+    private navController: NavController,
+    private router: Router,
+    private toastController:  ToastController,
+    private resources: ResourcesService,
+    private storage: StorageService,
+    private route: ActivatedRoute,
+  ) {
     this.loginUsername = "asd@aol.com"
     this.loginPassword = "test1235"
     route.params.subscribe(val => {
@@ -46,43 +48,50 @@ export class LoginPage implements OnInit {
   }
 
   login() {
-    // if(!this.loginUsername) {
-    //   this.presentToast("Please provide a valid username")
-    //   return
-    // }
-    // if(!this.loginPassword) { 
-    //   this.presentToast("Please provide a password")
-    //   return
-    // }
-    // if(!this.validateEmail(this.loginUsername)) {
-    //   this.presentToast("Please provide a valid email id as a username")
-    //   return
-    // }
-    // // this.printpath('', this.router.config);
-    // this.rest.login(this.loginUsername,  this.loginPassword).then((response) => {
-    //   response.json().then((r) => {
-    //     if (this.resources.IS_DEBUG_MODE) console.log(r)
-    //     console.log(r)
-    //     if(r && r.meta && r.meta.status) {
-    //       // this.storage.setToken(r.data.sessionToken)
-    //       this.storage.asyncLocalStorage.setItem('sessionToken',  r.data.sessionToken).then((out)=> {
-    //         this.router.navigate(['/tabs/fast'])
-    //       })
-    //       // this.navController.navigateRoot('tabs/fast'); // navigates without slide animation
-    //      // navigates with slide animation, by default
-    //     }
-    //     else {
-    //       this.presentToast("Invalid Login Credentials")
-    //     }
-    //   }, (e) => {
-    //     if (this.resources.IS_DEBUG_MODE) console.log(e)
-    //     console.log(e)
-    //   })
-    // }).catch((err) => {
-    //   if (this.resources.IS_DEBUG_MODE) console.log(err)
-    //   console.log(err)
-    // })
-    this.router.navigate(['tabs/fast'])
+    if(!this.loginUsername) {
+      this.presentToast("Please provide a valid username")
+      return
+    }
+    if(!this.loginPassword) { 
+      this.presentToast("Please provide a password")
+      return
+    }
+    if(!this.validateEmail(this.loginUsername)) {
+      this.presentToast("Please provide a valid email id as a username")
+      return
+    }
+    // this.printpath('', this.router.config);
+    this.rest.login(this.loginUsername,  this.loginPassword).then((response) => {
+      response.json().then((r) => {
+        if (this.resources.IS_DEBUG_MODE) console.log(r)
+        console.log(r)
+        if(r && r.meta && r.meta.status) {
+          this.storage.setToken(r.data.sessionToken).then(o => {
+            console.log(o);
+            this.navController.navigateForward('/tabs/fast'); // navigates without slide animation
+            // this.router.navigate(['/tabs'], { skipLocationChange: false });
+          });
+          // this.storage.asyncLocalStorage.setItem('sessionToken', r.data.sessionToken).then((out)=> {
+          //   console.log(out);
+          //   setTimeout(() => {
+          //     this.router.navigate(['/tabs/fast'])
+          //   }, 300);
+          // })
+          // this.navController.navigateRoot('tabs/fast'); // navigates without slide animation
+         // this.router.navigate(['/tabs/fast']); // navigates with slide animation, by default
+        }
+        else {
+          this.presentToast("Invalid Login Credentials")
+        }
+      }, (e) => {
+        if (this.resources.IS_DEBUG_MODE) console.log(e)
+        console.log(e)
+      })
+    }).catch((err) => {
+      if (this.resources.IS_DEBUG_MODE) console.log(err)
+      console.log(err)
+    })
+    // this.router.navigate(['tabs/fast'])
   }
 
   async presentToast(toastMessage) {

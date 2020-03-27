@@ -2,6 +2,7 @@ import { Injectable, ɵConsole } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { listLazyRoutes } from '@angular/compiler/src/aot/lazy_routes';
 import { CompletedFast, Fast } from './shared/resources.service';
+import { resolve } from 'url';
 const { Storage } = Plugins;
 
 @Injectable({
@@ -51,13 +52,11 @@ export class StorageService {
 
  asyncLocalStorage = {
     setItem: function (key, value) {
-        return Promise.resolve().then( async function () {
-            // this.setItem(key, value);
-           await Storage.set({
-              key: key,
-              value: value
-            });
+        let promise = new Promise((resolve, reject) => {
+          this.setItem(key, value);
+          resolve();
         });
+        return promise;
     },
     getItem: function (key) {
         return Promise.resolve().then(function () {
@@ -65,7 +64,6 @@ export class StorageService {
         });
     }
 };
-
 
   // JSON "set" example
 async setObject() {
@@ -148,8 +146,12 @@ async getChosenFast() {
   return value;
 }
 
-async setToken(v) {
-  this.setItem("sessionToken", v)
+setToken(v) {
+  let promise = new Promise((resolve, reject) => {
+    this.setItem("sessionToken", v);
+    resolve();
+  });
+  return promise;
 }
 
 deleteChosenFast() {
