@@ -46,6 +46,19 @@ export class RestService {
     })
   }
 
+  async getFasts() {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/fasts'
+    return fetch(tmp, {
+      method: 'GET',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json'
+      },
+      // body: JSON.stringify(b)
+    })
+  }
+
   async validateToken() {
     const { value } = await Storage.get({ key: "sessionToken"});
     let tmp = 'http://localhost:3500/validateToken'

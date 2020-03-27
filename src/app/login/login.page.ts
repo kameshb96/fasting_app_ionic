@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RestService } from '../rest.service';
 import { NavController, ToastController } from '@ionic/angular';
-import { Router, Route } from '@angular/router';
+import { Router, Route, ActivatedRoute } from '@angular/router';
 import { ResourcesService } from '../shared/resources.service';
 import { StorageService } from '../storage.service';
 
@@ -18,9 +18,13 @@ export class LoginPage implements OnInit {
               private router: Router,
               private toastController:  ToastController,
               private resources: ResourcesService,
-              private storage: StorageService) {
+              private storage: StorageService,
+              private route: ActivatedRoute ) {
     this.loginUsername = "asd@aol.com"
     this.loginPassword = "test1235"
+    route.params.subscribe(val => {
+      console.log(val, "txextxc")
+    });
    }
 
   ngOnInit() {
@@ -42,36 +46,43 @@ export class LoginPage implements OnInit {
   }
 
   login() {
-    if(!this.loginUsername) {
-      this.presentToast("Please provide a valid username")
-      return
-    }
-    if(!this.loginPassword) { 
-      this.presentToast("Please provide a password")
-      return
-    }
-    if(!this.validateEmail(this.loginUsername)) {
-      this.presentToast("Please provide a valid email id as a username")
-      return
-    }
-    // this.printpath('', this.router.config);
-    this.rest.login(this.loginUsername,  this.loginPassword).then((response) => {
-      response.json().then((r) => {
-        if (this.resources.IS_DEBUG_MODE) console.log(r)
-        if(r && r.meta && r.meta.status) {
-          this.storage.setToken(r.data.sessionToken)
-          // this.navController.navigateRoot('tabs/fast'); // navigates without slide animation
-          this.router.navigate(['/tabs/fast']) // navigates with slide animation, by default
-        }
-        else {
-          this.presentToast("Invalid Login Credentials")
-        }
-      }, (e) => {
-        if (this.resources.IS_DEBUG_MODE) console.log(e)
-      })
-    }).catch((err) => {
-      if (this.resources.IS_DEBUG_MODE) console.log(err)
-    })
+    // if(!this.loginUsername) {
+    //   this.presentToast("Please provide a valid username")
+    //   return
+    // }
+    // if(!this.loginPassword) { 
+    //   this.presentToast("Please provide a password")
+    //   return
+    // }
+    // if(!this.validateEmail(this.loginUsername)) {
+    //   this.presentToast("Please provide a valid email id as a username")
+    //   return
+    // }
+    // // this.printpath('', this.router.config);
+    // this.rest.login(this.loginUsername,  this.loginPassword).then((response) => {
+    //   response.json().then((r) => {
+    //     if (this.resources.IS_DEBUG_MODE) console.log(r)
+    //     console.log(r)
+    //     if(r && r.meta && r.meta.status) {
+    //       // this.storage.setToken(r.data.sessionToken)
+    //       this.storage.asyncLocalStorage.setItem('sessionToken',  r.data.sessionToken).then((out)=> {
+    //         this.router.navigate(['/tabs/fast'])
+    //       })
+    //       // this.navController.navigateRoot('tabs/fast'); // navigates without slide animation
+    //      // navigates with slide animation, by default
+    //     }
+    //     else {
+    //       this.presentToast("Invalid Login Credentials")
+    //     }
+    //   }, (e) => {
+    //     if (this.resources.IS_DEBUG_MODE) console.log(e)
+    //     console.log(e)
+    //   })
+    // }).catch((err) => {
+    //   if (this.resources.IS_DEBUG_MODE) console.log(err)
+    //   console.log(err)
+    // })
+    this.router.navigate(['tabs/fast'])
   }
 
   async presentToast(toastMessage) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ResourcesService, Fast } from '../shared/resources.service';
 import { ModalController, PopoverController, ToastController } from '@ionic/angular';
 import { CustomFastPage } from '../custom-fast/custom-fast.page';
@@ -26,31 +26,26 @@ export class FastPage implements OnInit {
     this.percent = 100;
    }
 
-  ngOnInit() {
-    this.fasts = this.resources.getFasts();
-    if (this.resources.IS_DEBUG_MODE) console.log(this.fasts);
+  ionViewWillEnter() {
+    console.log('here')
     this.rest.validateToken().then((res) => {
       if(res.status == 403) {
         this.router.navigate(['/login'])
         return
       }
       else if(res.status != 200) {
-        this.presentToast("Something went wrong")
+        this.resources.presentToast("Something went wrong")
         this.router.navigate(['/login'])
         return
       }
+      this.fasts =  this.resources.getFasts() 
     })
   }
 
-  async presentToast(toastMessage) {
-    const toast = await this.toastController.create({
-      color: 'dark',
-      duration: 2000,
-      message: toastMessage,
-      showCloseButton: true
-    });
-
-    await toast.present();
+  ngOnInit() {
+    console.log('Refreshing')
+    // this.fasts = this.resources.getFasts();
+    if (this.resources.IS_DEBUG_MODE) console.log(this.fasts);
   }
 
   async openCustomFastModal() {

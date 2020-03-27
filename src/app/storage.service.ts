@@ -49,6 +49,24 @@ export class StorageService {
     // });
   }
 
+ asyncLocalStorage = {
+    setItem: function (key, value) {
+        return Promise.resolve().then( async function () {
+            // this.setItem(key, value);
+           await Storage.set({
+              key: key,
+              value: value
+            });
+        });
+    },
+    getItem: function (key) {
+        return Promise.resolve().then(function () {
+            return this.getItem(key);
+        });
+    }
+};
+
+
   // JSON "set" example
 async setObject() {
   await Storage.set({
