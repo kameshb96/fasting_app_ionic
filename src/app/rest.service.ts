@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Plugins } from '@capacitor/core';
+import { Fast } from './shared/resources.service';
 const { Storage } = Plugins;
 
 
@@ -41,6 +42,24 @@ export class RestService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(b)
+    })
+  }
+
+  async addFast(fast: Fast) {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/Fast'
+    let b = {
+      title: fast.getTitle(),
+      duration: fast.getDuration(),
+      description: fast.getDescription()
+    }
+    return fetch(tmp, {
+      method: 'POST',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(b)
     })

@@ -24,9 +24,9 @@ export class LoginPage implements OnInit {
   ) {
     this.loginUsername = "asd@aol.com"
     this.loginPassword = "test1235"
-    route.params.subscribe(val => {
-      console.log(val, "txextxc")
-    });
+    // route.params.subscribe(val => {
+    //   console.log(val, "txextxc")
+    // });
    }
 
   ngOnInit() {

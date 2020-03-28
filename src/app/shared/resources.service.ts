@@ -15,17 +15,13 @@ export class ResourcesService {
   private foodResult: Array<Object>;
   public IS_DEBUG_MODE: boolean = false;
   public currentNutritionPageDate: Date = new Date();
+  public isFastInitialized: boolean = false
   constructor(
     private storage: StorageService, 
     private rest: RestService,
     private router: Router,
     private toastController: ToastController) {
     this.foodLogs = [];
-    this.fasts.push(new Fast("16:8 Fast", new Date("2020-02-13T16:00:58.404-05:00"), "16 Hour Fast followed by an 8 hour eating window", true));
-    this.fasts.push(new Fast("12:12 Fast", new Date("2020-02-13T12:00:03.098-05:00"), "12 Hour Fast followed by a 12 hour eating window", true));
-    // for demo usage
-    this.fasts.push(new Fast("1.30 hrs", new Date("2020-03-01T01:30:44.257+05:30"), "One and an Half hour fast...", true));
-
     // this.storage.getFastList().then((res:any) => {
     //   if(res) {
     //     let arr = JSON.parse(res);
@@ -33,21 +29,6 @@ export class ResourcesService {
     //       this.fasts.push(new Fast(arr[i].title, new Date(arr[i].duration), arr[i].description, arr[i].isPredefined))
     //   }
     // });
-    this.rest.getFasts().then((res: any) => {
-      res.json((val) =>  {
-        if(res.status !=  200) {
-          this.presentToast("Something went wrong")
-          this.router.navigate(['/login'])
-          return
-        }
-        if(val.meta.status) {
-          let arr = val.data.fasts
-          for(let i = 0; i < arr.length; i++) {
-            this.fasts.push(new Fast(arr[i].title, new Date(arr[i].duration), arr[i].description, arr[i].isPredefined))
-          }
-        }
-      })      
-    })
     if (this.IS_DEBUG_MODE) console.log(this.fasts)
     // this.fasts.push(new Fast("A",new Date("2020-03-01T01:14:29.909-05:00"),"1"));
     // this.storage.updateFasts(this.fasts);
@@ -74,8 +55,34 @@ export class ResourcesService {
     return this.chosenFast;
   }
 
-  getFasts() {
-    return this.fasts;
+  async getFasts() {
+    if(this.isFastInitialized) {
+      return this.fasts;
+    }
+    this.fasts.push(new Fast("16:8 Fast", new Date("2020-02-13T16:00:58.404-05:00"), "16 Hour Fast followed by an 8 hour eating window", true));
+    this.fasts.push(new Fast("12:12 Fast", new Date("2020-02-13T12:00:03.098-05:00"), "12 Hour Fast followed by a 12 hour eating window", true));
+    // for demo usage
+    this.fasts.push(new Fast("1.30 hrs", new Date("2020-03-01T01:30:44.257+05:30"), "One and an Half hour fast...", true));
+    await this.rest.getFasts().then((res: any) => {
+      console.log(res)
+      res.json().then((val) =>  {
+        console.log(val)  
+        if(res.status !=  200) {
+          this.presentToast("Something went wrong")
+          this.router.navigate(['/login'])
+          return
+        }
+        if(val.meta.status) {
+          let arr = val.data.fasts
+          for(let i = 0; i < arr.length; i++) {
+            this.fasts.push(new Fast(arr[i].title, new Date(arr[i].duration), arr[i].description, arr[i].isPredefined))
+          }
+          this.isFastInitialized = true
+        }
+      })      
+    })
+    console.log("message")
+    return this.fasts
   }
 
   getCompletedFasts() {
@@ -128,8 +135,16 @@ export class ResourcesService {
     if (this.IS_DEBUG_MODE) console.log(this.fasts);
     let fast = new Fast(fastTitle, fastTime, description, isPre);
     if (this.IS_DEBUG_MODE) console.log(fast);
-    this.storage.addFast(fast);
-    this.fasts.push(fast)
+    // this.storage.addFast(fast);
+    this.rest.addFast(fast).then((res) => {
+      if(res.status == 200) {
+        res.json().then((json) => {
+          if(json.meta.status) {
+            this.fasts.push(fast)
+          }
+        })
+      }
+    })
   }
 
   deleteFast(index) {

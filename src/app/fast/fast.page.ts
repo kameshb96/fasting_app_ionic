@@ -40,7 +40,10 @@ export class FastPage implements OnInit {
         this.resources.presentToast("Something went wrong")
         this.navController.navigateBack('/login')
       } else {
-        this.fasts =  this.resources.getFasts()
+        // this.fasts =  this.resources.getFasts()
+        this.resources.getFasts().then((res) => {
+          this.fasts = res
+        })
       }
     })
   }
