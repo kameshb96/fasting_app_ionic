@@ -150,9 +150,15 @@ export class ResourcesService {
   deleteFast(index) {
     if (this.IS_DEBUG_MODE) console.log(this.fasts);
     if (this.IS_DEBUG_MODE) console.log(index);
+    let cf = this.fasts[index]
     this.fasts.splice(index,1);
     if (this.IS_DEBUG_MODE) console.log(this.fasts);
-    this.storage.deleteFast(index);
+    // this.storage.deleteFast(index);
+    this.rest.deleteFast(cf.getTitle()).then((val) => {
+      if(val.status != 200) {
+        this.presentToast("Something went wrong")
+      }
+    })
   }
 
   addCompletedFast(obj: CompletedFast) {

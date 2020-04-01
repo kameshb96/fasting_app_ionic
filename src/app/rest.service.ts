@@ -78,6 +78,21 @@ export class RestService {
     })
   }
 
+  async deleteFast(identifier) {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/fast'
+    return fetch(tmp, {
+      method: 'DELETE',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: identifier
+      })
+    })
+  }
+
   async validateToken() {
     const { value } = await Storage.get({ key: "sessionToken"});
     let tmp = 'http://localhost:3500/validateToken'

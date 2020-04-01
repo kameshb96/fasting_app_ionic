@@ -52,7 +52,9 @@ export class FastModalPage implements OnInit {
     if (this.resources.IS_DEBUG_MODE) console.log(this.fasts);
     this.resources.deleteFast(this.index);
     //this.storage.updateFasts(this.fasts);
-    this.modal.dismiss();
+    this.modal.dismiss({ 
+      isModalClosed: true
+    });
   }
 
   setFast() {

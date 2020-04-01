@@ -17,7 +17,7 @@ export class FastPage implements OnInit {
   interval: any;
   fasts: Array<Fast>;
   constructor(
-    private resources: ResourcesService, 
+    private resources: ResourcesService,
     private modal: ModalController,
     private popoverController: PopoverController,
     private rest: RestService,
@@ -28,15 +28,15 @@ export class FastPage implements OnInit {
     this.isPlay = false;
     this.percent = 100;
     console.log("Fast - Constructor");
-   }
+  }
 
   ionViewWillEnter() {
     console.log('Fast - ionViewWillEnter')
     this.rest.validateToken().then((res) => {
-      if(res.status == 403) {
+      if (res.status == 403) {
         this.navController.navigateBack('/login')
       }
-      else if(res.status != 200) {
+      else if (res.status != 200) {
         this.resources.presentToast("Something went wrong")
         this.navController.navigateBack('/login')
       } else {
@@ -69,14 +69,14 @@ export class FastPage implements OnInit {
     if (this.resources.IS_DEBUG_MODE) console.log(event);
     let selected = null;
     let i = 0;
-    for(; i < this.fasts.length; i++) {
-      if(this.fasts[i].getTitle() === title) {  
+    for (; i < this.fasts.length; i++) {
+      if (this.fasts[i].getTitle() === title) {
         selected = this.fasts[i];
         break;
       }
     }
     let data = {
-      selectedFast: selected, 
+      selectedFast: selected,
       index: i,
       fasts: this.fasts
     };
@@ -84,9 +84,20 @@ export class FastPage implements OnInit {
       component: FastModalPage,
       componentProps: data
     })
+    modal.onDidDismiss().then(res => {
+      if (this.resources.IS_DEBUG_MODE) console.log(res);
+      console.log(res)
+      if (res && res.data && res.data.isModalClosed) {
+        this.resources.getFasts().then((res) => {
+          this.fasts = res
+        })
+      }
+    }, err => {
+      if (this.resources.IS_DEBUG_MODE) console.log(err);
+    });
     modal.present();
   }
-  
+
 
   resetTime() {
     this.percent = 100;
@@ -97,7 +108,7 @@ export class FastPage implements OnInit {
 
   startTime() {
     this.isPlay = !this.isPlay;
-    if(this.interval) {
+    if (this.interval) {
       clearInterval(this.interval);
       this.interval = null;
     }
