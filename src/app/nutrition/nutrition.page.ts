@@ -24,6 +24,7 @@ export class NutritionPage implements OnInit {
   nextPageDate: Date;
   nextFilteredFoodLogs: Array<any>;
   nextTitle: string;
+  isLogAdded: boolean = false;
   constructor(private modalController: ModalController,
     private resources: ResourcesService,
     private storage: StorageService,
@@ -49,10 +50,10 @@ export class NutritionPage implements OnInit {
 
   ionViewWillEnter() {
     if (this.resources.IS_DEBUG_MODE) console.log(this.resources.currentNutritionPageDate)
-    if(this.resources.currentNutritionPageDate) {
-      this.currentPageDate = new Date(this.resources.currentNutritionPageDate);  
+    if (this.resources.currentNutritionPageDate) {
+      this.currentPageDate = new Date(this.resources.currentNutritionPageDate);
     } else {
-      this.currentPageDate = new Date(); 
+      this.currentPageDate = new Date();
     }
     this.slides.slideTo(1, 0);
   }
@@ -71,21 +72,27 @@ export class NutritionPage implements OnInit {
 
   setPageData(d: Date) {
     let date = new Date(d);
-    this.resources.currentNutritionPageDate = new Date (date);
+    this.resources.currentNutritionPageDate = new Date(date);
     this.previousPageDate = new Date(date);
     this.previousPageDate.setDate(this.previousPageDate.getDate() - 1);
     this.nextPageDate = new Date(date);
     this.nextPageDate.setDate(this.nextPageDate.getDate() + 1);
     this.currentPageDate = new Date(date);
     if (this.resources.IS_DEBUG_MODE) console.log(date);
-    this.filteredFoodLogs = this.getFilteredLogs(date);
-    this.title = this.setTitle2(date);
-    date.setDate(date.getDate() - 1);
-    this.previousFilteredFoodLogs = this.getFilteredLogs(date);
-    this.previousTitle = this.setTitle2(date);
-    date.setDate(date.getDate() + 2);
-    this.nextFilteredFoodLogs = this.getFilteredLogs(date);
-    this.nextTitle = this.setTitle2(date);
+    this.getFilteredLogs(date).then((res) => {
+      this.filteredFoodLogs = res
+      this.title = this.setTitle2(date);
+      date.setDate(date.getDate() - 1);
+      this.getFilteredLogs(date).then((res2) => {
+        this.previousFilteredFoodLogs = res2
+        this.previousTitle = this.setTitle2(date);
+        date.setDate(date.getDate() + 2);
+        this.getFilteredLogs(date).then((res3) => {
+          this.nextFilteredFoodLogs = res3
+          this.nextTitle = this.setTitle2(date);
+        })
+      })
+    })
     if (this.resources.IS_DEBUG_MODE) console.log("Current: ", this.title, this.filteredFoodLogs);
     if (this.resources.IS_DEBUG_MODE) console.log("Prev: ", this.previousTitle, this.previousFilteredFoodLogs);
     if (this.resources.IS_DEBUG_MODE) console.log("Next: ", this.nextTitle, this.nextFilteredFoodLogs);
@@ -136,45 +143,49 @@ export class NutritionPage implements OnInit {
     this.slides.slideTo(0);
   }
 
-  getFilteredLogs(date: Date) {
-    this.foodLogs = this.resources.getFoodLogs();
-    let n = this.foodLogs.length;
-    let tmp = [];
-    for (let i = 0; i < n; i++) {
-      this.foodLogs[i].date = this.foodLogs[i].date instanceof Date ? this.foodLogs[i].date : new Date(this.foodLogs[i].date);
-      if (this.checkDate(this.foodLogs[i].date, date)) {
-        tmp.push(this.foodLogs[i]);
+  async getFilteredLogs(date: Date) {
+    let tmp = []
+    await this.resources.getFoodLogs(this.isLogAdded).then((val) => {
+      this.isLogAdded = false
+      this.foodLogs = val
+      let n = this.foodLogs.length;
+      for (let i = 0; i < n; i++) {
+        this.foodLogs[i].date = this.foodLogs[i].date instanceof Date ? this.foodLogs[i].date : new Date(this.foodLogs[i].date);
+        if (this.checkDate(this.foodLogs[i].date, date)) {
+          tmp.push(this.foodLogs[i]);
+        }
       }
-    }
-    n = tmp.length;
-    for (let i = 0; i < n; i++) {
-      if (this.resources.IS_DEBUG_MODE) console.log(tmp[i]);
-      let d1 = tmp[i].time instanceof Date ? tmp[i].date : new Date(tmp[i].date);
-      tmp[i].formattedTime = this.timeUtil(d1.getHours(), d1.getMinutes());
-    }
-
+      n = tmp.length;
+      for (let i = 0; i < n; i++) {
+        if (this.resources.IS_DEBUG_MODE) console.log(tmp[i]);
+        let d1 = tmp[i].time instanceof Date ? tmp[i].date : new Date(tmp[i].date);
+        tmp[i].formattedTime = this.timeUtil(d1.getHours(), d1.getMinutes());
+      }
+    })
     return tmp;
   }
 
   filterLogsByDate() {
-    this.foodLogs = this.resources.getFoodLogs();
+    this.resources.getFoodLogs().then((res) => {
+      this.foodLogs = res
+      this.filteredFoodLogs.sort((a, b) => a.time > b.time ? 1 : -1);
+      if (this.resources.IS_DEBUG_MODE) console.log(this.filteredFoodLogs);
+      let fl = this.filteredFoodLogs;
+      fl.forEach(e => {
+        if (this.resources.IS_DEBUG_MODE) console.log(e);
+        if (e.time instanceof Date) {
+          e.time = this.timeUtil(e.time.getHours(), e.time.getMinutes());
+        }
+      });
+      this.filteredFoodLogs = fl;
+    })
     // this.filteredFoodLogs = this.foodLogs.filter( (log)=> this.checkDate(log));
-    this.filteredFoodLogs.sort((a, b) => a.time > b.time ? 1 : -1);
-    if (this.resources.IS_DEBUG_MODE) console.log(this.filteredFoodLogs);
-    let fl = this.filteredFoodLogs;
-    fl.forEach(e => {
-      if (this.resources.IS_DEBUG_MODE) console.log(e);
-      if (e.time instanceof Date) {
-        e.time = this.timeUtil(e.time.getHours(), e.time.getMinutes());
-      }
-    });
-    this.filteredFoodLogs = fl;
   }
 
-  refreshPage(refreshDate = new Date(), shouldSlide=true) {
+  refreshPage(refreshDate = new Date(), shouldSlide = true) {
     // this.foodLogs = this.resources.getFoodLogs();
     this.setPageData(refreshDate);
-    if(shouldSlide) this.slides.slideTo(1, 0);
+    if (shouldSlide) this.slides.slideTo(1, 0);
   }
 
   async openModal() {
@@ -187,7 +198,11 @@ export class NutritionPage implements OnInit {
     });
     modal.onDidDismiss().then(res => {
       if (this.resources.IS_DEBUG_MODE) console.log(res);
-      if (res && res.data) this.refreshPage(this.currentPageDate, false);
+      console.log(res)
+      if (res && res.data) {
+        this.isLogAdded = true
+        this.refreshPage(this.currentPageDate, false);
+      }
     }, err => {
       if (this.resources.IS_DEBUG_MODE) console.log(err);
     });

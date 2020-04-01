@@ -16,6 +16,7 @@ export class ResourcesService {
   public IS_DEBUG_MODE: boolean = false;
   public currentNutritionPageDate: Date = new Date();
   public isFastInitialized: boolean = false
+  public isLogsInitialized: boolean = false
   constructor(
     private storage: StorageService, 
     private rest: RestService,
@@ -89,9 +90,28 @@ export class ResourcesService {
     return this.completedFasts;
   }
 
-  getFoodLogs() {
+  async getFoodLogs(shouldRefresh = false) {
     //  return this.foodLogs;
-    return this.storage.getFoodLogs();
+    // return this.storage.getFoodLogs();
+    if(this.isLogsInitialized && !shouldRefresh) {
+      return this.foodLogs
+    }
+    await this.rest.getLogs().then(async (res : any) => {
+      console.log(res)
+      await res.json().then((val) =>  {
+        console.log(val)  
+        if(res.status !=  200) {
+          this.presentToast("Something went wrong")
+          this.router.navigate(['/login'])
+          return
+        }
+        if(val.meta.status) {
+          this.foodLogs = val.data.logs
+          this.isLogsInitialized = true
+        }
+      })      
+    })
+    return this.foodLogs
   }
 
   setFoodResult(result) {
@@ -155,7 +175,13 @@ export class ResourcesService {
     if (this.IS_DEBUG_MODE) console.log(this.fasts);
     // this.storage.deleteFast(index);
     this.rest.deleteFast(cf.getTitle()).then((val) => {
-      if(val.status != 200) {
+      if(val.status == 400) {
+        this.presentToast("Insufficient info")
+      }
+      else if(val.status == 403) {
+        this.presentToast("Invalid sessionToken")
+      }
+      else if(val.status != 200) {
         this.presentToast("Something went wrong")
       }
     })
@@ -169,8 +195,19 @@ export class ResourcesService {
 
   addFoodLog(obj) {
     if (this.IS_DEBUG_MODE) console.log(obj);
-    this.storage.addLogItem(obj);
+    //this.storage.addLogItem(obj);
     //this.foodLogs.push(obj);
+    this.rest.addLog(obj).then((val) => {
+      if(val.status == 400) {
+        this.presentToast("Insufficient info")
+      }
+      else if(val.status == 403) {
+        this.presentToast("Invalid sessionToken")
+      }
+      else if(val.status != 200) {
+        this.presentToast("Something went wrong")
+      }
+    })
   }
 
   async presentToast(toastMessage) {

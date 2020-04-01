@@ -93,6 +93,32 @@ export class RestService {
     })
   }
 
+  async addLog(log) {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/log'
+    return fetch(tmp, {
+      method: 'POST',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(log)
+    })
+  }
+
+  async getLogs() {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/logs'
+    return fetch(tmp, {
+      method: 'GET',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json'
+      },
+      // body: JSON.stringify(log)
+    })
+  }
+
   async validateToken() {
     const { value } = await Storage.get({ key: "sessionToken"});
     let tmp = 'http://localhost:3500/validateToken'
