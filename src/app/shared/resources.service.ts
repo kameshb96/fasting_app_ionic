@@ -87,8 +87,8 @@ export class ResourcesService {
     return this.fasts
   }
 
-  async getCompletedFasts() {
-    if (this.isHistoryInitialized)
+  async getCompletedFasts(shouldRefresh = false) {
+    if (this.isHistoryInitialized && !shouldRefresh)
       return this.completedFasts;
     await this.rest.getCompletedFasts().then(async (res: any) => {
       this.isHistoryInitialized = true
@@ -103,7 +103,7 @@ export class ResourcesService {
         if (history) {
           for (let i = 0; i < history.length; i++) {
             let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description, history[i].fast.isPredefined);
-            let cf = new CompletedFast(fast, history[i].fastStartTime, history[i].eatStartTime, history[i].eatEndTime);
+            let cf = new CompletedFast(history[i]._id, fast, history[i].fastStartTime, history[i].eatStartTime, history[i].eatEndTime);
             this.completedFasts.push(cf);
           }
         }
@@ -156,19 +156,31 @@ export class ResourcesService {
     return this.foodResult
   }
 
-  deleteCompletedFast(fastStartTime) {
-    for (let i = 0; i < this.completedFasts.length; i++) {
-      if (!(fastStartTime instanceof Date))
-        fastStartTime = new Date(fastStartTime)
-      let d = this.completedFasts[i].getDetails().fastStartTime
-      if (!(d instanceof Date))
-        d = new Date(d)
-      if (fastStartTime.getTime() == d.getTime()) {
-        this.completedFasts.splice(i, 1);
-        this.storage.deleteCompletedFast(i);
-        return;
+  async deleteCompletedFast(id, fastStartTime = null) {
+    console.log(id)
+    await this.rest.deleteCompletedFast(id).then((val) => {
+      if (val.status == 400) {
+        this.presentToast("Insufficient info")
       }
-    }
+      else if (val.status == 403) {
+        this.presentToast("Invalid sessionToken")
+      }
+      else if (val.status != 200) {
+        this.presentToast("Something went wrong")
+      }
+    })
+    // for (let i = 0; i < this.completedFasts.length; i++) {
+    //   if (!(fastStartTime instanceof Date))
+    //     fastStartTime = new Date(fastStartTime)
+    //   let d = this.completedFasts[i].getDetails().fastStartTime
+    //   if (!(d instanceof Date))
+    //     d = new Date(d)
+    //   if (fastStartTime.getTime() == d.getTime()) {
+    //     this.completedFasts.splice(i, 1);
+    //     this.storage.deleteCompletedFast(i);
+    //     return;
+    //   }
+    // }
   }
 
   async deleteLog(id) {
@@ -309,12 +321,14 @@ export class Fast {
 }
 
 export class CompletedFast {
+  public _id: any;
   private fast: Fast;
   private fastStartTime: any;
   private eatStartTime: any;
   private eatEndTime: any;
 
-  constructor(fast, fastStartTime, eatStartTime, eatEndTime) {
+  constructor(_id, fast, fastStartTime, eatStartTime, eatEndTime) {
+    this._id = _id
     this.fast = fast;
     this.fastStartTime = fastStartTime;
     this.eatStartTime = eatStartTime;
@@ -323,6 +337,7 @@ export class CompletedFast {
 
   public getDetails() {
     return {
+      _id: this._id,
       fast: this.fast,
       fastStartTime: this.fastStartTime,
       eatStartTime: this.eatStartTime,

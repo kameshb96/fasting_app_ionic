@@ -159,6 +159,21 @@ export class RestService {
       // body: JSON.stringify(log)
     })
   }
+
+  async deleteCompletedFast(identifier) {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/completedFast'
+    return fetch(tmp, {
+      method: 'DELETE',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: identifier
+      })
+    })
+  }
   
 
   async validateToken() {

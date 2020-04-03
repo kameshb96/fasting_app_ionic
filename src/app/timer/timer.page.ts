@@ -108,7 +108,7 @@ export class TimerPage implements OnInit {
             else {
               if (this.resources.IS_DEBUG_MODE) console.log("Here in else")
               this.resources.addCompletedFast(
-                new CompletedFast(this.resources.getChosenFast(), 
+                new CompletedFast(null, this.resources.getChosenFast(), 
                 this.fastStartTime,
                 null,
                 null));
@@ -263,7 +263,7 @@ export class TimerPage implements OnInit {
           else {
             this.eatEndTime = new Date();
             this.stopTimer();
-            let cf = new CompletedFast(this.resources.getChosenFast(),
+            let cf = new CompletedFast(null, this.resources.getChosenFast(),
               this.fastStartTime,
               this.eatStartTime,
               this.eatEndTime);

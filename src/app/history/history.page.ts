@@ -10,19 +10,25 @@ import { ActionSheetController } from '@ionic/angular';
 })
 export class HistoryPage implements OnInit {
   private completedFasts: Array<any>;
-
+  private shouldRefresh: boolean = false;
   constructor(private resources: ResourcesService, 
               private actionSheetController: ActionSheetController) { }
 
   ngOnInit() {}
 
-  ionViewWillEnter()  {
-    this.resources.getCompletedFasts().then((res) => {
+  refreshPage() {
+    this.resources.getCompletedFasts(this.shouldRefresh).then((res) => {
+      this.shouldRefresh = false
       this.completedFasts = res
       for(let i = 0; i < this.completedFasts.length; i++) {
         this.completedFasts[i].formattedStartTime = this.timeUtil(this.completedFasts[i].fastStartTime)
       }
     })
+  }
+
+  ionViewWillEnter()  {
+    this.shouldRefresh =  true
+    this.refreshPage()
     // setTimeout(() => {
     //   let history = this.resources.getCompletedFasts();
     //   history.forEach(e => {
@@ -34,19 +40,22 @@ export class HistoryPage implements OnInit {
     // }, 500);
   }
 
-  deleteHistory(cf) {
-    this.resources.deleteCompletedFast(cf);
+  async deleteHistory(id) {
+    await this.resources.deleteCompletedFast(id).then(() => {
+      this.shouldRefresh = true
+      this.refreshPage()
+    })
   }
   // Name of fast
   // Date dd/mm/yyyy hh:mm
-  async openActionSheet(event, date) {
+  async openActionSheet(event, date, id) {
     const actionSheet = await this.actionSheetController.create({
       buttons: [{
         text: 'Delete',
         role: 'destructive',
         icon: 'trash',
-        handler: () => {
-          this.deleteHistory(date);
+        handler: async () => {
+          await this.deleteHistory(id);
         }
       }, {
         text: 'Cancel',
