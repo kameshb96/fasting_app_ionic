@@ -24,7 +24,7 @@ export class NutritionPage implements OnInit {
   nextPageDate: Date;
   nextFilteredFoodLogs: Array<any>;
   nextTitle: string;
-  isLogAdded: boolean = false;
+  shouldRefreshLog: boolean = false;
   constructor(private modalController: ModalController,
     private resources: ResourcesService,
     private storage: StorageService,
@@ -145,8 +145,8 @@ export class NutritionPage implements OnInit {
 
   async getFilteredLogs(date: Date) {
     let tmp = []
-    await this.resources.getFoodLogs(this.isLogAdded).then((val) => {
-      this.isLogAdded = false
+    await this.resources.getFoodLogs(this.shouldRefreshLog).then((val) => {
+      this.shouldRefreshLog = false
       this.foodLogs = val
       let n = this.foodLogs.length;
       for (let i = 0; i < n; i++) {
@@ -184,6 +184,7 @@ export class NutritionPage implements OnInit {
 
   refreshPage(refreshDate = new Date(), shouldSlide = true) {
     // this.foodLogs = this.resources.getFoodLogs();
+    console.log("In refresh page")
     this.setPageData(refreshDate);
     if (shouldSlide) this.slides.slideTo(1, 0);
   }
@@ -200,7 +201,7 @@ export class NutritionPage implements OnInit {
       if (this.resources.IS_DEBUG_MODE) console.log(res);
       console.log(res)
       if (res && res.data) {
-        this.isLogAdded = true
+        this.shouldRefreshLog = true
         this.refreshPage(this.currentPageDate, false);
       }
     }, err => {
@@ -209,19 +210,22 @@ export class NutritionPage implements OnInit {
     modal.present();
   }
 
-  deleteLog(date) {
-    this.resources.deleteLog(date);
-    this.refreshPage(this.currentPageDate, false);
+  async deleteLog(id) {
+    this.shouldRefreshLog = true
+    await this.resources.deleteLog(id).then(() => {
+      this.refreshPage(this.currentPageDate, false);
+    })
   }
 
-  async openActionSheet(event, date) {
+  async openActionSheet(event, date, _id) {
+    console.log(_id)
     const actionSheet = await this.actionSheetController.create({
       buttons: [{
         text: 'Delete',
         role: 'destructive',
         icon: 'trash',
-        handler: () => {
-          this.deleteLog(date);
+        handler: async () => {
+          await this.deleteLog(_id);
         }
       }, {
         text: 'Cancel',

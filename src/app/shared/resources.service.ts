@@ -137,18 +137,29 @@ export class ResourcesService {
     }
   }
 
-  deleteLog(date) {
-    this.foodLogs = this.storage.getFoodLogs();
-    let d = new Date(date);
-    for(let i = 0; i < this.foodLogs.length; i++) {
-      let d2 = new Date(this.foodLogs[i].date);
-      if (this.IS_DEBUG_MODE) console.log(d, d2);
-      if (d.getTime() == d2.getTime()) {
-        this.foodLogs.splice(i, 1);
-        this.storage.updateLogs(this.foodLogs);
-        return;
+  async deleteLog(id) {
+    // this.foodLogs = this.storage.getFoodLogs();
+    await this.rest.deleteLog(id).then((val) => {
+      if(val.status == 400) {
+        this.presentToast("Insufficient info")
       }
-    }
+      else if(val.status == 403) {
+        this.presentToast("Invalid sessionToken")
+      }
+      else if(val.status != 200) {
+        this.presentToast("Something went wrong")
+      }
+    })
+    // let d = new Date(date);
+    // for(let i = 0; i < this.foodLogs.length; i++) {
+    //   let d2 = new Date(this.foodLogs[i].date);
+    //   if (this.IS_DEBUG_MODE) console.log(d, d2);
+    //   if (d.getTime() == d2.getTime()) {
+    //     this.foodLogs.splice(i, 1);
+    //     this.storage.updateLogs(this.foodLogs);
+    //     return;
+    //   }
+    // }
   }
 
   addFast(fastTime, fastTitle, description, isPre) {
