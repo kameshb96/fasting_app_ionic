@@ -17,10 +17,12 @@ export class HistoryPage implements OnInit {
   ngOnInit() {}
 
   ionViewWillEnter()  {
-    this.completedFasts = this.resources.getCompletedFasts();
-    for(let i = 0; i < this.completedFasts.length; i++) {
-      this.completedFasts[i].formattedStartTime = this.timeUtil(this.completedFasts[i].fastStartTime)
-    }
+    this.resources.getCompletedFasts().then((res) => {
+      this.completedFasts = res
+      for(let i = 0; i < this.completedFasts.length; i++) {
+        this.completedFasts[i].formattedStartTime = this.timeUtil(this.completedFasts[i].fastStartTime)
+      }
+    })
     // setTimeout(() => {
     //   let history = this.resources.getCompletedFasts();
     //   history.forEach(e => {

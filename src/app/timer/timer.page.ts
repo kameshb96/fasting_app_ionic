@@ -267,10 +267,11 @@ export class TimerPage implements OnInit {
               this.fastStartTime,
               this.eatStartTime,
               this.eatEndTime);
-            this.resources.addCompletedFast(cf);
-            this.storage.deleteFastStartTime();
-            this.storage.deleteChosenFast();
-            this.resetTimer();
+            this.resources.addCompletedFast(cf).then(() => {
+              this.storage.deleteFastStartTime();
+              this.storage.deleteChosenFast();
+              this.resetTimer();
+            })
           }
         }
       }, 1000);

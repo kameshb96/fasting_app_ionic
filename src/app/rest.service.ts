@@ -134,6 +134,33 @@ export class RestService {
     })
   }
 
+  async addCompletedFast(completedFast) {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/completedFast'
+    return fetch(tmp, {
+      method: 'POST',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(completedFast)
+    })
+  }
+
+   async getCompletedFasts() {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/completedFasts'
+    return fetch(tmp, {
+      method: 'GET',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json'
+      },
+      // body: JSON.stringify(log)
+    })
+  }
+  
+
   async validateToken() {
     const { value } = await Storage.get({ key: "sessionToken"});
     let tmp = 'http://localhost:3500/validateToken'

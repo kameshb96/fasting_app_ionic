@@ -17,8 +17,9 @@ export class ResourcesService {
   public currentNutritionPageDate: Date = new Date();
   public isFastInitialized: boolean = false
   public isLogsInitialized: boolean = false
+  public isHistoryInitialized: boolean = false
   constructor(
-    private storage: StorageService, 
+    private storage: StorageService,
     private rest: RestService,
     private router: Router,
     private toastController: ToastController) {
@@ -34,18 +35,18 @@ export class ResourcesService {
     // this.fasts.push(new Fast("A",new Date("2020-03-01T01:14:29.909-05:00"),"1"));
     // this.storage.updateFasts(this.fasts);
     //this.completedFasts = this.storage.getCompletedFast();
-    this.storage.getFastHistory().then((res: any) => {
-      if (this.IS_DEBUG_MODE) console.log(res);
-      let history = JSON.parse(res);
-      if (history) {
-        for (let i = 0; i < history.length; i++) {
-          let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description, history[i].fast.isPredefined);
-          let cf = new CompletedFast(fast, history[i].fastStartTime, history[i].eatStartTime, history[i].eatEndTime);
-          this.completedFasts.push(cf);
-        }
-      }
-    });
-    this.foodLogs = this.storage.getFoodLogs();
+    // this.storage.getFastHistory().then((res: any) => {
+    //   if (this.IS_DEBUG_MODE) console.log(res);
+    //   let history = JSON.parse(res);
+    //   if (history) {
+    //     for (let i = 0; i < history.length; i++) {
+    //       let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description, history[i].fast.isPredefined);
+    //       let cf = new CompletedFast(fast, history[i].fastStartTime, history[i].eatStartTime, history[i].eatEndTime);
+    //       this.completedFasts.push(cf);
+    //     }
+    //   }
+    // });
+    // this.foodLogs = this.storage.getFoodLogs();
   }
 
   setChosenFast(fast: Fast) {
@@ -57,7 +58,7 @@ export class ResourcesService {
   }
 
   async getFasts() {
-    if(this.isFastInitialized) {
+    if (this.isFastInitialized) {
       return this.fasts;
     }
     this.fasts.push(new Fast("16:8 Fast", new Date("2020-02-13T16:00:58.404-05:00"), "16 Hour Fast followed by an 8 hour eating window", true));
@@ -66,50 +67,83 @@ export class ResourcesService {
     this.fasts.push(new Fast("1.30 hrs", new Date("2020-03-01T01:30:44.257+05:30"), "One and an Half hour fast...", true));
     await this.rest.getFasts().then((res: any) => {
       console.log(res)
-      res.json().then((val) =>  {
-        console.log(val)  
-        if(res.status !=  200) {
+      res.json().then((val) => {
+        console.log(val)
+        if (res.status != 200) {
           this.presentToast("Something went wrong")
           this.router.navigate(['/login'])
           return
         }
-        if(val.meta.status) {
+        if (val.meta.status) {
           let arr = val.data.fasts
-          for(let i = 0; i < arr.length; i++) {
+          for (let i = 0; i < arr.length; i++) {
             this.fasts.push(new Fast(arr[i].title, new Date(arr[i].duration), arr[i].description, arr[i].isPredefined))
           }
           this.isFastInitialized = true
         }
-      })      
+      })
     })
     console.log("message")
     return this.fasts
   }
 
-  getCompletedFasts() {
-    return this.completedFasts;
+  async getCompletedFasts() {
+    if (this.isHistoryInitialized)
+      return this.completedFasts;
+    await this.rest.getCompletedFasts().then(async (res: any) => {
+      this.isHistoryInitialized = true
+      if (res.status != 200) {
+        this.presentToast("Something went wrong")
+        return
+      }
+      this.completedFasts = []
+      await res.json().then((val) => {
+        console.log(val)
+        let history = val.data
+        if (history) {
+          for (let i = 0; i < history.length; i++) {
+            let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description, history[i].fast.isPredefined);
+            let cf = new CompletedFast(fast, history[i].fastStartTime, history[i].eatStartTime, history[i].eatEndTime);
+            this.completedFasts.push(cf);
+          }
+        }
+      })
+    })
+    // this.storage.getFastHistory().then((res: any) => {
+    //   if (this.IS_DEBUG_MODE) console.log(res);
+    //   let history = JSON.parse(res);
+    //   if (history) {
+    //     for (let i = 0; i < history.length; i++) {
+    //       let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description, history[i].fast.isPredefined);
+    //       let cf = new CompletedFast(fast, history[i].fastStartTime, history[i].eatStartTime, history[i].eatEndTime);
+    //       this.completedFasts.push(cf);
+    //     }
+    //   }
+    // });
+    console.log(this.completedFasts)
+    return this.completedFasts
   }
 
   async getFoodLogs(shouldRefresh = false) {
     //  return this.foodLogs;
     // return this.storage.getFoodLogs();
-    if(this.isLogsInitialized && !shouldRefresh) {
+    if (this.isLogsInitialized && !shouldRefresh) {
       return this.foodLogs
     }
-    await this.rest.getLogs().then(async (res : any) => {
+    await this.rest.getLogs().then(async (res: any) => {
       console.log(res)
-      await res.json().then((val) =>  {
-        console.log(val)  
-        if(res.status !=  200) {
+      await res.json().then((val) => {
+        console.log(val)
+        if (res.status != 200) {
           this.presentToast("Something went wrong")
           this.router.navigate(['/login'])
           return
         }
-        if(val.meta.status) {
+        if (val.meta.status) {
           this.foodLogs = val.data.logs
           this.isLogsInitialized = true
         }
-      })      
+      })
     })
     return this.foodLogs
   }
@@ -123,14 +157,14 @@ export class ResourcesService {
   }
 
   deleteCompletedFast(fastStartTime) {
-    for(let i = 0; i < this.completedFasts.length; i++) {
-      if(!(fastStartTime instanceof Date)) 
+    for (let i = 0; i < this.completedFasts.length; i++) {
+      if (!(fastStartTime instanceof Date))
         fastStartTime = new Date(fastStartTime)
       let d = this.completedFasts[i].getDetails().fastStartTime
-      if(!(d instanceof Date))
+      if (!(d instanceof Date))
         d = new Date(d)
-      if(fastStartTime.getTime() == d.getTime()) {
-        this.completedFasts.splice(i,1);
+      if (fastStartTime.getTime() == d.getTime()) {
+        this.completedFasts.splice(i, 1);
         this.storage.deleteCompletedFast(i);
         return;
       }
@@ -140,13 +174,13 @@ export class ResourcesService {
   async deleteLog(id) {
     // this.foodLogs = this.storage.getFoodLogs();
     await this.rest.deleteLog(id).then((val) => {
-      if(val.status == 400) {
+      if (val.status == 400) {
         this.presentToast("Insufficient info")
       }
-      else if(val.status == 403) {
+      else if (val.status == 403) {
         this.presentToast("Invalid sessionToken")
       }
-      else if(val.status != 200) {
+      else if (val.status != 200) {
         this.presentToast("Something went wrong")
       }
     })
@@ -168,9 +202,9 @@ export class ResourcesService {
     if (this.IS_DEBUG_MODE) console.log(fast);
     // this.storage.addFast(fast);
     this.rest.addFast(fast).then((res) => {
-      if(res.status == 200) {
+      if (res.status == 200) {
         res.json().then((json) => {
-          if(json.meta.status) {
+          if (json.meta.status) {
             this.fasts.push(fast)
           }
         })
@@ -182,26 +216,37 @@ export class ResourcesService {
     if (this.IS_DEBUG_MODE) console.log(this.fasts);
     if (this.IS_DEBUG_MODE) console.log(index);
     let cf = this.fasts[index]
-    this.fasts.splice(index,1);
+    this.fasts.splice(index, 1);
     if (this.IS_DEBUG_MODE) console.log(this.fasts);
     // this.storage.deleteFast(index);
     this.rest.deleteFast(cf.getTitle()).then((val) => {
-      if(val.status == 400) {
+      if (val.status == 400) {
         this.presentToast("Insufficient info")
       }
-      else if(val.status == 403) {
+      else if (val.status == 403) {
         this.presentToast("Invalid sessionToken")
       }
-      else if(val.status != 200) {
+      else if (val.status != 200) {
         this.presentToast("Something went wrong")
       }
     })
   }
 
-  addCompletedFast(obj: CompletedFast) {
-    this.storage.addCompletedFast(obj);
+  async addCompletedFast(obj: CompletedFast) {
+    // this.storage.addCompletedFast(obj);
+    await this.rest.addCompletedFast(obj).then((val) => {
+      if (val.status == 400) {
+        this.presentToast("Insufficient info")
+      }
+      else if (val.status == 403) {
+        this.presentToast("Invalid sessionToken")
+      }
+      else if (val.status != 200) {
+        this.presentToast("Something went wrong")
+      }
+      this.completedFasts.push(obj);
+    })
     //this.completedFasts = this.storage.getCompletedFast();
-    this.completedFasts.push(obj);
   }
 
   addFoodLog(obj) {
@@ -209,13 +254,13 @@ export class ResourcesService {
     //this.storage.addLogItem(obj);
     //this.foodLogs.push(obj);
     this.rest.addLog(obj).then((val) => {
-      if(val.status == 400) {
+      if (val.status == 400) {
         this.presentToast("Insufficient info")
       }
-      else if(val.status == 403) {
+      else if (val.status == 403) {
         this.presentToast("Invalid sessionToken")
       }
-      else if(val.status != 200) {
+      else if (val.status != 200) {
         this.presentToast("Something went wrong")
       }
     })
