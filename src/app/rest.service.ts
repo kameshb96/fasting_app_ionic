@@ -32,6 +32,19 @@ export class RestService {
     })
   }
 
+  async logout() {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/logout'
+    return fetch(tmp, {
+      method: 'PUT',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json',
+      },
+      // body: JSON.stringify(b)
+    })
+  }
+
   public register(loginUsername, loginPassword) {
     let tmp = 'http://localhost:3500/register'
     let b = {

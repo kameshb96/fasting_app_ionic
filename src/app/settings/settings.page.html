@@ -1,9 +1,22 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>settings</ion-title>
+    <ion-title>Settings</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-item>
+    <ion-icon name="notifications-outline"></ion-icon>
+    <ion-label style="margin-left: 2%;">Enable Notifications</ion-label>
+    <ion-toggle [(ngModel)]="notification" color="success"></ion-toggle>
+  </ion-item>
+  <ion-item>
+    <ion-icon name="moon"></ion-icon>
+    <ion-label style="margin-left: 2%;">Dark Mode</ion-label>
+    <ion-toggle [(ngModel)]="darkMode" color="success"></ion-toggle>
+  </ion-item>
+  <ion-item (click)="logout()">
+    <ion-icon name="log-out"></ion-icon>
+    <ion-label style="margin-left: 2%;">Logout</ion-label>
+  </ion-item>
 </ion-content>

@@ -49,6 +49,22 @@ export class ResourcesService {
     // this.foodLogs = this.storage.getFoodLogs();
   }
 
+  logout() {
+    this.rest.logout().then((val) => {
+      if (val.status == 403) {
+        this.presentToast("Invalid sessionToken")
+      }
+      else if (val.status != 200) {
+        this.presentToast("Something went wrong")
+      }
+      else {
+        this.storage.setToken("").then((res) => {
+          this.router.navigate(['/login'])
+        })
+      }
+    })
+  }
+
   setChosenFast(fast: Fast) {
     this.chosenFast = fast;
   }

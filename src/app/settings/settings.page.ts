@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ResourcesService } from '../shared/resources.service';
 
 @Component({
   selector: 'app-settings',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SettingsPage implements OnInit {
 
-  constructor() { }
+  constructor(private resources: ResourcesService) { }
 
   ngOnInit() {
+  }
+
+  logout() {
+    this.resources.logout()
   }
 
 }
