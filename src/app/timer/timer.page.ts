@@ -42,83 +42,160 @@ export class TimerPage implements OnInit {
     private navController: NavController
   ) {
     console.log("Timer - Constructor");
-      if (this.resources.IS_DEBUG_MODE) console.log("constructor");
+    if (this.resources.IS_DEBUG_MODE) console.log("constructor");
     this.didReOpen = false;
-    this.storage.getFastStartTime().then((res) => {
+    this.resources.getTimerInfo().then((res: any) => {
       if (res) {
-        this.fastStartTime = new Date(JSON.parse(res));
+        console.log(res)
+        this.fastStartTime = new Date(res.fastStartTime);
         this.didReOpen = true;
-        let d1 = new Date(JSON.parse(res));
+        let d1 = new Date(res.fastStartTime);
         let d2 = new Date();
-        this.storage.getChosenFast().then((chosenFast) => {
-          if (chosenFast) {
-            if (this.resources.IS_DEBUG_MODE) console.log(chosenFast);
-            let cf = JSON.parse(chosenFast);
-            this.resources.setChosenFast(new Fast(cf.title, cf.duration, cf.description, cf.IsPredefined));
-            //cf = new Fast(cf.getTitle(), cf.getDuration(), cf.getDescription(), cf.getIsPreDefined());
-            let dur = new Date(cf.duration);
-            let fastEndTime = new Date(d1);
-            
-            if (this.resources.IS_DEBUG_MODE) console.log(fastEndTime);
-            fastEndTime.setHours(fastEndTime.getHours() + dur.getHours());
-            fastEndTime.setMinutes(fastEndTime.getMinutes() + dur.getMinutes());
-            let eatEndTime = new Date(d1);
-            eatEndTime.setHours(eatEndTime.getHours() + 24);
-            if (this.resources.IS_DEBUG_MODE) console.log(fastEndTime);
-            if (this.resources.IS_DEBUG_MODE) console.log(eatEndTime);
-            
-            if (d2 < fastEndTime) {
-              // Still in fasting time
-              let diff = new Date(d2.getTime() - d1.getTime());
-              let totalSecs = this.getTotalSeconds({
-                hours: dur.getHours(),
-                minutes: dur.getMinutes(),
-                seconds: 0
-              });
-              let elapsedSecs = Math.floor(diff.getTime() / 1000)
-              //this.percent = ((totalSecs - elapsedSecs) / totalSecs) * 100;
-              let remainingTime = this.getTimeData(totalSecs - elapsedSecs);
-              this.status = this.fastTime;
-              this.status.hours = remainingTime.hours;
-              this.status.minutes = remainingTime.minutes;
-              this.status.seconds = remainingTime.seconds;
-              this.isPlay = false;
-              this.initialSeconds = totalSecs;
-              if (this.resources.IS_DEBUG_MODE) console.log("Here");
-              this.setTitle();
-              this.startStage();
-              this.didReOpen = false;
-            }
-            else if(d2 > fastEndTime && d2 < eatEndTime) {
-              let totalSecs = Math.floor((eatEndTime.getTime() - fastEndTime.getTime()) / 1000);
-              let diff = d2.getTime() - fastEndTime.getTime();
-              let elapsedSecs = Math.floor(diff / 1000); //86330
-              let remainingTime = this.getTimeData(totalSecs - elapsedSecs);
-              this.status = this.eatTime;
-              this.status.hours = remainingTime.hours;
-              this.status.minutes = remainingTime.minutes;
-              this.status.seconds = remainingTime.seconds;
-              this.isPlay = false;
-              this.initialSeconds = totalSecs;
-              if (this.resources.IS_DEBUG_MODE) console.log("Here");
-              this.statusName = "eat";
-              this.setTitle();
-              this.startStage();
-            }
-            else {
-              if (this.resources.IS_DEBUG_MODE) console.log("Here in else")
-              this.resources.addCompletedFast(
-                new CompletedFast(null, this.resources.getChosenFast(), 
+        // this.storage.getChosenFast().then((chosenFast) => {
+        let chosenFast = res.chosenFast
+        if (chosenFast) {
+          if (this.resources.IS_DEBUG_MODE) console.log(chosenFast);
+          let cf = chosenFast;
+          this.resources.setChosenFast(new Fast(cf.title, cf.duration, cf.description, cf.IsPredefined));
+          //cf = new Fast(cf.getTitle(), cf.getDuration(), cf.getDescription(), cf.getIsPreDefined());
+          let dur = new Date(cf.duration);  
+          let fastEndTime = new Date(d1);
+
+          if (this.resources.IS_DEBUG_MODE) console.log(fastEndTime);
+          fastEndTime.setHours(fastEndTime.getHours() + dur.getHours());
+          fastEndTime.setMinutes(fastEndTime.getMinutes() + dur.getMinutes());
+          let eatEndTime = new Date(d1);
+          eatEndTime.setHours(eatEndTime.getHours() + 24);
+          if (this.resources.IS_DEBUG_MODE) console.log(fastEndTime);
+          if (this.resources.IS_DEBUG_MODE) console.log(eatEndTime);
+
+          if (d2 < fastEndTime) {
+            // Still in fasting time
+            let diff = new Date(d2.getTime() - d1.getTime());
+            let totalSecs = this.getTotalSeconds({
+              hours: dur.getHours(),
+              minutes: dur.getMinutes(),
+              seconds: 0
+            });
+            let elapsedSecs = Math.floor(diff.getTime() / 1000)
+            //this.percent = ((totalSecs - elapsedSecs) / totalSecs) * 100;
+            let remainingTime = this.getTimeData(totalSecs - elapsedSecs);
+            this.status = this.fastTime;
+            this.status.hours = remainingTime.hours;
+            this.status.minutes = remainingTime.minutes;
+            this.status.seconds = remainingTime.seconds;
+            this.isPlay = false;
+            this.initialSeconds = totalSecs;
+            if (this.resources.IS_DEBUG_MODE) console.log("Here");
+            this.setTitle();
+            this.startStage();
+            this.didReOpen = false;
+          }
+          else if (d2 > fastEndTime && d2 < eatEndTime) {
+            let totalSecs = Math.floor((eatEndTime.getTime() - fastEndTime.getTime()) / 1000);
+            let diff = d2.getTime() - fastEndTime.getTime();
+            let elapsedSecs = Math.floor(diff / 1000); //86330
+            let remainingTime = this.getTimeData(totalSecs - elapsedSecs);
+            this.status = this.eatTime;
+            this.status.hours = remainingTime.hours;
+            this.status.minutes = remainingTime.minutes;
+            this.status.seconds = remainingTime.seconds;
+            this.isPlay = false;
+            this.initialSeconds = totalSecs;
+            if (this.resources.IS_DEBUG_MODE) console.log("Here");
+            this.statusName = "eat";
+            this.setTitle();
+            this.startStage();
+          }
+          else {
+            if (this.resources.IS_DEBUG_MODE) console.log("Here in else")
+            this.resources.addCompletedFast(
+              new CompletedFast(null, this.resources.getChosenFast(),
                 this.fastStartTime,
                 null,
                 null));
-              this.resetTimer();
-              this.storage.deleteFastStartTime();
-            }
+            this.resetTimer();
+            // this.storage.deleteFastStartTime();
           }
-        });
+        }
+        // });
       }
     })
+    // this.storage.getFastStartTime().then((res) => {
+    //   if (res) {
+    //     this.fastStartTime = new Date(JSON.parse(res));
+    //     this.didReOpen = true;
+    //     let d1 = new Date(JSON.parse(res));
+    //     let d2 = new Date();
+    //     this.storage.getChosenFast().then((chosenFast) => {
+    //       if (chosenFast) {
+    //         if (this.resources.IS_DEBUG_MODE) console.log(chosenFast);
+    //         let cf = JSON.parse(chosenFast);
+    //         this.resources.setChosenFast(new Fast(cf.title, cf.duration, cf.description, cf.IsPredefined));
+    //         //cf = new Fast(cf.getTitle(), cf.getDuration(), cf.getDescription(), cf.getIsPreDefined());
+    //         let dur = new Date(cf.duration);
+    //         let fastEndTime = new Date(d1);
+
+    //         if (this.resources.IS_DEBUG_MODE) console.log(fastEndTime);
+    //         fastEndTime.setHours(fastEndTime.getHours() + dur.getHours());
+    //         fastEndTime.setMinutes(fastEndTime.getMinutes() + dur.getMinutes());
+    //         let eatEndTime = new Date(d1);
+    //         eatEndTime.setHours(eatEndTime.getHours() + 24);
+    //         if (this.resources.IS_DEBUG_MODE) console.log(fastEndTime);
+    //         if (this.resources.IS_DEBUG_MODE) console.log(eatEndTime);
+
+    //         if (d2 < fastEndTime) {
+    //           // Still in fasting time
+    //           let diff = new Date(d2.getTime() - d1.getTime());
+    //           let totalSecs = this.getTotalSeconds({
+    //             hours: dur.getHours(),
+    //             minutes: dur.getMinutes(),
+    //             seconds: 0
+    //           });
+    //           let elapsedSecs = Math.floor(diff.getTime() / 1000)
+    //           //this.percent = ((totalSecs - elapsedSecs) / totalSecs) * 100;
+    //           let remainingTime = this.getTimeData(totalSecs - elapsedSecs);
+    //           this.status = this.fastTime;
+    //           this.status.hours = remainingTime.hours;
+    //           this.status.minutes = remainingTime.minutes;
+    //           this.status.seconds = remainingTime.seconds;
+    //           this.isPlay = false;
+    //           this.initialSeconds = totalSecs;
+    //           if (this.resources.IS_DEBUG_MODE) console.log("Here");
+    //           this.setTitle();
+    //           this.startStage();
+    //           this.didReOpen = false;
+    //         }
+    //         else if(d2 > fastEndTime && d2 < eatEndTime) {
+    //           let totalSecs = Math.floor((eatEndTime.getTime() - fastEndTime.getTime()) / 1000);
+    //           let diff = d2.getTime() - fastEndTime.getTime();
+    //           let elapsedSecs = Math.floor(diff / 1000); //86330
+    //           let remainingTime = this.getTimeData(totalSecs - elapsedSecs);
+    //           this.status = this.eatTime;
+    //           this.status.hours = remainingTime.hours;
+    //           this.status.minutes = remainingTime.minutes;
+    //           this.status.seconds = remainingTime.seconds;
+    //           this.isPlay = false;
+    //           this.initialSeconds = totalSecs;
+    //           if (this.resources.IS_DEBUG_MODE) console.log("Here");
+    //           this.statusName = "eat";
+    //           this.setTitle();
+    //           this.startStage();
+    //         }
+    //         else {
+    //           if (this.resources.IS_DEBUG_MODE) console.log("Here in else")
+    //           this.resources.addCompletedFast(
+    //             new CompletedFast(null, this.resources.getChosenFast(), 
+    //             this.fastStartTime,
+    //             null,
+    //             null));
+    //           this.resetTimer();
+    //           this.storage.deleteFastStartTime();
+    //         }
+    //       }
+    //     });
+    //   }
+    // })
 
   }
 
@@ -126,7 +203,7 @@ export class TimerPage implements OnInit {
     console.log("Timer - ionViewWillEnter");
     this.rest.validateToken().then(res => {
       console.log(res);
-      if(res.status != 200) {
+      if (res.status != 200) {
         this.navController.navigateBack("/login");
       }
     }, e => {
@@ -181,6 +258,7 @@ export class TimerPage implements OnInit {
   }
 
   resetTimer() {
+    this.resources.setTimerInfo({}, "")
     this.didReOpen = false;
     this.percent = 100;
     this.fastTime.hours = this.fastTime.minutes = this.fastTime.seconds = 0;
@@ -226,15 +304,16 @@ export class TimerPage implements OnInit {
     if (this.interval) {
       this.isPlay = !this.isPlay;
       this.resetTimer();
-      this.storage.deleteChosenFast();
-      this.storage.deleteFastStartTime();
+      // this.storage.deleteChosenFast();
+      // this.storage.deleteFastStartTime();
     }
     else {
       if (!this.didReOpen) {
         if (this.statusName == "fast") {
           this.fastStartTime = new Date();
-          this.storage.saveFastStartTime(this.fastStartTime);
-          this.storage.saveChosenFast(this.resources.getChosenFast());
+          // this.storage.saveFastStartTime(this.fastStartTime);
+          // this.storage.saveChosenFast(this.resources.getChosenFast());
+          this.resources.setTimerInfo(this.resources.getChosenFast(), this.fastStartTime)
         }
         else {
           this.eatStartTime = new Date();
@@ -268,8 +347,8 @@ export class TimerPage implements OnInit {
               this.eatStartTime,
               this.eatEndTime);
             this.resources.addCompletedFast(cf).then(() => {
-              this.storage.deleteFastStartTime();
-              this.storage.deleteChosenFast();
+              // this.storage.deleteFastStartTime();
+              // this.storage.deleteChosenFast();
               this.resetTimer();
             })
           }

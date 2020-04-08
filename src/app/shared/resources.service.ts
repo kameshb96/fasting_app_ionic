@@ -49,6 +49,33 @@ export class ResourcesService {
     // this.foodLogs = this.storage.getFoodLogs();
   }
 
+  setTimerInfo(chosenFast, fastStartTime) {
+    this.rest.setTimerInfo({
+      chosenFast: chosenFast,
+      fastStartTime: fastStartTime
+    }).then((val) => {
+      if (val.status == 400) {
+        this.presentToast("Insufficient info")
+      }
+      else if (val.status == 403) {
+        this.presentToast("Invalid sessionToken")
+      }
+      else if (val.status != 200) {
+        this.presentToast("Something went wrong")
+      }
+    })
+  }
+
+  async getTimerInfo() {
+    let timerInfo = {}
+    await this.rest.getTimerInfo().then(async (val) => {
+      await val.json().then((res) => {
+        timerInfo = res.data
+      })
+    })
+    return timerInfo
+  }
+
   logout() {
     this.rest.logout().then((val) => {
       if (val.status == 403) {

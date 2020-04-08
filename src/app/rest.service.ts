@@ -187,6 +187,38 @@ export class RestService {
       })
     })
   }
+
+  async setTimerInfo(obj) {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/timerinfo'
+    return fetch(tmp, {
+      method: 'PUT',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        chosenFast: obj.chosenFast,
+        fastStartTime: obj.fastStartTime
+      })
+    })
+  }
+
+  async getTimerInfo() {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/timerinfo'
+    return fetch(tmp, {
+      method: 'GET',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json'
+      },
+      // body: JSON.stringify({
+      //   chosenFast: obj.chosenFast,
+      //   fastStartTime: obj.fastStartTime
+      // })
+    })
+  }
   
 
   async validateToken() {
