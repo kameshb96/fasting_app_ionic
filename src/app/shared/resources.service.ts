@@ -92,6 +92,38 @@ export class ResourcesService {
     })
   }
 
+  async getPassword() {
+    let password = ""
+    await this.rest.getPassword().then(async (val) => {
+      if (val.status == 403) {
+        this.presentToast("Invalid sessionToken")
+      }
+      else if (val.status != 200) {
+        this.presentToast("Something went wrong")
+      }
+      await val.json().then((res) => {
+        if(res.meta.status)
+          password =  res.data
+      })
+    })
+    console.log(password)
+    return password
+  }
+
+  async changePassword(newPassword) {
+    await this.rest.changePassword(newPassword).then((val) => {
+      if (val.status == 403) {
+        this.presentToast("Invalid sessionToken")
+      }
+      else if(val.status == 400) {
+        this.presentToast("Please enter a valid new Password")
+      }
+      else if (val.status != 200) {
+        this.presentToast("Something went wrong")
+      }
+    })
+  }
+
   setChosenFast(fast: Fast) {
     this.chosenFast = fast;
   }

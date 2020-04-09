@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourcesService } from '../shared/resources.service';
+import { ModalController } from '@ionic/angular';
+import { PasswordPage } from '../password/password.page';
 
 @Component({
   selector: 'app-settings',
@@ -8,13 +10,21 @@ import { ResourcesService } from '../shared/resources.service';
 })
 export class SettingsPage implements OnInit {
 
-  constructor(private resources: ResourcesService) { }
+  constructor(private resources: ResourcesService,
+              private modal: ModalController) { }
 
   ngOnInit() {
   }
 
   logout() {
     this.resources.logout()
+  }
+
+  async changePassword() {
+    const modal = await this.modal.create({
+      component: PasswordPage
+    })
+    modal.present();
   }
 
 }

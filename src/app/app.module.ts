@@ -12,11 +12,12 @@ import { FoodInfoPage } from './food-info/food-info.page';
 import { CustomFastPage } from './custom-fast/custom-fast.page';
 import { FastModalPage } from './fast-modal/fast-modal.page';
 import { AutoCompleteModule } from 'ionic4-auto-complete';
+import { PasswordPage } from './password/password.page';
 
 
 @NgModule({
-  declarations: [AppComponent, FoodInfoPage, CustomFastPage, FastModalPage],
-  entryComponents: [FoodInfoPage, CustomFastPage, FastModalPage],
+  declarations: [AppComponent, FoodInfoPage, CustomFastPage, FastModalPage, PasswordPage],
+  entryComponents: [FoodInfoPage, CustomFastPage, FastModalPage, PasswordPage],
   imports: [BrowserModule,
             IonicModule.forRoot(), 
             AppRoutingModule, 

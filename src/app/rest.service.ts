@@ -234,4 +234,33 @@ export class RestService {
     })
   }
 
+  async getPassword() {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/password'
+    return fetch(tmp, {
+      method: 'GET',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json'
+      },
+      // body: JSON.stringify(b)
+    })
+  }
+
+  async changePassword(newPassword) {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/password'
+    let b = {
+      'newPassword': newPassword
+    }
+    return fetch(tmp, {
+      method: 'PUT',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(b)
+    })
+  }
+
 }

@@ -34,6 +34,10 @@ const routes: Routes = [
     path: '**',
     redirectTo: '/login',
     pathMatch: 'full'
+  },
+  {
+    path: 'password',
+    loadChildren: () => import('./password/password.module').then( m => m.PasswordPageModule)
   }
 ];
 @NgModule({
