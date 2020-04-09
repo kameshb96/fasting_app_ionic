@@ -6,8 +6,15 @@
   </ion-toolbar>
 </ion-header>
 
+<!-- <ng-template #customTemplate let-attrs="attrs">
+  <img src="assets/image/flags/{{attrs.data.name}}.png" 
+       class="flag"/>
+   <span [innerHTML]="attrs.data.name | boldprefix:attrs.keyword"></span>
+</ng-template> -->
+
 <ion-content>
-  <ion-auto-complete (itemSelected)="processInfo($event)" [dataProvider]="completeTestService" style="width: 100%" [options]="{ placeholder : 'Search for food' }"></ion-auto-complete>
+  <!-- [template]="customTemplate" [styles]="autoCompleteStyles"-->
+  <ion-auto-complete (itemSelected)="processInfo($event)" [dataProvider]="completeTestService" style="width: 100%;" [options]="{ placeholder : 'Search for food' }"></ion-auto-complete>
   <ion-item>
     <ion-label>Date</ion-label>
     <ion-datetime [(ngModel)]="logDate" displayFormat="MM DD YY" placeholder="Select Date"></ion-datetime>

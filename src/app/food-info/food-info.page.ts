@@ -4,6 +4,8 @@ import { ModalController, NavParams } from '@ionic/angular';
 import { ResourcesService } from '../shared/resources.service';
 import { RestService } from '../rest.service';
 import { CompleteTestService } from '../complete-test.service';
+import { AutoCompleteStyles } from 'ionic4-auto-complete/esm5/auto-complete-styles.model';
+
 @Component({
   selector: 'app-food-info',
   templateUrl: './food-info.page.html',
@@ -17,13 +19,15 @@ export class FoodInfoPage implements OnInit {
   logCalories: number;
   logUnit: string;
   selectedFood: any =  {}
+  autoCompleteStyles: AutoCompleteStyles;
   constructor(
     private storage: StorageService,
     private resources: ResourcesService, 
     private modal: ModalController,
     private restService: RestService,
     private completeTestService: CompleteTestService,
-    private navParams: NavParams
+    private navParams: NavParams,
+    // private autoCompleteStyles: AutoCompleteStyles
   ) { 
     this.logUnit = "Units";
     this.logCalories = 0;
@@ -31,6 +35,20 @@ export class FoodInfoPage implements OnInit {
     if (!currentDateTime || currentDateTime == undefined || currentDateTime == "") currentDateTime = new Date().toISOString();
     this.logDate = currentDateTime
     this.logTime = currentDateTime
+    // To make use of ion-auto-search styles
+    // this.autoCompleteStyles = new AutoCompleteStyles ();
+    // this.autoCompleteStyles.list = {
+    //   background: 'black',
+    //   color: 'white'
+    // }
+    // this.autoCompleteStyles.listItem = {
+    //   background: 'black',
+    //   color: 'white'
+    // }
+    // this.autoCompleteStyles.searchbar = {
+    //   background: 'black',
+    //   color: 'white',
+    // }
   }
 
   timeUtil(hours, minutes) {

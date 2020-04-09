@@ -155,7 +155,7 @@
  * ------------------
  */
 
- body.dark {
+body.dark {
   --ion-color-primary: #428cff;
   --ion-color-primary-rgb: 66, 140, 255;
   --ion-color-primary-contrast: #ffffff;
@@ -218,6 +218,28 @@
   --ion-color-light-contrast-rgb: 255, 255, 255;
   --ion-color-light-shade: #1e2023;
   --ion-color-light-tint: #383a3e;
+
+  ion-auto-complete,
+  .searchbar-input-container,
+  // .sc-ion-searchbar-md-h, 
+  // .sc-ion-searchbar-md-s md,
+  // .searchbar-left-aligned,
+  ion-auto-complete ul, 
+  ion-auto-complete ul li,
+  ion-auto-complete .loading input.searchbar-input {
+      background-color: black;
+      color: white;
+      
+      --ion-background-color: #000000;
+      --ion-background-color-rgb: 0, 0, 0;
+
+      --ion-text-color: #ffffff;
+      --ion-text-color-rgb: 255, 255, 255;
+  }
+
+  ion-auto-complete ul li.focus {
+      background-color: gray;
+  }
 }
 
 /*
@@ -264,10 +286,12 @@
  */
 
 .md body.dark {
-  --ion-background-color: #121212;
+  // --ion-background-color: #121212;
+  --ion-background-color: gray;
   --ion-background-color-rgb: 18, 18, 18;
 
-  --ion-text-color: #ffffff;
+  // --ion-text-color: #ffffff;
+  --ion-text-color: black;
   --ion-text-color-rgb: 255, 255, 255;
 
   --ion-border-color: #222222;
