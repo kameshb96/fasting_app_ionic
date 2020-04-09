@@ -363,6 +363,39 @@ export class ResourcesService {
 
     await toast.present();
   }
+
+  toggle: any;
+  prefersDark: any;
+  checkDarkTheme() {
+    // Query for the toggle that is used to change between themes
+    this.toggle = document.querySelector('#themeToggle');
+    console.log(this.toggle)
+    // Listen for the toggle check/uncheck to toggle the dark class on the <body>
+    if(this.toggle) {
+      this.toggle.addEventListener('ionChange', (ev) => {
+        console.log(ev)
+        document.body.classList.toggle('dark', ev.detail.checked);
+      });
+    }
+
+    this.prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    console.log(this.prefersDark)
+    // Listen for changes to the prefers-color-scheme media query
+    if(this.prefersDark) {
+      this.prefersDark.addListener((e) => this.checkToggle(e.matches));
+      this.checkToggle(this.prefersDark.matches);
+    }
+  }
+
+  // Called by the media query to check/uncheck the toggle
+  checkToggle(shouldCheck) {
+    this.toggle.checked = shouldCheck;
+  }
+
+  isDark() {
+    return this.toggle ? this.toggle.checked : false;
+  }
+
 }
 
 export class Fast {

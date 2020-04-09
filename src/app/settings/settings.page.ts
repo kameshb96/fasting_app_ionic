@@ -14,6 +14,7 @@ export class SettingsPage implements OnInit {
               private modal: ModalController) { }
 
   ngOnInit() {
+    if(!this.resources.toggle) this.resources.checkDarkTheme();
   }
 
   logout() {
