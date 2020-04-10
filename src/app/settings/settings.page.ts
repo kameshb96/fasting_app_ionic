@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ResourcesService } from '../shared/resources.service';
 import { ModalController } from '@ionic/angular';
 import { PasswordPage } from '../password/password.page';
 import { Router } from '@angular/router';
+import { StorageService } from '../storage.service';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',
   styleUrls: ['./settings.page.scss'],
 })
-export class SettingsPage implements OnInit {
+export class SettingsPage implements OnInit, OnDestroy {
   constructor(private resources: ResourcesService,
     private modal: ModalController,
-    private router: Router) { 
+    private router: Router,
+    private storage: StorageService) { 
       console.log("Settings constructor")
       // this.resources.getSettings().then((res: any) => {
       //   this.darkMode = res.data.dark
@@ -28,6 +30,11 @@ export class SettingsPage implements OnInit {
     if (!this.resources.toggle) this.resources.checkDarkTheme();
   }
 
+  ngOnDestroy() {
+    // ...
+    console.log(this.resources.darkMode)
+  }
+
   logout() {
     this.resources.logout()
   }
@@ -39,11 +46,16 @@ export class SettingsPage implements OnInit {
     modal.present();
   }
 
-  settingsChanged() {
-    console.log(this.router.url)
-    if(this.router.url != '/tabs/settings')
-      return
+  async settingsChanged() {
     console.log(this.resources.darkMode)
+    let st = ""
+    await this.storage.getToken().then((token) => {
+      st = token
+    })
+    if(!st) {
+      console.log("sessionToken not found ")
+      return
+    }
     let obj = {
       settings: {
         notifications: this.resources.notification ? this.resources.notification : false,

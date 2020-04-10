@@ -154,6 +154,11 @@ setToken(v) {
   return promise;
 }
 
+async getToken() {
+  const { value } = await Storage.get({ key: "sessionToken"});
+  return value
+}
+
 deleteChosenFast() {
   this.setItem("chosenFast", "");    
 }

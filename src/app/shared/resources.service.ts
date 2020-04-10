@@ -53,18 +53,18 @@ export class ResourcesService {
     
   }
 
-  async getSettings() {
+  async getSettings(fromLogin = false) {
     let result = {}
-    if(this.router.url == '/login')
+    if(!fromLogin && this.router.url == '/login')
       return
-    await this.rest.getSettings().then(async (val) => {
+    await this.rest.getSettings().then((val) => {
       if (val.status == 403) {
         this.presentToast("Invalid sessionToken")
       }
       else if (val.status != 200) {
         this.presentToast("Something went wrong")
       }
-      await val.json().then((res) => {
+      val.json().then((res) => {
         console.log("Resources constructor")  
         result = res 
         this.darkMode = res.data.dark
@@ -105,11 +105,10 @@ export class ResourcesService {
   reset() {
     this.darkMode = false
     this.notification = false 
-    this.checkDarkTheme()
   }
 
-  logout() {
-    this.rest.logout().then((val) => {
+  async logout() {
+    await this.rest.logout().then(async (val) => {
       if (val.status == 403) {
         this.presentToast("Invalid sessionToken")
       }
@@ -117,10 +116,10 @@ export class ResourcesService {
         this.presentToast("Something went wrong")
       }
       else {
-        this.storage.setToken("").then((res) => {
-          this.reset()
-          this.router.navigate(['/login'])
-        })
+        await this.storage.setToken("")
+        this.reset()
+        console.log("message")
+        this.router.navigate(['/login'])
       }
     })
   }
@@ -205,7 +204,6 @@ export class ResourcesService {
         }
       })
     })
-    console.log("message")
     return this.fasts
   }
 
@@ -413,12 +411,15 @@ export class ResourcesService {
 
   toggle: any;
   prefersDark: any;
+  isEventAdded: boolean = false
+  isListenerAdded: boolean = false
   checkDarkTheme(applyDark = false) {
     // Query for the toggle that is used to change between themes
     this.toggle = document.querySelector('#themeToggle');
     console.log(this.toggle)
     // Listen for the toggle check/uncheck to toggle the dark class on the <body>
-    if(this.toggle) {
+    if(this.toggle && !this.isEventAdded) {
+      this.isEventAdded = true
       this.toggle.addEventListener('ionChange', (ev) => {
         console.log(ev)
         document.body.classList.toggle('dark', ev.detail.checked);
@@ -427,14 +428,15 @@ export class ResourcesService {
     if(applyDark) {
       document.body.classList.toggle('dark', true);
     }
-    this.prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    console.log(this.prefersDark)
-    // Listen for changes to the prefers-color-scheme media query
-    if(this.prefersDark) {
-      this.prefersDark.addListener((e) => this.checkToggle(e.matches));
-      if(this.toggle)
-        this.checkToggle(this.prefersDark.matches);
-    }
+    // this.prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    // console.log(this.prefersDark)
+    // // Listen for changes to the prefers-color-scheme media query
+    // if(this.prefersDark && !this.isListenerAdded) {
+    //   this.isListenerAdded = true
+    //   this.prefersDark.addListener((e) => this.checkToggle(e.matches));
+    //   if(this.toggle)
+    //     this.checkToggle(this.prefersDark.matches);
+    // }
   }
 
   // Called by the media query to check/uncheck the toggle
