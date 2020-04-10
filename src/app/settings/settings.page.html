@@ -8,12 +8,12 @@
   <ion-item>
     <ion-icon name="notifications-outline"></ion-icon>
     <ion-label style="margin-left: 2%;">Enable Notifications</ion-label>
-    <ion-toggle [(ngModel)]="notification" color="success"></ion-toggle>
+    <ion-toggle (ionChange)="settingsChanged()" [(ngModel)]="notification" color="success"></ion-toggle>
   </ion-item>
   <ion-item>
     <ion-icon name="moon"></ion-icon>
     <ion-label style="margin-left: 2%;">Dark Mode</ion-label>
-    <ion-toggle id="themeToggle" [(ngModel)]="darkMode" color="success"></ion-toggle>
+    <ion-toggle (ionChange)="settingsChanged()" id="themeToggle" [(ngModel)]="darkMode" color="success"></ion-toggle>
   </ion-item>
   <ion-item (click)="changePassword()">
     <ion-icon name="lock"></ion-icon>

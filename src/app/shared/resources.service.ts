@@ -124,6 +124,20 @@ export class ResourcesService {
     })
   }
 
+  async updateSettings(settings) {
+    await this.rest.updateSettings(settings).then((val) => {
+      if (val.status == 403) {
+        this.presentToast("Invalid sessionToken")
+      } 
+      else if(val.status == 400) {
+        this.presentToast("Invalid settings info")
+      }
+      else if (val.status != 200) {
+        this.presentToast("Something went wrong")
+      }
+    })
+  }
+
   setChosenFast(fast: Fast) {
     this.chosenFast = fast;
   }

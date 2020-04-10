@@ -9,12 +9,13 @@ import { PasswordPage } from '../password/password.page';
   styleUrls: ['./settings.page.scss'],
 })
 export class SettingsPage implements OnInit {
-
+  private darkMode: boolean
+  private notification: boolean
   constructor(private resources: ResourcesService,
-              private modal: ModalController) { }
+    private modal: ModalController) { }
 
   ngOnInit() {
-    if(!this.resources.toggle) this.resources.checkDarkTheme();
+    if (!this.resources.toggle) this.resources.checkDarkTheme();
   }
 
   logout() {
@@ -26,6 +27,18 @@ export class SettingsPage implements OnInit {
       component: PasswordPage
     })
     modal.present();
+  }
+
+  settingsChanged() {
+    console.log(this.darkMode)
+    let obj = {
+      settings: {
+        notifications: this.notification ? this.notification : false,
+        dark: this.darkMode ? this.darkMode : false
+      }
+    }
+    console.log(obj)
+    this.resources.updateSettings(obj)
   }
 
 }

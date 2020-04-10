@@ -263,4 +263,17 @@ export class RestService {
     })
   }
 
+  async updateSettings(settings) {
+    const { value } = await Storage.get({ key: "sessionToken"});
+    let tmp = 'http://localhost:3500/settings'
+    return fetch(tmp, {
+      method: 'PUT',
+      headers: {
+        'sessionToken': value,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(settings)
+    })
+  }
+
 }
