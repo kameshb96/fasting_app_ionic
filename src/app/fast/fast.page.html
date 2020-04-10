@@ -6,7 +6,7 @@
 </ion-header>
 
 <ion-content> 
-  <ion-card (click)="openFastModal($event, fast.title)" style="height:13.5%;" [ngStyle]="{'background-color': this.resources.isDark() ? 'transparent': 'lightgray'}" *ngFor = "let fast of fasts"> 
+  <ion-card (click)="openFastModal($event, fast.title)" style="height:13.5%;" [ngStyle]="{'background-color': this.resources.darkMode ? 'transparent': 'lightgray'}" *ngFor = "let fast of fasts"> 
     <ion-card-header>
       <ion-card-title style="font-size: 1rem;">{{ fast.title }}</ion-card-title>
       <ion-card-subtitle>{{ fast.description }}</ion-card-subtitle>

@@ -18,6 +18,8 @@ export class ResourcesService {
   public isFastInitialized: boolean = false
   public isLogsInitialized: boolean = false
   public isHistoryInitialized: boolean = false
+  public darkMode: boolean = false
+  public notification: boolean = false
   constructor(
     private storage: StorageService,
     private rest: RestService,
@@ -31,6 +33,7 @@ export class ResourcesService {
     //       this.fasts.push(new Fast(arr[i].title, new Date(arr[i].duration), arr[i].description, arr[i].isPredefined))
     //   }
     // });
+    this.getSettings()
     if (this.IS_DEBUG_MODE) console.log(this.fasts)
     // this.fasts.push(new Fast("A",new Date("2020-03-01T01:14:29.909-05:00"),"1"));
     // this.storage.updateFasts(this.fasts);
@@ -47,6 +50,29 @@ export class ResourcesService {
     //   }
     // });
     // this.foodLogs = this.storage.getFoodLogs();
+    
+  }
+
+  async getSettings() {
+    let result = {}
+    if(this.router.url == '/login')
+      return
+    await this.rest.getSettings().then(async (val) => {
+      if (val.status == 403) {
+        this.presentToast("Invalid sessionToken")
+      }
+      else if (val.status != 200) {
+        this.presentToast("Something went wrong")
+      }
+      await val.json().then((res) => {
+        console.log("Resources constructor")  
+        result = res 
+        this.darkMode = res.data.dark
+        this.notification = res.data.notification 
+        this.checkDarkTheme(this.darkMode)      
+      })
+    })
+    return result
   }
 
   setTimerInfo(chosenFast, fastStartTime) {
@@ -76,6 +102,12 @@ export class ResourcesService {
     return timerInfo
   }
 
+  reset() {
+    this.darkMode = false
+    this.notification = false 
+    this.checkDarkTheme()
+  }
+
   logout() {
     this.rest.logout().then((val) => {
       if (val.status == 403) {
@@ -86,6 +118,7 @@ export class ResourcesService {
       }
       else {
         this.storage.setToken("").then((res) => {
+          this.reset()
           this.router.navigate(['/login'])
         })
       }
@@ -380,7 +413,7 @@ export class ResourcesService {
 
   toggle: any;
   prefersDark: any;
-  checkDarkTheme() {
+  checkDarkTheme(applyDark = false) {
     // Query for the toggle that is used to change between themes
     this.toggle = document.querySelector('#themeToggle');
     console.log(this.toggle)
@@ -391,13 +424,16 @@ export class ResourcesService {
         document.body.classList.toggle('dark', ev.detail.checked);
       });
     }
-
+    if(applyDark) {
+      document.body.classList.toggle('dark', true);
+    }
     this.prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
     console.log(this.prefersDark)
     // Listen for changes to the prefers-color-scheme media query
     if(this.prefersDark) {
       this.prefersDark.addListener((e) => this.checkToggle(e.matches));
-      this.checkToggle(this.prefersDark.matches);
+      if(this.toggle)
+        this.checkToggle(this.prefersDark.matches);
     }
   }
 
@@ -405,11 +441,6 @@ export class ResourcesService {
   checkToggle(shouldCheck) {
     this.toggle.checked = shouldCheck;
   }
-
-  isDark() {
-    return this.toggle ? this.toggle.checked : false;
-  }
-
 }
 
 export class Fast {
