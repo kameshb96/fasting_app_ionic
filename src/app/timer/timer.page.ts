@@ -47,6 +47,8 @@ export class TimerPage implements OnInit {
     this.resources.getTimerInfo().then((res: any) => {
       if (res) {
         console.log(res)
+        if(res.fastStartTime == "" || res.chosenFast == {})
+          return
         this.fastStartTime = new Date(res.fastStartTime);
         this.didReOpen = true;
         let d1 = new Date(res.fastStartTime);
