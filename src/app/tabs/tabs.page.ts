@@ -13,5 +13,5 @@ export class TabsPage implements OnInit {
 
   ngOnInit() {
     this.resources.isLoggedIn = true
-  }
+  }       
 }
