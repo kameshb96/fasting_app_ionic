@@ -17,7 +17,7 @@ export class LoginPage implements OnInit {
     private rest: RestService,
     private navController: NavController,
     private router: Router,
-    private toastController:  ToastController,
+    private toastController: ToastController,
     private resources: ResourcesService,
     private storage: StorageService,
     private route: ActivatedRoute,
@@ -27,10 +27,22 @@ export class LoginPage implements OnInit {
     // route.params.subscribe(val => {
     //   console.log(val, "txextxc")
     // });
-   }
-
-  ngOnInit() {
   }
+
+  async ngOnInit() {
+    let st = ""
+    await this.storage.getToken().then((token) => {
+      st = token
+    })
+    if (st != "") {
+      this.rest.validateToken().then((val) => {
+        if (val.status == 200) {
+          this.router.navigate(['/tabs/fast'])
+        }
+      })
+    }
+  }
+
 
   printpath(parent: String, config: Route[]) {
     for (let i = 0; i < config.length; i++) {
@@ -48,24 +60,24 @@ export class LoginPage implements OnInit {
   }
 
   login() {
-    if(!this.loginUsername) {
+    if (!this.loginUsername) {
       this.presentToast("Please provide a valid username")
       return
     }
-    if(!this.loginPassword) { 
+    if (!this.loginPassword) {
       this.presentToast("Please provide a password")
       return
     }
-    if(!this.validateEmail(this.loginUsername)) {
+    if (!this.validateEmail(this.loginUsername)) {
       this.presentToast("Please provide a valid email id as a username")
       return
     }
     // this.printpath('', this.router.config);
-    this.rest.login(this.loginUsername,  this.loginPassword).then((response) => {
+    this.rest.login(this.loginUsername, this.loginPassword).then((response) => {
       response.json().then((r) => {
         if (this.resources.IS_DEBUG_MODE) console.log(r)
         console.log(r)
-        if(r && r.meta && r.meta.status) {
+        if (r && r.meta && r.meta.status) {
           this.storage.setToken(r.data.sessionToken).then(o => {
             console.log(o);
             this.resources.getSettings(true)
@@ -80,7 +92,7 @@ export class LoginPage implements OnInit {
           //   }, 300);
           // })
           // this.navController.navigateRoot('tabs/fast'); // navigates without slide animation
-         // this.router.navigate(['/tabs/fast']); // navigates with slide animation, by default
+          // this.router.navigate(['/tabs/fast']); // navigates with slide animation, by default
         }
         else {
           this.presentToast("Invalid Login Credentials")
@@ -110,6 +122,6 @@ export class LoginPage implements OnInit {
   validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
-}
+  }
 
 }

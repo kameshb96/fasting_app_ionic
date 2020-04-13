@@ -117,7 +117,7 @@ export class ResourcesService {
         this.presentToast("Something went wrong")
       }
       else {
-        this.isLoggedIn = false
+        this.isLoggedIn = false 
         this.reset()
         console.log("message")
         await this.storage.setToken("")

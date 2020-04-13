@@ -48,7 +48,7 @@ export class SettingsPage implements OnInit, OnDestroy {
 
   async settingsChanged() {
     console.log(this.resources.darkMode)
-    let st = ""
+    // let st = ""
     // await this.storage.getToken().then((token) => {
     //   st = token
     // })
