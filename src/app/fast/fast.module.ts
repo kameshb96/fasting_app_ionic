@@ -9,6 +9,7 @@ import { FastPageRoutingModule } from './fast-routing.module';
 import { FastPage } from './fast.page';
 
 import { NgCircleProgressModule } from 'ng-circle-progress';
+import { LocalNotificationsService } from '../local-notifications.service';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { NgCircleProgressModule } from 'ng-circle-progress';
       renderOnClick: false
     })
   ],
-  declarations: [FastPage]
+  declarations: [FastPage],
+  providers: [LocalNotificationsService]
 })
 export class FastPageModule {}

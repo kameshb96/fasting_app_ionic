@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { TabsPageRoutingModule } from './tabs-routing.module';
 
 import { TabsPage } from './tabs.page';
+// import { LocalNotificationsService } from '../local-notifications.service';
 
 @NgModule({
   imports: [
@@ -15,5 +16,6 @@ import { TabsPage } from './tabs.page';
     TabsPageRoutingModule
   ],
   declarations: [TabsPage]
+  // providers: [LocalNotificationsService]
 })
 export class TabsPageModule {}

@@ -6,6 +6,7 @@ import { FoodInfoPage } from '../food-info/food-info.page';
 import { FastModalPage } from '../fast-modal/fast-modal.page';
 import { RestService } from '../rest.service';
 import { Router, Route } from '@angular/router';
+import { LocalNotificationsService } from '../local-notifications.service';
 @Component({
   selector: 'app-fast',
   templateUrl: './fast.page.html',
@@ -23,7 +24,8 @@ export class FastPage implements OnInit {
     private rest: RestService,
     private router: Router,
     private toastController: ToastController,
-    private navController: NavController
+    private navController: NavController,
+    private notif: LocalNotificationsService
   ) {
     this.isPlay = false;
     this.percent = 100;
@@ -32,6 +34,7 @@ export class FastPage implements OnInit {
 
   ionViewWillEnter() {
     console.log('Fast - ionViewWillEnter')
+    this.notif.makeNotifications()
     this.rest.validateToken().then((res) => {
       if (res.status == 403) {
         this.navController.navigateBack('/login')

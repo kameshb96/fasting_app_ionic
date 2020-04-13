@@ -30,6 +30,7 @@ export class LoginPage implements OnInit {
   }
 
   async ngOnInit() {
+    console.log("LATEST VERSION  1.0")
     let st = ""
     await this.storage.getToken().then((token) => {
       st = token
