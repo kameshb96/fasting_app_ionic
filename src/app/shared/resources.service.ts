@@ -20,6 +20,7 @@ export class ResourcesService {
   public isHistoryInitialized: boolean = false
   public darkMode: boolean = false
   public notification: boolean = false
+  public isLoggedIn: boolean = false
   constructor(
     private storage: StorageService,
     private rest: RestService,
@@ -116,10 +117,14 @@ export class ResourcesService {
         this.presentToast("Something went wrong")
       }
       else {
-        await this.storage.setToken("")
+        this.isLoggedIn = false
         this.reset()
         console.log("message")
-        this.router.navigate(['/login'])
+        await this.storage.setToken("")
+        document.body.classList.toggle('dark', false);
+        // this.reset()
+        // console.log("message")
+       this.router.navigate(['/login'])     
       }
     })
   }

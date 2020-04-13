@@ -49,13 +49,13 @@ export class SettingsPage implements OnInit, OnDestroy {
   async settingsChanged() {
     console.log(this.resources.darkMode)
     let st = ""
-    await this.storage.getToken().then((token) => {
-      st = token
-    })
-    if(!st) {
+    // await this.storage.getToken().then((token) => {
+    //   st = token
+    // })
+    if(!this.resources.isLoggedIn) {
       console.log("sessionToken not found ")
       return
-    }
+    }       
     let obj = {
       settings: {
         notifications: this.resources.notification ? this.resources.notification : false,

@@ -69,6 +69,7 @@ export class LoginPage implements OnInit {
           this.storage.setToken(r.data.sessionToken).then(o => {
             console.log(o);
             this.resources.getSettings(true)
+            this.resources.isLoggedIn = true
             this.navController.navigateForward('/tabs/fast'); // navigates without slide animation
             // this.router.navigate(['/tabs'], { skipLocationChange: false });
           });
