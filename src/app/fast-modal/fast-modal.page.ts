@@ -58,6 +58,7 @@ export class FastModalPage implements OnInit {
   }
 
   setFast() {
+    console.log(this.selected)
     if (this.resources.IS_DEBUG_MODE) console.log(this.selected);
     this.resources.setChosenFast(this.selected);
     if (this.resources.IS_DEBUG_MODE) console.log(this.resources.getChosenFast());

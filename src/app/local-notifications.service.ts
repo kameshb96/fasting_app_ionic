@@ -11,15 +11,16 @@ export class LocalNotificationsService {
   constructor(private localNotifications: LocalNotifications,
     private platform: Platform) { }
 
-  makeNotifications() {
-    console.log("makeNotifications")
-    //Schedule a single notification
-    this.localNotifications.schedule({
-      id: 1,
-      text: 'Fasting about to end',
-      sound: this.platform.is("android") ? 'file://sound.mp3' : 'file://beep.caf',
-      data: { secret: "" }
-    });
+  makeNotifications(time = new Date()) {
+    console.log(time)
+    // console.log("makeNotifications")
+    // //Schedule a single notification
+    // this.localNotifications.schedule({
+    //   id: 1,
+    //   text: 'Fasting about to end',
+    //   sound: this.platform.is("android") ? 'file://sound.mp3' : 'file://beep.caf',
+    //   data: { secret: "" }
+    // });
 
 
     // Schedule multiple notifications
@@ -37,11 +38,12 @@ export class LocalNotificationsService {
 
 
     // Schedule delayed notification
-    this.localNotifications.schedule({
+    this.localNotifications.schedule({ 
        text: 'Delayed ILocalNotification',
-       //new Date().getTime() + 3600)
-       trigger: {at: new Date(new Date().getTime() + 5000)},
+       //new Date().getTime() + 3600) 
+       trigger: {at: time},
        led: 'FF0000',
+       foreground: true,
        sound: this.platform.is("android") ? 'file://sound.mp3' : 'file://beep.caf'  
     });
   }

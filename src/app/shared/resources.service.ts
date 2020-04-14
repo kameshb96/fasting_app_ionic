@@ -176,6 +176,7 @@ export class ResourcesService {
   }
 
   setChosenFast(fast: Fast) {
+    console.log(fast)
     this.chosenFast = fast;
   }
 

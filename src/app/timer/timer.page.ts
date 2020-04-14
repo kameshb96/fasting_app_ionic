@@ -5,6 +5,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { StorageService } from '../storage.service';
 import { RestService } from '../rest.service';
 import { Router } from '@angular/router';
+import { LocalNotificationsService } from '../local-notifications.service';
 
 
 @Component({
@@ -39,16 +40,19 @@ export class TimerPage implements OnInit {
     private storage: StorageService,
     private rest: RestService,
     private router: Router,
-    private navController: NavController
+    private navController: NavController,
+    private notif: LocalNotificationsService
   ) {
     console.log("Timer - Constructor");
     if (this.resources.IS_DEBUG_MODE) console.log("constructor");
     this.didReOpen = false;
+    console.log(this.resources.getChosenFast())       
     this.resources.getTimerInfo().then((res: any) => {
       if (res) {
         console.log(res)
         if(res.fastStartTime == "" || res.chosenFast == {})
           return
+        console.log("UPDATING CHOSEN FAST")
         this.fastStartTime = new Date(res.fastStartTime);
         this.didReOpen = true;
         let d1 = new Date(res.fastStartTime);
@@ -315,7 +319,15 @@ export class TimerPage implements OnInit {
           this.fastStartTime = new Date();
           // this.storage.saveFastStartTime(this.fastStartTime);
           // this.storage.saveChosenFast(this.resources.getChosenFast());
-          this.resources.setTimerInfo(this.resources.getChosenFast(), this.fastStartTime)
+          let cf = this.resources.getChosenFast() 
+          this.resources.setTimerInfo(cf, this.fastStartTime)
+          console.log(cf)
+          let time = {
+            hours: cf.getDuration().getHours(),
+            minutes: cf.getDuration().getMinutes(),
+            seconds: 0
+          }
+          this.notif.makeNotifications(new Date(this.fastStartTime.getTime() + (this.getTotalSeconds(time)*1000)))  
         }
         else {
           this.eatStartTime = new Date();
