@@ -327,7 +327,8 @@ export class TimerPage implements OnInit {
             minutes: cf.getDuration().getMinutes(),
             seconds: 0
           }
-          this.notif.makeNotifications(new Date(this.fastStartTime.getTime() + (this.getTotalSeconds(time)*1000)))  
+          this.notif.makeNotifications(new Date(this.fastStartTime.getTime() + (this.getTotalSeconds(time)*1000)), "Fasting Period Complete", 1)  
+          this.notif.makeNotifications(new Date(this.fastStartTime.getTime() + (86400 * 1000)), "Fast Complete",  2)  
         }
         else {
           this.eatStartTime = new Date();

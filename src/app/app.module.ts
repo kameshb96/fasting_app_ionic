@@ -14,6 +14,8 @@ import { FastModalPage } from './fast-modal/fast-modal.page';
 import { AutoCompleteModule } from 'ionic4-auto-complete';
 import { PasswordPage } from './password/password.page';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
+
 
 
 @NgModule({
@@ -29,6 +31,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
     StatusBar,
     SplashScreen,
     LocalNotifications,
+    BackgroundMode,       
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

@@ -34,7 +34,6 @@ export class FastPage implements OnInit {
 
   ionViewWillEnter() {
     console.log('Fast - ionViewWillEnter')
-    this.notif.makeNotifications()
     this.rest.validateToken().then((res) => {
       if (res.status == 403) {
         this.navController.navigateBack('/login')

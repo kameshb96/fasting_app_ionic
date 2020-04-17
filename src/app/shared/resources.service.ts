@@ -3,6 +3,7 @@ import { StorageService } from '../storage.service';
 import { RestService } from '../rest.service';
 import { Router, Route } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,8 @@ export class ResourcesService {
     private storage: StorageService,
     private rest: RestService,
     private router: Router,
-    private toastController: ToastController) {
+    private toastController: ToastController,
+    private backgroundMode: BackgroundMode) {
     this.foodLogs = [];
     // this.storage.getFastList().then((res:any) => {
     //   if(res) {
@@ -34,6 +36,12 @@ export class ResourcesService {
     //       this.fasts.push(new Fast(arr[i].title, new Date(arr[i].duration), arr[i].description, arr[i].isPredefined))
     //   }
     // });
+    console.log(this.backgroundMode.isEnabled())
+    this.backgroundMode.enable(); 
+    this.backgroundMode.on("enabled").subscribe(()=>{
+      console.log("BACKGROUND MODE ACTIVATED")
+    });
+    console.log(this.backgroundMode.isEnabled())
     this.getSettings()
     if (this.IS_DEBUG_MODE) console.log(this.fasts)
     // this.fasts.push(new Fast("A",new Date("2020-03-01T01:14:29.909-05:00"),"1"));

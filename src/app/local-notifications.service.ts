@@ -11,7 +11,7 @@ export class LocalNotificationsService {
   constructor(private localNotifications: LocalNotifications,
     private platform: Platform) { }
 
-  makeNotifications(time = new Date()) {
+  makeNotifications(time = new Date(), text, id) {
     console.log(time)
     // console.log("makeNotifications")
     // //Schedule a single notification
@@ -39,14 +39,13 @@ export class LocalNotificationsService {
 
     // Schedule delayed notification
     this.localNotifications.schedule({ 
-       text: 'Delayed ILocalNotification',
+       id: id,
+       text: text,
        //new Date().getTime() + 3600) 
        trigger: {at: time},
        led: 'FF0000',
        foreground: true,
        sound: this.platform.is("android") ? 'file://sound.mp3' : 'file://beep.caf'  
     });
-  }
-
 }
 
