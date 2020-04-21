@@ -64,7 +64,8 @@ export class ResourcesService {
 
   async getSettings(fromLogin = false) {
     let result = {}
-    if(!fromLogin && this.router.url == '/login')
+    console.log(this.router.url)    
+    if(!fromLogin && (this.router.url == '/login' || this.router.url == '/'))
       return
     await this.rest.getSettings().then((val) => {
       if (val.status == 403) {
