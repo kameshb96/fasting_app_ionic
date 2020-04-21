@@ -48,5 +48,15 @@ export class LocalNotificationsService {
       sound: this.platform.is("android") ? 'file://sound.mp3' : 'file://beep.caf'
     });
   }
+
+  requestNotifications() {
+    this.localNotifications.hasPermission().then((isPermitted) => {
+      console.log(isPermitted)
+      if (!isPermitted)
+        this.localNotifications.requestPermission().then((isGranted) => {
+          console.log(isGranted)
+        })
+    })
+  }
 }
 
