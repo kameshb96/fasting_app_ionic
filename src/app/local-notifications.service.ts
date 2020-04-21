@@ -38,14 +38,15 @@ export class LocalNotificationsService {
 
 
     // Schedule delayed notification
-    this.localNotifications.schedule({ 
-       id: id,
-       text: text,
-       //new Date().getTime() + 3600) 
-       trigger: {at: time},
-       led: 'FF0000',
-       foreground: true,
-       sound: this.platform.is("android") ? 'file://sound.mp3' : 'file://beep.caf'  
+    this.localNotifications.schedule({
+      id: id,
+      text: text,
+      //new Date().getTime() + 3600) 
+      trigger: { at: time },
+      led: 'FF0000',
+      foreground: true,
+      sound: this.platform.is("android") ? 'file://sound.mp3' : 'file://beep.caf'
     });
+  }
 }
 

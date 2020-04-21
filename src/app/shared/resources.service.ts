@@ -85,8 +85,18 @@ export class ResourcesService {
   }
 
   setTimerInfo(chosenFast, fastStartTime) {
+    var cf;   
+    console.log(chosenFast  )
+    if(!chosenFast) {
+      cf = JSON.parse(JSON.stringify(chosenFast))
+      cf.duration = new Date(cf.duration).toISOString()
+    }
+    else {
+      cf = chosenFast 
+    }
+    console.log(cf.duration)
     this.rest.setTimerInfo({
-      chosenFast: chosenFast,
+      chosenFast: cf  ,
       fastStartTime: fastStartTime
     }).then((val) => {
       if (val.status == 400) {
@@ -196,10 +206,10 @@ export class ResourcesService {
     if (this.isFastInitialized) {
       return this.fasts;
     }
-    this.fasts.push(new Fast("16:8 Fast", new Date("2020-02-13T16:00:58.404-05:00"), "16 Hour Fast followed by an 8 hour eating window", true));
-    this.fasts.push(new Fast("12:12 Fast", new Date("2020-02-13T12:00:03.098-05:00"), "12 Hour Fast followed by a 12 hour eating window", true));
+    this.fasts.push(new Fast("16:8 Fast", new Date("2020-04-21T23:00:48.447Z"), "16 Hour Fast followed by an 8 hour eating window", true));
+    this.fasts.push(new Fast("12:12 Fast", new Date("2020-04-21T19:00:53.820Z"), "12 Hour Fast followed by a 12 hour eating window", true));
     // for demo usage
-    this.fasts.push(new Fast("1.30 hrs", new Date("2020-03-01T01:30:44.257+05:30"), "One and an Half hour fast...", true));
+    this.fasts.push(new Fast("1.30 hrs", new Date("2020-04-21T08:30:04.855Z"), "One and an Half hour fast...", true));
     await this.rest.getFasts().then((res: any) => {
       console.log(res)
       res.json().then((val) => {

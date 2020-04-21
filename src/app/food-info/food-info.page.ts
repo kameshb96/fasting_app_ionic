@@ -62,14 +62,15 @@ export class FoodInfoPage implements OnInit {
     if (this.resources.IS_DEBUG_MODE) console.log(this.logQty);
     if (this.resources.IS_DEBUG_MODE) console.log(this.logCalories);
     let obj = {
-      date: new Date(this.logDate),
-      time: new Date(this.logTime),
+      date: new Date(this.logDate).toISOString(),
+      time: new Date(this.logTime).toISOString(),
       food: this.logFood,
       qty: this.logQty,
       cal: this.logCalories ? this.logCalories : 0,
       unit: this.logUnit
     }
     if (this.resources.IS_DEBUG_MODE) console.log(obj);
+    console.log(obj)
     this.resources.addFoodLog(obj);
     this.closeModal({
       isFoodInfoAdded: true

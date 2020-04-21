@@ -44,7 +44,9 @@ export class CustomFastPage implements OnInit {
       this.presentToast('Please Enter Fast Title');
       return;
     }
-    this.resources.addFast(this.fastDuration, this.fastTitle, this.fastDescription, false);
+    console.log(this.fastDuration)
+    let isotime = new Date(this.fastDuration).toISOString()
+    this.resources.addFast(isotime, this.fastTitle, this.fastDescription, false);
     if (this.resources.IS_DEBUG_MODE) console.log(this.resources.getFasts());
     this.modal.dismiss();
     this.presentToast('Custom Fast Added');

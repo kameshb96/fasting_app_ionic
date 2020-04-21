@@ -117,7 +117,7 @@ export class TimerPage implements OnInit {
             if (this.resources.IS_DEBUG_MODE) console.log("Here in else")
             this.resources.addCompletedFast(
               new CompletedFast(null, this.resources.getChosenFast(),
-                this.fastStartTime,
+                this.fastStartTime.toISOString(),
                 null,
                 null));
             this.resetTimer();
