@@ -24,7 +24,7 @@ export class NutritionPage implements OnInit {
   nextPageDate: Date;
   nextFilteredFoodLogs: Array<any>;
   nextTitle: string;
-  shouldRefreshLog: boolean = false;
+  // shouldRefreshLog: boolean = false;
   constructor(private modalController: ModalController,
     private resources: ResourcesService,
     private storage: StorageService,
@@ -56,6 +56,8 @@ export class NutritionPage implements OnInit {
       this.currentPageDate = new Date();
     }
     this.slides.slideTo(1, 0);
+    console.log(this.foodLogs)
+    this.didChange()    
   }
 
   didChange() {
@@ -145,8 +147,9 @@ export class NutritionPage implements OnInit {
 
   async getFilteredLogs(date: Date) {
     let tmp = []
-    await this.resources.getFoodLogs(this.shouldRefreshLog).then((val) => {
-      this.shouldRefreshLog = false
+    console.log("SHOULD REFRESH=", this.resources.shouldRefreshLog)
+    await this.resources.getFoodLogs(this.resources.shouldRefreshLog).then((val) => {
+      this.resources.shouldRefreshLog = false   
       this.foodLogs = val
       let n = this.foodLogs.length;
       for (let i = 0; i < n; i++) {
@@ -201,7 +204,7 @@ export class NutritionPage implements OnInit {
       if (this.resources.IS_DEBUG_MODE) console.log(res);
       console.log(res)
       if (res && res.data) {
-        this.shouldRefreshLog = true
+        this.resources.shouldRefreshLog = true
         this.refreshPage(this.currentPageDate, false);
       }
     }, err => {
@@ -211,7 +214,7 @@ export class NutritionPage implements OnInit {
   }
 
   async deleteLog(id) {
-    this.shouldRefreshLog = true
+    this.resources.shouldRefreshLog = true
     await this.resources.deleteLog(id).then(() => {
       this.refreshPage(this.currentPageDate, false);
     })

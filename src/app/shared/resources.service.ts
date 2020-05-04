@@ -22,6 +22,7 @@ export class ResourcesService {
   public darkMode: boolean = false
   public notification: boolean = false
   public isLoggedIn: boolean = false
+  public shouldRefreshLog: boolean = true 
   constructor(
     private storage: StorageService,
     private rest: RestService,
@@ -124,7 +125,14 @@ export class ResourcesService {
 
   reset() {
     this.darkMode = false
-    this.notification = false 
+    this.notification = false  
+    this.isFastInitialized = false 
+    this.fasts = []
+    this.isLogsInitialized = false
+    this.foodLogs = []
+    this.isHistoryInitialized = false
+    this.completedFasts = []
+    this.shouldRefreshLog = true 
   }
 
   async logout() {
@@ -207,6 +215,7 @@ export class ResourcesService {
     if (this.isFastInitialized) {
       return this.fasts;
     }
+    this.fasts = []
     this.fasts.push(new Fast("16:8 Fast", new Date("2020-04-21T23:00:48.447Z"), "16 Hour Fast followed by an 8 hour eating window", true));
     this.fasts.push(new Fast("12:12 Fast", new Date("2020-04-21T19:00:53.820Z"), "12 Hour Fast followed by a 12 hour eating window", true));
     // for demo usage
@@ -273,6 +282,8 @@ export class ResourcesService {
     //  return this.foodLogs;
     // return this.storage.getFoodLogs();
     if (this.isLogsInitialized && !shouldRefresh) {
+      console.log("RETURNING CACHED VALUE")
+      console.log(this.foodLogs)
       return this.foodLogs
     }
     await this.rest.getLogs().then(async (res: any) => {
