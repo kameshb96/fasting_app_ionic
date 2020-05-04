@@ -478,7 +478,7 @@ export class Fast {
 
   constructor(title, duration, description, isPre) {
     this.title = title;
-    this.duration = duration;
+    this.duration = new Date(duration);
     this.description = description;
     this.isPredefined = isPre;
   }

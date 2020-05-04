@@ -9,16 +9,21 @@ const { Storage } = Plugins;
   providedIn: 'root'
 })
 export class RestService {
-
+  isProd = true
+  url = "http://localhost:3500"
   constructor(
-    private httpClient: HttpClient) {}
+    private httpClient: HttpClient) {
+      if(this.isProd) { 
+        this.url = "https://fastserver.herokuapp.com:443"
+      }
+    }
 
   public getNutritionixData(query) {
-    return this.httpClient.get(`http://localhost:3500/search?q=${encodeURIComponent(query)}&qty=100`);
+    return this.httpClient.get(`${this.url}/search?q=${encodeURIComponent(query)}&qty=100`);
   }
 
   public login(loginUsername, loginPassword) {
-    let tmp = 'http://localhost:3500/login'
+    let tmp = `${this.url}/login`
     let b = {
       username: loginUsername,
       password: loginPassword
@@ -34,7 +39,7 @@ export class RestService {
 
   async logout() {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/logout'
+    let tmp = `${this.url}/logout`
     return fetch(tmp, {
       method: 'PUT',
       headers: {
@@ -46,7 +51,7 @@ export class RestService {
   }
 
   public register(loginUsername, loginPassword) {
-    let tmp = 'http://localhost:3500/register'
+    let tmp = `${this.url}/register`
     let b = {
       username: loginUsername,
       password: loginPassword
@@ -62,7 +67,7 @@ export class RestService {
 
   async addFast(fast: Fast) {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/Fast'
+    let tmp = `${this.url}/Fast`
     let b = {
       title: fast.getTitle(),
       duration: fast.getDuration(),
@@ -80,7 +85,7 @@ export class RestService {
 
   async getFasts() {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/fasts'
+    let tmp = `${this.url}/fasts`
     return fetch(tmp, {
       method: 'GET',
       headers: {
@@ -93,7 +98,7 @@ export class RestService {
 
   async deleteFast(identifier) {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/fast'
+    let tmp = `${this.url}/fast`
     return fetch(tmp, {
       method: 'DELETE',
       headers: {
@@ -108,7 +113,7 @@ export class RestService {
 
   async deleteLog(identifier) {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/log'
+    let tmp = `${this.url}/log`
     return fetch(tmp, {
       method: 'DELETE',
       headers: {
@@ -123,7 +128,7 @@ export class RestService {
 
   async addLog(log) {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/log'
+    let tmp = `${this.url}/log`
     return fetch(tmp, {
       method: 'POST',
       headers: {
@@ -136,7 +141,7 @@ export class RestService {
 
   async getLogs() {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/logs'
+    let tmp = `${this.url}/logs`
     return fetch(tmp, {
       method: 'GET',
       headers: {
@@ -149,7 +154,7 @@ export class RestService {
 
   async addCompletedFast(completedFast) {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/completedFast'
+    let tmp = `${this.url}/completedFast`
     return fetch(tmp, {
       method: 'POST',
       headers: {
@@ -162,7 +167,7 @@ export class RestService {
 
    async getCompletedFasts() {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/completedFasts'
+    let tmp = `${this.url}/completedFasts`
     return fetch(tmp, {
       method: 'GET',
       headers: {
@@ -175,7 +180,7 @@ export class RestService {
 
   async deleteCompletedFast(identifier) {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/completedFast'
+    let tmp = `${this.url}/completedFast`
     return fetch(tmp, {
       method: 'DELETE',
       headers: {
@@ -190,7 +195,7 @@ export class RestService {
 
   async setTimerInfo(obj) {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/timerinfo'
+    let tmp = `${this.url}/timerinfo`
     return fetch(tmp, {
       method: 'PUT',
       headers: {
@@ -206,7 +211,7 @@ export class RestService {
 
   async getTimerInfo() {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/timerinfo'
+    let tmp = `${this.url}/timerinfo` 
     return fetch(tmp, {
       method: 'GET',
       headers: {
@@ -223,7 +228,7 @@ export class RestService {
 
   async validateToken() {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/validateToken'
+    let tmp = `${this.url}/validateToken`
     return fetch(tmp, {
       method: 'GET',
       headers: {
@@ -236,7 +241,7 @@ export class RestService {
 
   async getPassword() {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/password'
+    let tmp = `${this.url}/password`
     return fetch(tmp, {
       method: 'GET',
       headers: {
@@ -249,7 +254,7 @@ export class RestService {
 
   async changePassword(newPassword) {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/password'
+    let tmp = `${this.url}/password`
     let b = {
       'newPassword': newPassword
     }
@@ -265,7 +270,7 @@ export class RestService {
 
   async updateSettings(settings) {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/settings'
+    let tmp = `${this.url}/settings`
     return fetch(tmp, {
       method: 'PUT',
       headers: {
@@ -278,7 +283,7 @@ export class RestService {
 
   async getSettings() {
     const { value } = await Storage.get({ key: "sessionToken"});
-    let tmp = 'http://localhost:3500/settings'
+    let tmp = `${this.url}/settings`
     return fetch(tmp, {
       method: 'GET',
       headers: {
