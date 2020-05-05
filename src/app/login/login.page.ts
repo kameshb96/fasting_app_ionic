@@ -74,37 +74,42 @@ export class LoginPage implements OnInit {
       return
     }
     // this.printpath('', this.router.config);
-    this.rest.login(this.loginUsername, this.loginPassword).then((response) => {
-      response.json().then((r) => {
-        if (this.resources.IS_DEBUG_MODE) console.log(r)
-        console.log(r)
-        if (r && r.meta && r.meta.status) {
-          this.storage.setToken(r.data.sessionToken).then(o => {
-            console.log(o);
-            this.resources.getSettings(true)
-            this.resources.isLoggedIn = true
-            this.navController.navigateForward('/tabs/fast'); // navigates without slide animation
-            // this.router.navigate(['/tabs'], { skipLocationChange: false });
-          });
-          // this.storage.asyncLocalStorage.setItem('sessionToken', r.data.sessionToken).then((out)=> {
-          //   console.log(out);
-          //   setTimeout(() => {
-          //     this.router.navigate(['/tabs/fast'])
-          //   }, 300);
-          // })
-          // this.navController.navigateRoot('tabs/fast'); // navigates without slide animation
-          // this.router.navigate(['/tabs/fast']); // navigates with slide animation, by default
-        }
-        else {
-          this.presentToast("Invalid Login Credentials")
-        }
-      }, (e) => {
-        if (this.resources.IS_DEBUG_MODE) console.log(e)
-        console.log(e)
+    this.resources.presentLoading().then(() => {
+      this.rest.login(this.loginUsername, this.loginPassword).then((response) => {
+        response.json().then((r) => {
+          if (this.resources.IS_DEBUG_MODE) console.log(r)
+          console.log(r)
+          if (r && r.meta && r.meta.status) {
+            this.storage.setToken(r.data.sessionToken).then(o => {
+              console.log(o);
+              this.resources.getSettings(true)
+              this.resources.isLoggedIn = true
+              this.navController.navigateForward('/tabs/fast').then(() => {
+                console.log("AFTER NAVIGATION")
+                this.resources.loading.dismiss()
+              }) // navigates without slide animation
+              // this.router.navigate(['/tabs'], { skipLocationChange: false });
+            });
+            // this.storage.asyncLocalStorage.setItem('sessionToken', r.data.sessionToken).then((out)=> {
+            //   console.log(out);
+            //   setTimeout(() => {
+            //     this.router.navigate(['/tabs/fast'])
+            //   }, 300);
+            // })
+            // this.navController.navigateRoot('tabs/fast'); // navigates without slide animation
+            // this.router.navigate(['/tabs/fast']); // navigates with slide animation, by default
+          }
+          else {
+            this.presentToast("Invalid Login Credentials")
+          }
+        }, (e) => {
+          if (this.resources.IS_DEBUG_MODE) console.log(e)
+          console.log(e)
+        })
+      }).catch((err) => {
+        if (this.resources.IS_DEBUG_MODE) console.log(err)
+        console.log(err)
       })
-    }).catch((err) => {
-      if (this.resources.IS_DEBUG_MODE) console.log(err)
-      console.log(err)
     })
     // this.router.navigate(['tabs/fast'])
   }

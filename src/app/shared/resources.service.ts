@@ -4,6 +4,7 @@ import { RestService } from '../rest.service';
 import { Router, Route } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
+import { LoadingController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +24,14 @@ export class ResourcesService {
   public notification: boolean = false
   public isLoggedIn: boolean = false
   public shouldRefreshLog: boolean = true 
+  public loading: any
   constructor(
     private storage: StorageService,
     private rest: RestService,
     private router: Router,
     private toastController: ToastController,
-    private backgroundMode: BackgroundMode) {
+    private backgroundMode: BackgroundMode,
+    public loadingController: LoadingController) {
     this.foodLogs = [];
     // this.storage.getFastList().then((res:any) => {
     //   if(res) {
@@ -61,6 +64,18 @@ export class ResourcesService {
     // });
     // this.foodLogs = this.storage.getFoodLogs();
     
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingController.create({
+      message: 'Please wait...',
+      // duration: 2000
+    });
+    console.log(this.loading)
+    return await this.loading.present();
+
+    // const { role, data } = await this.loading.onDidDismiss();
+    // console.log('Loading dismissed!');
   }
 
   async getSettings(fromLogin = false) {
