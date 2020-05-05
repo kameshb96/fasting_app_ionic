@@ -148,6 +148,7 @@ export class ResourcesService {
     this.isHistoryInitialized = false
     this.completedFasts = []
     this.shouldRefreshLog = true 
+    this.isEventAdded = false
   }
 
   async logout() {
