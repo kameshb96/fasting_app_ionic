@@ -8,13 +8,15 @@ import { FoodInfoPageRoutingModule } from './food-info-routing.module';
 
 import { FoodInfoPage } from './food-info.page';
 import { CompleteTestService } from '../complete-test.service';
+import { AutoCompleteModule } from 'ionic4-auto-complete';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FoodInfoPageRoutingModule
+    FoodInfoPageRoutingModule,
+    AutoCompleteModule
   ],
   declarations: [FoodInfoPage],
   providers: [CompleteTestService]

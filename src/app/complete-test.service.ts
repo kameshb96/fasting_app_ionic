@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {map} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
-import {AutoCompleteService} from 'ionic4-auto-complete';
 import { RestService } from './rest.service';
 import { ResourcesService } from './shared/resources.service';
 import { format } from 'url';
+import { AutoCompleteService } from 'ionic4-auto-complete';
 
 @Injectable({
   providedIn: 'root'
