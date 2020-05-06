@@ -11,7 +11,7 @@ import { AppComponent } from './app.component';
 import { FoodInfoPage } from './food-info/food-info.page';
 import { CustomFastPage } from './custom-fast/custom-fast.page';
 import { FastModalPage } from './fast-modal/fast-modal.page';
-import { AutoCompleteModule } from '../../node_modules/ionic4-auto-complete';
+import { AutoCompleteModule } from 'ionic4-auto-complete';
 import { PasswordPage } from './password/password.page';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
