@@ -30,10 +30,17 @@ export class FastPage implements OnInit {
     this.isPlay = false;
     this.percent = 100;
     console.log("Fast - Constructor");
+    this.resources.isLoggedIn.subscribe((value) => { 
+      console.log(value);
+      if(!value) {
+        this.reset()
+      }
+   });
   }
 
   ionViewWillEnter() {
     console.log('Fast - ionViewWillEnter')
+    this.resources.isWsAvailable.next(true)
     this.rest.validateToken().then((res) => {
       if (res.status == 403) {
         this.navController.navigateBack('/login')
@@ -48,6 +55,11 @@ export class FastPage implements OnInit {
         })
       }
     })
+  }
+
+  reset() {
+    console.log("In fast reset")
+    this.fasts = []
   }
 
   ngOnInit() {

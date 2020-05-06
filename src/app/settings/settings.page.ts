@@ -54,7 +54,7 @@ export class SettingsPage implements OnInit, OnDestroy {
     // await this.storage.getToken().then((token) => {
     //   st = token
     // })
-    if(!this.resources.isLoggedIn) {
+    if(!this.resources.isLoggedIn.value) {
       console.log("sessionToken not found ")
       return
     }    

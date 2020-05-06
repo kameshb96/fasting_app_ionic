@@ -11,21 +11,30 @@ import { AppComponent } from './app.component';
 import { FoodInfoPage } from './food-info/food-info.page';
 import { CustomFastPage } from './custom-fast/custom-fast.page';
 import { FastModalPage } from './fast-modal/fast-modal.page';
-import { AutoCompleteModule } from 'ionic4-auto-complete';
+import { AutoCompleteModule } from '../../node_modules/ionic4-auto-complete';
 import { PasswordPage } from './password/password.page';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
+import { PasswordPageModule } from './password/password.module';
+import { FastModalPageModule } from './fast-modal/fast-modal.module';
+import { CustomFastPageModule } from './custom-fast/custom-fast.module';
+import { FoodInfoPageModule } from './food-info/food-info.module';
+
 
 
 
 @NgModule({
-  declarations: [AppComponent, FoodInfoPage, CustomFastPage, FastModalPage, PasswordPage],
+  declarations: [AppComponent],
   entryComponents: [FoodInfoPage, CustomFastPage, FastModalPage, PasswordPage],
   imports: [BrowserModule,
             IonicModule.forRoot(), 
             AppRoutingModule, 
             FormsModule, 
             HttpClientModule,
+            PasswordPageModule,
+            FastModalPageModule,  
+            CustomFastPageModule,
+            FoodInfoPageModule,
             AutoCompleteModule],
   providers: [
     StatusBar,

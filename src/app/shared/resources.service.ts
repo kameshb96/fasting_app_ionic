@@ -5,6 +5,7 @@ import { Router, Route } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { LoadingController } from '@ionic/angular';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,9 @@ export class ResourcesService {
   public isHistoryInitialized: boolean = false
   public darkMode: boolean = false
   public notification: boolean = false
-  public isLoggedIn: boolean = false
+  public isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public shouldRefreshLog: boolean = true 
+  public isWsAvailable: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public loading: any
   constructor(
     private storage: StorageService,
@@ -33,6 +35,7 @@ export class ResourcesService {
     private backgroundMode: BackgroundMode,
     public loadingController: LoadingController) {
     this.foodLogs = [];
+    this.isWsAvailable.next(true)
     // this.storage.getFastList().then((res:any) => {
     //   if(res) {
     //     let arr = JSON.parse(res);
@@ -70,6 +73,7 @@ export class ResourcesService {
     this.loading = await this.loadingController.create({
       message: 'Please wait...',
       // duration: 2000
+      cssClass: 'loadingCSS'
     });
     console.log(this.loading)
     return await this.loading.present();
@@ -149,6 +153,7 @@ export class ResourcesService {
     this.completedFasts = []
     this.shouldRefreshLog = true 
     this.isEventAdded = false
+    this.isWsAvailable.next(false)
   }
 
   async logout() {
@@ -160,7 +165,7 @@ export class ResourcesService {
         this.presentToast("Something went wrong")
       }
       else {
-        this.isLoggedIn = false 
+        this.isLoggedIn.next(false) 
         this.reset()
         console.log("message")
         await this.storage.setToken("")
