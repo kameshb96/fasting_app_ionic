@@ -25,7 +25,8 @@ export class ResourcesService {
   public notification: boolean = false
   public isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public shouldRefreshLog: boolean = true 
-  public isWsAvailable: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  // public isWsAvailable: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  // public isNutrInit: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public loading: any
   constructor(
     private storage: StorageService,
@@ -35,7 +36,8 @@ export class ResourcesService {
     private backgroundMode: BackgroundMode,
     public loadingController: LoadingController) {
     this.foodLogs = [];
-    this.isWsAvailable.next(true)
+    // this.isWsAvailable.next(true)
+    this.isLoggedIn.next(true)
     // this.storage.getFastList().then((res:any) => {
     //   if(res) {
     //     let arr = JSON.parse(res);
@@ -153,7 +155,8 @@ export class ResourcesService {
     this.completedFasts = []
     this.shouldRefreshLog = true 
     this.isEventAdded = false
-    this.isWsAvailable.next(false)
+    // this.isWsAvailable.next(false)
+    this.isLoggedIn.next(false)
   }
 
   async logout() {
@@ -299,27 +302,37 @@ export class ResourcesService {
     return this.completedFasts
   }
 
-  async getFoodLogs(shouldRefresh = false) {
+  async getFoodLogs() {
     //  return this.foodLogs;
     // return this.storage.getFoodLogs();
-    if (this.isLogsInitialized && !shouldRefresh) {
+    if (this.isLogsInitialized && !this.shouldRefreshLog) {
       console.log("RETURNING CACHED VALUE")
-      console.log(this.foodLogs)
+      console.log(this.foodLogs)  
       return this.foodLogs
     }
-    await this.rest.getLogs().then(async (res: any) => {
-      console.log(res)
-      await res.json().then((val) => {
-        console.log(val)
-        if (res.status != 200) {
-          this.presentToast("Something went wrong")
-          this.router.navigate(['/login'])
-          return
-        }
-        if (val.meta.status) {
-          this.foodLogs = val.data.logs
-          this.isLogsInitialized = true
-        }
+    this.shouldRefreshLog = false 
+    if(this.loading) this.loading.dismiss()
+    await this.presentLoading().then(async () => {
+      console.log("BEFORE REST")
+      await this.rest.getLogs().then(async (res: any) => {
+        console.log(res)
+        await res.json().then((val) => {
+          console.log(val)
+          if (res.status != 200) {
+            this.presentToast("Something went wrong")
+            this.loading.dismiss()
+            this.router.navigate(['/login'])
+            return
+          }
+          if (val.meta.status) {
+            this.foodLogs = val.data.logs
+            this.isLogsInitialized = true
+          }
+        })
+        console.log("DISMISS INSIDE THE REST")
+        this.loading.dismiss()
+      }).catch((error) => {
+        this.loading.dismiss()
       })
     })
     return this.foodLogs

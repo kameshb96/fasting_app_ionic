@@ -40,7 +40,7 @@ export class FastPage implements OnInit {
 
   ionViewWillEnter() {
     console.log('Fast - ionViewWillEnter')
-    this.resources.isWsAvailable.next(true)
+    // this.resources.isWsAvailable.next(true)
     this.rest.validateToken().then((res) => {
       if (res.status == 403) {
         this.navController.navigateBack('/login')

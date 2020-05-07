@@ -24,17 +24,21 @@ export class NutritionPage implements OnInit {
   nextPageDate: Date;
   nextFilteredFoodLogs: Array<any>;
   nextTitle: string;
+  isPageInit: boolean = false;
   // shouldRefreshLog: boolean = false;
   constructor(private modalController: ModalController,
     private resources: ResourcesService,
     private storage: StorageService,
     private actionSheetController: ActionSheetController,
     private restService: RestService) {
-
+      this.resources.isLoggedIn.subscribe((value) => {
+        if(value) this.isPageInit = false
+      })
   }
 
   ngOnInit() {
     // this.slides.slideTo(1, 500);
+    // this.isPageInit = true;
   }
 
   checkDate(date1: Date, date2: Date) {
@@ -57,7 +61,14 @@ export class NutritionPage implements OnInit {
     }
     this.slides.slideTo(1, 0);
     console.log(this.foodLogs)
-    this.didChange()    
+    if(!this.isPageInit) {
+      this.isPageInit = true
+      this.setPageData(new Date()) 
+    }
+    // if(!this.isPageInit) {
+    //   this.isPageInit = true
+    //   this.didChange()
+    //  } //Handling data for different users 
   }
 
   didChange() {
@@ -148,8 +159,8 @@ export class NutritionPage implements OnInit {
   async getFilteredLogs(date: Date) {
     let tmp = []
     console.log("SHOULD REFRESH=", this.resources.shouldRefreshLog)
-    await this.resources.getFoodLogs(this.resources.shouldRefreshLog).then((val) => {
-      this.resources.shouldRefreshLog = false   
+    await this.resources.getFoodLogs().then((val) => {
+      // this.resources.shouldRefreshLog = false   
       this.foodLogs = val
       let n = this.foodLogs.length;
       for (let i = 0; i < n; i++) {
