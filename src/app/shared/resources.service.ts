@@ -385,19 +385,24 @@ export class ResourcesService {
     // }
   }
 
-  addFast(fastTime, fastTitle, description, isPre) {
+  async addFast(fastTime, fastTitle, description, isPre) {
     if (this.IS_DEBUG_MODE) console.log(this.fasts);
     let fast = new Fast(fastTitle, fastTime, description, isPre);
     if (this.IS_DEBUG_MODE) console.log(fast);
     // this.storage.addFast(fast);
-    this.rest.addFast(fast).then((res) => {
-      if (res.status == 200) {
-        res.json().then((json) => {
-          if (json.meta.status) {
-            this.fasts.push(fast)
-          }
-        })
-      }
+    await this.presentLoading().then(async () => {
+      await this.rest.addFast(fast).then((res) => {
+        this.loading.dismiss()
+        if (res.status == 200) {
+          res.json().then((json) => {
+            if (json.meta.status) {
+              this.fasts.push(fast)
+            }
+          })
+        }
+      }).catch((error) => {
+        this.loading.dismiss()      
+      })
     })
   }
 

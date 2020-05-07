@@ -46,10 +46,11 @@ export class CustomFastPage implements OnInit {
     }
     console.log(this.fastDuration)
     let isotime = new Date(this.fastDuration).toISOString()
-    this.resources.addFast(isotime, this.fastTitle, this.fastDescription, false);
+    this.resources.addFast(isotime, this.fastTitle, this.fastDescription, false).then(() => {
+      this.modal.dismiss();
+      this.presentToast('Custom Fast Added');
+    })
     if (this.resources.IS_DEBUG_MODE) console.log(this.resources.getFasts());
-    this.modal.dismiss();
-    this.presentToast('Custom Fast Added');
   }
 
   closeModal() {

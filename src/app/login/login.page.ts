@@ -110,6 +110,7 @@ export class LoginPage implements OnInit {
         })
       }).catch((err) => {
         if (this.resources.IS_DEBUG_MODE) console.log(err)
+        this.resources.loading.dismiss()
         console.log(err)
       })
     })
