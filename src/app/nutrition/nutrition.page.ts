@@ -32,7 +32,16 @@ export class NutritionPage implements OnInit {
     private actionSheetController: ActionSheetController,
     private restService: RestService) {
       this.resources.isLoggedIn.subscribe((value) => {
-        if(value) this.isPageInit = false
+        console.log("VALUE=", value)
+        if(value) {
+          this.isPageInit = false
+          setTimeout(() => {
+            this.slides.update().then(() => {
+              console.log("slide updated")
+            })
+          }, 2000)
+        }
+        else this.isPageInit = true 
       })
   }
 
@@ -59,21 +68,39 @@ export class NutritionPage implements OnInit {
     } else {
       this.currentPageDate = new Date();
     }
-    this.slides.slideTo(1, 0);
+    // this.slides.slideTo(1, 0);
+    this.slides.getActiveIndex().then((index) => {
+      console.log(index)
+      if(index != 1) {
+        this.slides.slideTo(1, 0);
+        if(!this.isPageInit) {
+          this.isPageInit = true
+        }
+      }
+      if(!this.isPageInit) this.setPageData(new Date()) 
+    })
     console.log(this.foodLogs)
-    if(!this.isPageInit) {
-      this.isPageInit = true
-      this.setPageData(new Date()) 
-    }
     // if(!this.isPageInit) {
     //   this.isPageInit = true
     //   this.didChange()
     //  } //Handling data for different users 
   }
 
+  ionViewWillLeave() {
+    console.log("Leaving nutrition page")
+    this.foodLogs = []
+    this.slides.slideTo(2, 0)
+    this.slides.getActiveIndex().then((index) => {
+      console.log("INDEX=", index)
+      this.slides.getSwiper().then((obj) => {
+        console.log(obj)
+      })
+    })
+  }
+
   didChange() {
     this.slides.getActiveIndex().then(index => {
-      if (this.resources.IS_DEBUG_MODE) console.log("Did change" + index);
+      console.log("Did change" + index);
       if (index == 1) this.setPageData(this.currentPageDate);
       else if (index == 0)
         this.setPageData(this.previousPageDate);
@@ -84,6 +111,7 @@ export class NutritionPage implements OnInit {
   }
 
   setPageData(d: Date) {
+    console.log("IN SET PAGE DATA")
     let date = new Date(d);
     this.resources.currentNutritionPageDate = new Date(date);
     this.previousPageDate = new Date(date);
