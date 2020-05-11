@@ -268,23 +268,29 @@ export class ResourcesService {
   async getCompletedFasts(shouldRefresh = false) {
     if (this.isHistoryInitialized && !shouldRefresh)
       return this.completedFasts;
-    await this.rest.getCompletedFasts().then(async (res: any) => {
-      this.isHistoryInitialized = true
-      if (res.status != 200) {
-        this.presentToast("Something went wrong")
-        return
-      }
-      this.completedFasts = []
-      await res.json().then((val) => {
-        console.log(val)
-        let history = val.data
-        if (history) {
-          for (let i = 0; i < history.length; i++) {
-            let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description, history[i].fast.isPredefined);
-            let cf = new CompletedFast(history[i]._id, fast, history[i].fastStartTime, history[i].eatStartTime, history[i].eatEndTime);
-            this.completedFasts.push(cf);
-          }
+    await this.presentLoading().then(async () => {
+      await this.rest.getCompletedFasts().then(async (res: any) => {
+        this.isHistoryInitialized = true
+        if (res.status != 200) {
+          this.loading.dismiss()
+          this.presentToast("Something went wrong")
+          return
         }
+        this.completedFasts = []
+        await res.json().then((val) => {
+          console.log(val)
+          let history = val.data
+          if (history) {
+            for (let i = 0; i < history.length; i++) {
+              let fast = new Fast(history[i].fast.title, history[i].fast.duration, history[i].fast.description, history[i].fast.isPredefined);
+              let cf = new CompletedFast(history[i]._id, fast, history[i].fastStartTime, history[i].eatStartTime, history[i].eatEndTime);
+              this.completedFasts.push(cf);
+            }
+          }
+          this.loading.dismiss()
+        })
+      }).catch((error) => {
+        this.loading.dismiss()
       })
     })
     // this.storage.getFastHistory().then((res: any) => {
