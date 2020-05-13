@@ -68,8 +68,8 @@ export class TimerPage implements OnInit {
           let fastEndTime = new Date(d1);
 
           if (this.resources.IS_DEBUG_MODE) console.log(fastEndTime);
-          fastEndTime.setHours(fastEndTime.getHours() + dur.getHours());
-          fastEndTime.setMinutes(fastEndTime.getMinutes() + dur.getMinutes());
+          fastEndTime.setHours(fastEndTime.getHours() + dur.getUTCHours());
+          fastEndTime.setMinutes(fastEndTime.getMinutes() + dur.getUTCMinutes());
           let eatEndTime = new Date(d1);
           eatEndTime.setHours(eatEndTime.getHours() + 24);
           if (this.resources.IS_DEBUG_MODE) console.log(fastEndTime);
@@ -79,8 +79,8 @@ export class TimerPage implements OnInit {
             // Still in fasting time
             let diff = new Date(d2.getTime() - d1.getTime());
             let totalSecs = this.getTotalSeconds({
-              hours: dur.getHours(),
-              minutes: dur.getMinutes(),
+              hours: dur.getUTCHours(),
+              minutes: dur.getUTCMinutes(),
               seconds: 0
             });
             let elapsedSecs = Math.floor(diff.getTime() / 1000)
@@ -226,8 +226,8 @@ export class TimerPage implements OnInit {
       let duration = new Date(chosen.getDuration());
       if (this.resources.IS_DEBUG_MODE) console.log(duration);
       if (this.resources.IS_DEBUG_MODE) console.log(new Date(duration));
-      this.fastTime.hours = duration.getHours();
-      this.fastTime.minutes = duration.getMinutes();
+      this.fastTime.hours = duration.getUTCHours();
+      this.fastTime.minutes = duration.getUTCMinutes();
       this.fastTime.seconds = 0;
       this.setTitle();
       this.initialSeconds = this.getTotalSeconds(this.fastTime);
@@ -326,8 +326,8 @@ export class TimerPage implements OnInit {
           this.resources.setTimerInfo(cf, this.fastStartTime)
           console.log(cf)
           let time = {
-            hours: cf.getDuration().getHours(),
-            minutes: cf.getDuration().getMinutes(),
+            hours: cf.getDuration().getUTCHours(),
+            minutes: cf.getDuration().getUTCMinutes(),
             seconds: 0
           }
           this.notif.makeNotifications(new Date(this.fastStartTime.getTime() + (this.getTotalSeconds(time)*1000)), "Fasting Period Complete", 1)  

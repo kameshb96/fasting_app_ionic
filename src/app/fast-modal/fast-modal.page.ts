@@ -35,8 +35,8 @@ export class FastModalPage implements OnInit {
 
   setDurationText() {
     let duration = new Date(this.selected.duration);
-    let hours = duration.getHours();
-    let mins = duration.getMinutes();
+    let hours = duration.getUTCHours();
+    let mins = duration.getUTCMinutes();
     let titleText = "" + ((hours < 10) ? ("0" + hours) : hours)
                          + ":" 
                          + ((mins < 10) ? ("0" + mins) : mins);

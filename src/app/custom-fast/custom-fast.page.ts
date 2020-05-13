@@ -45,7 +45,14 @@ export class CustomFastPage implements OnInit {
       return;
     }
     console.log(this.fastDuration)
-    let isotime = new Date(this.fastDuration).toISOString()
+    let time = new Date(this.fastDuration)
+    let dbUTCHours = time.getHours()
+    let dbUTCMinutes = time.getMinutes()
+    time.setUTCHours(dbUTCHours)
+    time.setUTCMinutes(dbUTCMinutes)
+    let isotime = time.toISOString()
+    console.log(time)
+    console.log(isotime)
     this.resources.addFast(isotime, this.fastTitle, this.fastDescription, false).then(() => {
       this.modal.dismiss();
       this.presentToast('Custom Fast Added');

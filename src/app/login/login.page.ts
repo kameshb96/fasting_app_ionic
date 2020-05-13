@@ -102,6 +102,7 @@ export class LoginPage implements OnInit {
             // this.router.navigate(['/tabs/fast']); // navigates with slide animation, by default
           }
           else {
+            this.resources.loading.dismiss()
             this.presentToast("Invalid Login Credentials")
           }
         }, (e) => {

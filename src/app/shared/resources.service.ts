@@ -287,7 +287,6 @@ export class ResourcesService {
               this.completedFasts.push(cf);
             }
           }
-          this.loading.dismiss()
         })
       }).catch((error) => {
         this.loading.dismiss()
