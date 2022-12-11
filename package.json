@@ -36,7 +36,7 @@
     "cordova-plugin-device": "^2.0.3",
     "cordova-plugin-local-notification": "^0.9.0-beta.2",
     "core-js": "^2.5.4",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "ionic4-auto-complete": "^2.6.0",
     "ng-circle-progress": "^1.5.1",
     "path": "^0.12.7",
